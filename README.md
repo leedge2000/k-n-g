@@ -49,13 +49,23 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 包含 PostgreSQL、NebulaGraph 集群、Elasticsearch、MinIO、双 API 实例与 Nginx。
 
+项目自建的两个镜像已发布到 GitHub Container Registry，可直接拉取，无需本地构建：
+
+| 镜像 | 说明 |
+| --- | --- |
+| `ghcr.io/leedge2000/k-n-g/api:latest` | API 服务（FastAPI） |
+| `ghcr.io/leedge2000/k-n-g/minio:RELEASE.2025-04-22T22-12-26Z` | MinIO 对象存储（已内置二进制，免去 GitHub Release 下载） |
+
 ```powershell
 cd kg-system/deploy
 Copy-Item .env.example .env    # 首次部署时按需修改口令
-docker compose up -d --build
+docker compose pull            # 拉取自建镜像
+docker compose up -d           # 若本地无镜像且未 pull，compose 会自动构建
 ```
 
 访问 <http://localhost:8991>（端口由 `.env` 中 `HTTP_PORT` 控制，默认 8991）。
+
+其余依赖（PostgreSQL、NebulaGraph、Elasticsearch、nebula-console）直接使用官方公共镜像，见 `deploy/docker-compose.yml`。
 
 ## 数据说明
 

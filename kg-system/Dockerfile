@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN addgroup -S app && adduser -S -G app app
+RUN groupadd -r app && useradd -r -g app -s /usr/sbin/nologin app
 
 COPY requirements.txt ./
 RUN pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
@@ -14,8 +14,7 @@ RUN pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
 COPY --chown=app:app app ./app
 COPY --chown=app:app web ./web
 COPY --chown=app:app seed ./seed
-COPY --chown=app:app ontology_ly/terms ./ontology_ly/terms
-COPY --chown=app:app ontology_ly/kernel ./ontology_ly/kernel
+COPY --chown=app:app ontology_ly ./ontology_ly
 COPY --chown=app:app deploy/schema.ngql ./deploy/schema.ngql
 
 RUN mkdir -p /app/data && chown -R app:app /app/data

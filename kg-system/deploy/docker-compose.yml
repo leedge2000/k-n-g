@@ -4,7 +4,7 @@ x-api-service: &api-service
   build:
     context: ..
     dockerfile: Dockerfile
-  image: grain-oil-kg-api:local
+  image: ghcr.io/leedge2000/k-n-g/api:latest
   restart: unless-stopped
   expose:
     - "8000"
@@ -84,7 +84,7 @@ services:
     build:
       context: ..
       dockerfile: deploy/minio.Dockerfile
-    image: grain-oil-minio:RELEASE.2025-04-22T22-12-26Z
+    image: ghcr.io/leedge2000/k-n-g/minio:RELEASE.2025-04-22T22-12-26Z
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
