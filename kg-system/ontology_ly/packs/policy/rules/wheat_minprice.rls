@@ -1,0 +1,10 @@
+region_ok(?c) :- in_region(?c, ?r), allowed_region(?r) .
+fires(?c, "S1") :- case_exists(?c), region_ok(?c), within_window_s1(?c), price_below_s1(?c), quality_ok_s1(?c), ~reserve_active(?c) .
+fires(?c, "S2") :- case_exists(?c), region_ok(?c), within_window_s2(?c), price_below_s2(?c), quality_ok_s2(?c), province_rule_published(?c) .
+fires(?c, "S3") :- case_exists(?c), within_window_s3(?c), emergency_trigger_s3(?c) .
+prevails_t(?a, ?b) :- prevails(?a, ?b) .
+prevails_t(?a, ?c) :- prevails(?a, ?b), prevails_t(?b, ?c) .
+overridden_by(?c, ?a, ?b) :- fires(?c, ?b), prevails_t(?b, ?a) .
+overridden(?c, ?a) :- overridden_by(?c, ?a, ?b) .
+effective(?c, ?s) :- fires(?c, ?s), ~overridden(?c, ?s) .
+cycle(?a) :- prevails_t(?a, ?a) .

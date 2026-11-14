@@ -1,0 +1,240 @@
+{
+  "schemaVersion": "0.1.0",
+  "stage": "STAGE0",
+  "frozen": true,
+  "note": "Palantir Function 在本方案中的落点。Function 只做确定性计算与校验，不做推理；条款推理属于 Rule（见 packs/policy/clause_model.json），二者共用 Function 这一大类但分文件、分执行环境、分失败语义。",
+  "separationFromRule": {
+    "function": "输入确定则输出确定；失败语义 = 抛错或返回 NULL；不产证明树；不需人工回译确认。",
+    "rule": "输入不足时输出 UNABLE 并列出缺失事实；产证明树；必须经 backTranslation + testcase + CONFIRMED 才能参与判定。",
+    "why": "若混为一类，规则的人工确认链会被函数签名冲淡，且 UNABLE 语义无法在函数体系里表达。"
+  },
+  "functionCount": 12,
+  "functions": [
+    {
+      "functionId": "FN-PUB-BASIS",
+      "name": "基差",
+      "category": "COMPUTE",
+      "implementedIn": "PYTHON",
+      "formula": "basis = spotPrice - futuresPrice",
+      "inputs": [
+        { "name": "spotSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "futuresSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unitFrom": "spotSeriesId", "signed": true },
+      "preconditions": ["FN-PUB-SCOPE-COMPAT 返回 PASS", "两序列 priceBasis 分别为 SPOT 与 FUTURES"],
+      "errorCodes": ["E_UNIT_DIM_MISMATCH", "E_CURRENCY_MISMATCH", "E_TAX_BASIS_MISMATCH", "E_PERIOD_MISSING"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-CRUSH-MARGIN",
+      "name": "压榨利润",
+      "category": "COMPUTE",
+      "implementedIn": "PYTHON",
+      "formula": "margin = oilValue + mealValue - seedCost - processingCost，其中 oilValue = oilPrice * oilYield，mealValue = mealPrice * mealYield",
+      "inputs": [
+        { "name": "seedSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "oilSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "mealSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "processId", "type": "ref TransformationProcess", "required": true, "note": "出油率/出粕率取自该关系实体，不在函数内写死" },
+        { "name": "processingCostSeriesId", "type": "ref IndicatorSeries", "required": false },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "CNY/t", "signed": true },
+      "preconditions": ["yieldRates 之和 <= 1.05（含损耗容差）", "三序列同币种、同税基、同期间"],
+      "errorCodes": ["E_YIELD_SUM_INVALID", "E_SCOPE_INCOMPARABLE", "E_PROCESS_REGION_MISMATCH"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-STOCK-USE",
+      "name": "库存消费比",
+      "category": "COMPUTE",
+      "implementedIn": "SQLITE_SQL",
+      "formula": "ratio = endingStock / annualConsumption",
+      "inputs": [
+        { "name": "stockSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "consumptionSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "marketingYearPeriodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "%", "signed": false },
+      "preconditions": ["两序列的 TimePeriod.periodType 必须为 MARKETING_YEAR 或 GRAIN_YEAR", "两序列 scopeId 的 COMMODITY 与 GEOGRAPHY 维度成员必须一致"],
+      "errorCodes": ["E_PERIOD_TYPE_INVALID", "E_SCOPE_INCOMPARABLE", "E_DIVIDE_BY_ZERO"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-IMPORT-COST",
+      "name": "进口成本（到岸完税价）",
+      "category": "COMPUTE",
+      "implementedIn": "PYTHON",
+      "formula": "cost = cifPrice * fxRate * (1 + tariffRate) * (1 + vatRate) + portCharges",
+      "inputs": [
+        { "name": "cifSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "fxRateSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "tariffRate", "type": "FLOAT", "required": true, "note": "来自政策 RuleParameter，不在函数内假设" },
+        { "name": "vatRate", "type": "FLOAT", "required": true },
+        { "name": "portChargeSeriesId", "type": "ref IndicatorSeries", "required": false },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "CNY/t", "signed": false },
+      "preconditions": ["tariffRate 必须有 RuleParameter 来源，缺失则拒绝执行而非取默认值"],
+      "errorCodes": ["E_TARIFF_PARAM_MISSING", "E_FX_SERIES_MISSING", "E_UNIT_DIM_MISMATCH"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-YIELD",
+      "name": "理论出率",
+      "category": "COMPUTE",
+      "implementedIn": "SQLITE_SQL",
+      "formula": "yield = outputMass / inputMass，按 TransformationProcess 的 inputFormIds/outputFormIds 配对",
+      "inputs": [
+        { "name": "processId", "type": "ref TransformationProcess", "required": true },
+        { "name": "inputFormId", "type": "ref CommodityForm", "required": true },
+        { "name": "outputFormId", "type": "ref CommodityForm", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "%", "signed": false },
+      "preconditions": ["inputFormId 在 process.inputFormIds 内", "outputFormId 在 process.outputFormIds 内"],
+      "errorCodes": ["E_FORM_NOT_IN_PROCESS", "E_YIELD_NOT_RECORDED"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-PERIOD-CHANGE",
+      "name": "同比增长 / 环比增长",
+      "category": "COMPUTE",
+      "implementedIn": "SQLITE_SQL",
+      "formula": "yoy = (v_t - v_t_minus_12m) / v_t_minus_12m；mom = (v_t - v_t_minus_1) / v_t_minus_1",
+      "inputs": [
+        { "name": "seriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true },
+        { "name": "mode", "type": "ENUM", "values": ["YOY", "MOM"], "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "%", "signed": true },
+      "preconditions": ["基期数据点 qualityFlag != MISSING", "基期与当期同一 seriesId"],
+      "errorCodes": ["E_BASE_PERIOD_MISSING", "E_BASE_VALUE_ZERO"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-REAL-PRICE",
+      "name": "实际价格（平减）",
+      "category": "COMPUTE",
+      "implementedIn": "PYTHON",
+      "formula": "realPrice = nominalPrice / deflator * 100",
+      "inputs": [
+        { "name": "nominalSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "deflatorSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "basePeriodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unitFrom": "nominalSeriesId", "signed": false },
+      "preconditions": ["deflatorSeriesId 的 indicatorType 必须为 INDEX"],
+      "errorCodes": ["E_DEFLATOR_NOT_INDEX", "E_BASE_PERIOD_MISSING"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-TRANSMISSION",
+      "name": "价格传导弹性与滞后估计",
+      "category": "ESTIMATE",
+      "implementedIn": "PYTHON",
+      "formula": "在 PriceTransmissionLink 上拟合 Δln(p_to) = alpha + beta * Δln(p_from) + sum(gamma_k * Δln(p_from)_t-k)；beta 即 elasticity，最大显著 k 即 lagDays",
+      "inputs": [
+        { "name": "linkId", "type": "ref PriceTransmissionLink", "required": true },
+        { "name": "samplePeriodId", "type": "ref TimePeriod", "required": true },
+        { "name": "maxLag", "type": "INT", "required": false, "default": 12 }
+      ],
+      "output": { "type": "JSON", "shape": "{elasticity, lagDays, r2, n, method}" },
+      "preconditions": ["样本期数据点 >= 24 且无连续缺失 > 3 期"],
+      "errorCodes": ["E_SAMPLE_TOO_SHORT", "E_SERIES_GAP_TOO_LONG"],
+      "returnsFactsForRule": false,
+      "note": "估计结果是 PriceTransmissionLink 的属性值来源，不是事实断言；必须写回该关系实体并带 Evidence。",
+      "version": 1,
+      "owner": "MARKET_PACK"
+    },
+    {
+      "functionId": "FN-PUB-HHI",
+      "name": "集中度（HHI）",
+      "category": "COMPUTE",
+      "implementedIn": "SQLITE_SQL",
+      "formula": "hhi = sum(share_i^2) * 10000",
+      "inputs": [
+        { "name": "shareSeriesIds", "type": "ref IndicatorSeries[]", "required": true },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "INDEX_0_10000", "signed": false },
+      "preconditions": ["各序列 share 之和在 0.99—1.01 之间"],
+      "errorCodes": ["E_SHARE_SUM_INVALID", "E_SCOPE_INCOMPARABLE"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-SELF-SUFFICIENCY",
+      "name": "自给率",
+      "category": "COMPUTE",
+      "implementedIn": "SQLITE_SQL",
+      "formula": "selfSufficiency = domesticProduction / (domesticProduction + imports - exports)",
+      "inputs": [
+        { "name": "productionSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "importSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "exportSeriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true }
+      ],
+      "output": { "type": "FLOAT", "unit": "%", "signed": false },
+      "preconditions": ["三序列同期间类型、同 COMMODITY 维度成员"],
+      "errorCodes": ["E_SCOPE_INCOMPARABLE", "E_DIVIDE_BY_ZERO"],
+      "returnsFactsForRule": false,
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-POLICY-THRESHOLD",
+      "name": "政策阈值判定（事实注入器）",
+      "category": "CHECK",
+      "implementedIn": "PYTHON",
+      "formula": "给定 priceSeriesId、periodId、thresholdValue、comparator，输出布尔事实 price_crosses_threshold(formCode, periodId, comparator, threshold)",
+      "inputs": [
+        { "name": "seriesId", "type": "ref IndicatorSeries", "required": true },
+        { "name": "periodId", "type": "ref TimePeriod", "required": true },
+        { "name": "thresholdValue", "type": "FLOAT", "required": true },
+        { "name": "thresholdUnitId", "type": "ref UnitOfMeasure", "required": true },
+        { "name": "comparator", "type": "enum ConditionOperator", "required": true }
+      ],
+      "output": { "type": "BOOL_FACT", "shape": "price_crosses_threshold(FormCode, PeriodId, Comparator, Threshold)" },
+      "preconditions": ["阈值必须来自 RuleParameter，不得由调用方随意传入"],
+      "errorCodes": ["E_THRESHOLD_NOT_FROM_RULE", "E_UNIT_DIM_MISMATCH"],
+      "returnsFactsForRule": true,
+      "note": "Datalog 无算术能力，所有数值比较必须由本函数先算成布尔事实再注入规则。",
+      "version": 1,
+      "owner": "KERNEL"
+    },
+    {
+      "functionId": "FN-PUB-SCOPE-COMPAT",
+      "name": "口径可比性检查",
+      "category": "CHECK",
+      "implementedIn": "PYTHON",
+      "formula": "逐维比对两个 Scope 的 members：处理超集/子集关系、单位维度、价格口径、税基、货币；任一不满足即 REJECT",
+      "inputs": [
+        { "name": "scopeIdA", "type": "ref Scope", "required": true },
+        { "name": "scopeIdB", "type": "ref Scope", "required": true }
+      ],
+      "output": { "type": "ENUM", "values": ["PASS", "REJECT"], "withReasons": true },
+      "preconditions": [],
+      "errorCodes": ["E_SCOPE_UNRESOLVED"],
+      "returnsFactsForRule": true,
+      "note": "落实铁律 R6：单位、价格口径、统计来源三者必须同时确定才允许比较。",
+      "version": 1,
+      "owner": "KERNEL"
+    }
+  ]
+}

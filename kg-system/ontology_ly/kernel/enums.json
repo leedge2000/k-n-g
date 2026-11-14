@@ -1,0 +1,858 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "frozen": true,
+  "sourceBaseline": "STAGE0-执行分解.md §3 / 方案定稿.md §4",
+  "policy": {
+    "noCatchAll": "所有枚举为封闭词表，不得使用 Other 作为兜底。名称为 OTHER 的取值是显式编码，使用时必须在对象 description 中写明具体含义（explicitOnly=true）。",
+    "defaultRule": "default=null 表示该字段无隐含默认值，必须显式给出；有值表示缺省时取该值。",
+    "extensionRule": "扩展包不得新增内核枚举值（R4）；新增须走内核评审并升 schemaVersion。"
+  },
+  "enumCount": 68,
+  "enums": {
+    "DomainCode": {
+      "label": "域码",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "PUB", "label": "共享内核" },
+        { "value": "S1", "label": "口粮" },
+        { "value": "S2", "label": "饲料粮" },
+        { "value": "S3", "label": "油脂油料" },
+        { "value": "S4", "label": "政策与储备" },
+        { "value": "S5", "label": "进出口与贸易" },
+        { "value": "S6", "label": "价格与期货" },
+        { "value": "S7", "label": "加工产业链" }
+      ]
+    },
+    "ObjectStatus": {
+      "label": "对象状态",
+      "closed": true,
+      "default": "DRAFT",
+      "values": [
+        { "value": "ACTIVE", "label": "生效" },
+        { "value": "MERGED", "label": "已合并" },
+        { "value": "RETIRED", "label": "已退场" },
+        { "value": "DRAFT", "label": "草稿" }
+      ]
+    },
+    "RetireReason": {
+      "label": "退场原因",
+      "closed": true,
+      "default": null,
+      "note": "与 status=RETIRED 配套；G2-9 要求退场必须四选一可解释。EXPIRED 不建任何替代边。",
+      "values": [
+        { "value": "SUPERSEDED", "label": "被替代", "requiresEdge": "SUPERSEDES" },
+        { "value": "AMENDED", "label": "被修订", "requiresEdge": "AMENDS" },
+        { "value": "EXTENDED", "label": "被延期", "requiresEdge": "EXTENDS" },
+        { "value": "EXPIRED", "label": "自然到期", "requiresEdge": null, "note": "无替代边，仅 validTo 已过" }
+      ]
+    },
+    "ExtractedBy": {
+      "label": "产生方式",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "RULE", "label": "规则抽取" },
+        { "value": "LLM", "label": "模型抽取" },
+        { "value": "HUMAN", "label": "人工录入" },
+        { "value": "IMPORT", "label": "批量导入" }
+      ]
+    },
+    "NamingAuthority": {
+      "label": "命名权威",
+      "closed": true,
+      "default": "LY",
+      "values": [
+        { "value": "LY", "label": "粮油自建" },
+        { "value": "AGROVOC", "label": "AGROVOC" },
+        { "value": "GB", "label": "国家标准" },
+        { "value": "ISO", "label": "ISO" },
+        { "value": "CUSTOMS", "label": "海关" }
+      ]
+    },
+    "CategoryType": {
+      "label": "品类类目类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "GRAIN_OIL", "label": "粮油根" },
+        { "value": "GRAIN", "label": "谷物" },
+        { "value": "OILSEED", "label": "油料" },
+        { "value": "OIL", "label": "油脂" },
+        { "value": "BYPRODUCT", "label": "副产物" },
+        { "value": "FOOD", "label": "食品" }
+      ]
+    },
+    "StapleType": {
+      "label": "口粮属性",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "RATION", "label": "口粮" },
+        { "value": "FEED", "label": "饲料粮" },
+        { "value": "OIL", "label": "油料" },
+        { "value": "INDUSTRIAL", "label": "工业用" },
+        { "value": "OTHER", "label": "其他用途", "explicitOnly": true, "note": "显式编码，非兜底；须在 description 写明具体用途" }
+      ]
+    },
+    "FormType": {
+      "label": "形态类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "RAW_GRAIN", "label": "原粮" },
+        { "value": "PROCESSED_GRAIN", "label": "成品粮" },
+        { "value": "CRUDE_OIL", "label": "毛油" },
+        { "value": "REFINED_OIL", "label": "精炼油" },
+        { "value": "MEAL", "label": "粕" },
+        { "value": "STARCH", "label": "淀粉" },
+        { "value": "SEED", "label": "种子" }
+      ]
+    },
+    "RegionLevel": {
+      "label": "地区层级",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "COUNTRY", "label": "国家" },
+        { "value": "PROVINCE", "label": "省级" },
+        { "value": "CITY", "label": "市级" },
+        { "value": "COUNTY", "label": "县级" },
+        { "value": "ECONOMIC_ZONE", "label": "经济区" }
+      ]
+    },
+    "MarketType": {
+      "label": "市场类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "FUTURES", "label": "期货交易所" },
+        { "value": "WHOLESALE", "label": "批发市场" },
+        { "value": "SPOT", "label": "现货市场" },
+        { "value": "AUCTION", "label": "竞价/拍卖市场" },
+        { "value": "PORT", "label": "港口市场" }
+      ]
+    },
+    "LogisticsNodeType": {
+      "label": "物流节点类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "PORT", "label": "港口" },
+        { "value": "WAREHOUSE", "label": "仓库/库点" },
+        { "value": "RAIL_HUB", "label": "铁路枢纽" },
+        { "value": "BORDER", "label": "口岸" },
+        { "value": "MILL", "label": "加工厂" }
+      ]
+    },
+    "OrgType": {
+      "label": "机构类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "GOVERNMENT", "label": "政府部门" },
+        { "value": "ASSOCIATION", "label": "协会" },
+        { "value": "RESEARCH", "label": "研究机构" },
+        { "value": "MEDIA", "label": "媒体" },
+        { "value": "INTERNATIONAL", "label": "国际组织" },
+        { "value": "EXCHANGE", "label": "交易所" }
+      ]
+    },
+    "OrgFunctionScope": {
+      "label": "机构职能",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "RESERVE", "label": "储备管理" },
+        { "value": "PRICE_MONITOR", "label": "价格监测" },
+        { "value": "TRADE_ADMIN", "label": "进出口管理" },
+        { "value": "STATISTICS", "label": "统计发布" },
+        { "value": "STANDARD", "label": "标准制定" },
+        { "value": "SUBSIDY", "label": "补贴管理" }
+      ]
+    },
+    "EnterpriseType": {
+      "label": "企业类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "STATE_RESERVE", "label": "储备企业" },
+        { "value": "PROCESSOR", "label": "加工企业" },
+        { "value": "TRADER", "label": "贸易企业" },
+        { "value": "BREEDER", "label": "养殖企业" },
+        { "value": "FEED", "label": "饲料企业" },
+        { "value": "RETAIL", "label": "零售企业" },
+        { "value": "LOGISTICS", "label": "物流企业" }
+      ]
+    },
+    "PersonRole": {
+      "label": "人物角色",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "OFFICIAL", "label": "官员" },
+        { "value": "EXPERT", "label": "专家" },
+        { "value": "ANALYST", "label": "分析师" },
+        { "value": "SPOKESPERSON", "label": "发言人" }
+      ]
+    },
+    "PeriodType": {
+      "label": "期间类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "DAY", "label": "日" },
+        { "value": "WEEK", "label": "周" },
+        { "value": "DECADE", "label": "旬" },
+        { "value": "MONTH", "label": "月" },
+        { "value": "QUARTER", "label": "季" },
+        { "value": "HALF_YEAR", "label": "半年" },
+        { "value": "YEAR", "label": "自然年" },
+        { "value": "MARKETING_YEAR", "label": "市场年度" },
+        { "value": "GRAIN_YEAR", "label": "粮食年度" },
+        { "value": "POLICY_CYCLE", "label": "政策周期" }
+      ]
+    },
+    "CalendarSchemeType": {
+      "label": "年度口径类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "CALENDAR_YEAR", "label": "自然年" },
+        { "value": "GRAIN_YEAR", "label": "粮食年度" },
+        { "value": "MARKETING_YEAR", "label": "市场年度" }
+      ]
+    },
+    "UnitDimension": {
+      "label": "单位量纲",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "MASS", "label": "质量" },
+        { "value": "VOLUME", "label": "体积" },
+        { "value": "AREA", "label": "面积" },
+        { "value": "CURRENCY", "label": "货币" },
+        { "value": "RATIO", "label": "比例" },
+        { "value": "PRICE", "label": "价格" }
+      ]
+    },
+    "IndicatorType": {
+      "label": "指标类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "PRICE", "label": "价格" },
+        { "value": "VOLUME", "label": "数量" },
+        { "value": "AREA", "label": "面积" },
+        { "value": "RATIO", "label": "比率" },
+        { "value": "INDEX", "label": "指数" },
+        { "value": "STOCK", "label": "库存" },
+        { "value": "CAPACITY", "label": "产能" }
+      ]
+    },
+    "IndicatorDirection": {
+      "label": "指标方向语义",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "HIGHER_IS_TIGHTER", "label": "越高越紧" },
+        { "value": "HIGHER_IS_LOOSER", "label": "越高越松" },
+        { "value": "HIGHER_IS_BULLISH", "label": "越高越利多" },
+        { "value": "HIGHER_IS_BEARISH", "label": "越高越利空" }
+      ]
+    },
+    "PriceBasis": {
+      "label": "价格口径",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "EX_FARM", "label": "收购价" },
+        { "value": "WHOLESALE", "label": "批发价" },
+        { "value": "RETAIL", "label": "零售价" },
+        { "value": "FOB", "label": "离岸价" },
+        { "value": "CIF", "label": "到岸价" },
+        { "value": "DELIVERED", "label": "到厂价" },
+        { "value": "FUTURES", "label": "期货价" }
+      ]
+    },
+    "TaxBasis": {
+      "label": "税基",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "INCLUSIVE", "label": "含税" },
+        { "value": "EXCLUSIVE", "label": "不含税" }
+      ]
+    },
+    "QualityFlag": {
+      "label": "数据点质量标记",
+      "closed": true,
+      "default": "NORMAL",
+      "values": [
+        { "value": "NORMAL", "label": "正常" },
+        { "value": "ESTIMATED", "label": "估算" },
+        { "value": "PROVISIONAL", "label": "初步值" },
+        { "value": "REVISED", "label": "已修订" },
+        { "value": "MISSING", "label": "缺失" }
+      ]
+    },
+    "StatisticalSourceType": {
+      "label": "统计来源类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "CUSTOMS", "label": "海关" },
+        { "value": "NBS", "label": "国家统计局" },
+        { "value": "MARA", "label": "农业农村部" },
+        { "value": "NDRC", "label": "国家发展改革委" },
+        { "value": "USDA", "label": "USDA" },
+        { "value": "FAO", "label": "FAO" },
+        { "value": "EXCHANGE", "label": "交易所" },
+        { "value": "COMPANY", "label": "企业" },
+        { "value": "OTHER", "label": "其他来源", "explicitOnly": true, "note": "显式编码；须在 description 写明来源全称" }
+      ]
+    },
+    "RevisionPolicy": {
+      "label": "修订政策",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "NO_REVISION", "label": "不修订" },
+        { "value": "PERIODIC", "label": "定期修订" },
+        { "value": "AD_HOC", "label": "不定期修订" }
+      ]
+    },
+    "EventCategory": {
+      "label": "事件大类",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "POLICY", "label": "政策" },
+        { "value": "MARKET", "label": "市场" },
+        { "value": "SUPPLY", "label": "供给" },
+        { "value": "DEMAND", "label": "需求" },
+        { "value": "TRADE", "label": "贸易" },
+        { "value": "WEATHER", "label": "天气" },
+        { "value": "DISASTER", "label": "灾害" },
+        { "value": "CORPORATE", "label": "企业" }
+      ]
+    },
+    "ImpactDirection": {
+      "label": "影响方向",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "POSITIVE", "label": "利多/正向" },
+        { "value": "NEGATIVE", "label": "利空/负向" },
+        { "value": "UNCERTAIN", "label": "不确定" }
+      ]
+    },
+    "Severity": {
+      "label": "重要度",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "HIGH", "label": "高" },
+        { "value": "MEDIUM", "label": "中" },
+        { "value": "LOW", "label": "低" }
+      ]
+    },
+    "EventScale": {
+      "label": "事件范围",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "NATIONAL", "label": "全国" },
+        { "value": "REGIONAL", "label": "区域" },
+        { "value": "LOCAL", "label": "地方" }
+      ]
+    },
+    "DocumentType": {
+      "label": "文档类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "POLICY_DOC", "label": "政策文件" },
+        { "value": "REPORT", "label": "研究报告" },
+        { "value": "NEWS", "label": "新闻" },
+        { "value": "STATISTIC_BULLETIN", "label": "统计公报" },
+        { "value": "ANNOUNCEMENT", "label": "公告" },
+        { "value": "LAW", "label": "法律" },
+        { "value": "STANDARD", "label": "标准" }
+      ]
+    },
+    "AuthorityLevel": {
+      "label": "发文层级",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "NATIONAL_LAW", "label": "国家法律" },
+        { "value": "STATE_COUNCIL", "label": "国务院" },
+        { "value": "MINISTRY", "label": "部委" },
+        { "value": "PROVINCIAL", "label": "省级" },
+        { "value": "MUNICIPAL", "label": "市级" },
+        { "value": "OTHER", "label": "其他层级", "explicitOnly": true, "note": "显式编码；须在 description 写明发文单位" }
+      ]
+    },
+    "SegmentType": {
+      "label": "段落类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "TITLE", "label": "标题" },
+        { "value": "BODY", "label": "正文" },
+        { "value": "TABLE", "label": "表格" },
+        { "value": "FOOTNOTE", "label": "脚注" },
+        { "value": "ANNEX", "label": "附件" },
+        { "value": "HEADER", "label": "页眉" }
+      ]
+    },
+    "EvidenceType": {
+      "label": "证据类型",
+      "closed": true,
+      "default": "DIRECT",
+      "values": [
+        { "value": "DIRECT", "label": "直接陈述" },
+        { "value": "DERIVED", "label": "推算" },
+        { "value": "CITED", "label": "转引" },
+        { "value": "HUMAN_VERIFIED", "label": "人工核验" }
+      ]
+    },
+    "DimensionCode": {
+      "label": "维度码",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "COMMODITY", "label": "品种/形态" },
+        { "value": "GEOGRAPHY", "label": "地区" },
+        { "value": "ACTOR", "label": "主体" },
+        { "value": "CHANNEL", "label": "市场渠道" },
+        { "value": "TIME_WINDOW", "label": "适用时间窗" },
+        { "value": "UNIT_BASIS", "label": "单位与价格口径" },
+        { "value": "POLICY_TOOL", "label": "政策工具" },
+        { "value": "TAX_BASIS", "label": "税基" },
+        { "value": "QUALITY_GRADE", "label": "质量等级" },
+        { "value": "TRADE_FLOW", "label": "贸易流向" }
+      ]
+    },
+    "ScopeType": {
+      "label": "范围类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "POLICY_SCOPE", "label": "政策范围" },
+        { "value": "SERIES_SCOPE", "label": "序列范围" },
+        { "value": "EVENT_SCOPE", "label": "事件范围" },
+        { "value": "ASSERTION_SCOPE", "label": "断言范围" }
+      ]
+    },
+    "FactorCategory": {
+      "label": "因子一级分类",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "SUPPLY", "label": "供给" },
+        { "value": "DEMAND", "label": "需求" },
+        { "value": "COST", "label": "成本" },
+        { "value": "POLICY", "label": "政策" },
+        { "value": "TRADE", "label": "贸易" },
+        { "value": "FINANCE", "label": "金融" },
+        { "value": "RELATED", "label": "关联品" }
+      ]
+    },
+    "FactorDirection": {
+      "label": "因子默认方向",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "UP", "label": "推涨" },
+        { "value": "DOWN", "label": "压低" },
+        { "value": "NEUTRAL", "label": "中性" },
+        { "value": "UNCERTAIN", "label": "不确定" }
+      ]
+    },
+    "FactorProposer": {
+      "label": "因子提案方",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "KERNEL", "label": "内核组" },
+        { "value": "POLICY_PACK", "label": "政策包" },
+        { "value": "MARKET_PACK", "label": "市场包" }
+      ]
+    },
+    "AssertionType": {
+      "label": "断言类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "FORECAST", "label": "预测" },
+        { "value": "JUDGEMENT", "label": "判断" },
+        { "value": "ESTIMATE", "label": "估计" },
+        { "value": "CAUSAL", "label": "归因" },
+        { "value": "POLICY_INTENT", "label": "政策意图" }
+      ]
+    },
+    "AssertionPredicate": {
+      "label": "断言谓词",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "WILL_RISE", "label": "将上涨" },
+        { "value": "WILL_FALL", "label": "将下跌" },
+        { "value": "BULLISH", "label": "看多" },
+        { "value": "BEARISH", "label": "看空" },
+        { "value": "CAUSES", "label": "导致" },
+        { "value": "SUPPORTS", "label": "支撑" },
+        { "value": "WEAKENS", "label": "削弱" },
+        { "value": "UNCHANGED", "label": "持平" }
+      ]
+    },
+    "AssertedByType": {
+      "label": "断言方类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "ORGANIZATION", "label": "机构" },
+        { "value": "PERSON", "label": "人物" }
+      ]
+    },
+    "Horizon": {
+      "label": "断言时间跨度",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "SHORT", "label": "短期（≤1季）" },
+        { "value": "MEDIUM", "label": "中期（≤1年）" },
+        { "value": "LONG", "label": "长期（>1年）" }
+      ]
+    },
+    "StanceStrength": {
+      "label": "原话强度",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "STRONG", "label": "强" },
+        { "value": "MODERATE", "label": "中" },
+        { "value": "WEAK", "label": "弱" }
+      ]
+    },
+    "ProcessType": {
+      "label": "加工工艺类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "CRUSHING", "label": "压榨" },
+        { "value": "MILLING", "label": "碾磨/制粉" },
+        { "value": "REFINING", "label": "精炼" },
+        { "value": "FEED_MIX", "label": "饲料配制" },
+        { "value": "STARCH", "label": "淀粉加工" }
+      ]
+    },
+    "SubstitutionDirection": {
+      "label": "替代方向",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "ONE_WAY", "label": "单向" },
+        { "value": "TWO_WAY", "label": "双向" }
+      ]
+    },
+    "TransmissionType": {
+      "label": "传导类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "COST_PUSH", "label": "成本推动" },
+        { "value": "DEMAND_PULL", "label": "需求拉动" },
+        { "value": "ARBITRAGE", "label": "套利" },
+        { "value": "POLICY", "label": "政策传导" }
+      ]
+    },
+    "ImpactMagnitude": {
+      "label": "影响强度",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "STRONG", "label": "强" },
+        { "value": "MODERATE", "label": "中" },
+        { "value": "WEAK", "label": "弱" }
+      ]
+    },
+    "ImpactSourceType": {
+      "label": "影响来源类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "EVENT", "label": "事件" },
+        { "value": "POLICY", "label": "政策文件" }
+      ]
+    },
+    "ImpactTargetType": {
+      "label": "影响对象类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "COMMODITY", "label": "品种" },
+        { "value": "FACTOR", "label": "因子" },
+        { "value": "SERIES", "label": "指标序列" }
+      ]
+    },
+    "TradeFlow": {
+      "label": "贸易流向",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "IMPORT", "label": "进口" },
+        { "value": "EXPORT", "label": "出口" },
+        { "value": "DOMESTIC", "label": "内贸" },
+        { "value": "ENTREPOT", "label": "转口" }
+      ]
+    },
+    "ObjectTypeName": {
+      "label": "对象类型名",
+      "closed": true,
+      "default": null,
+      "note": "共 38 个：29 个内核类型为 Stage 0 启用集；9 个政策包条款类型由内核预先登记，避免包越权改枚举（R4）。",
+      "values": [
+        { "value": "CommodityCategory", "label": "品类类目", "scope": "kernel" },
+        { "value": "Commodity", "label": "品种", "scope": "kernel" },
+        { "value": "CommodityForm", "label": "形态规格", "scope": "kernel" },
+        { "value": "Region", "label": "地区", "scope": "kernel" },
+        { "value": "MarketPlace", "label": "市场", "scope": "kernel" },
+        { "value": "LogisticsNode", "label": "物流节点", "scope": "kernel" },
+        { "value": "Organization", "label": "机构", "scope": "kernel" },
+        { "value": "Enterprise", "label": "企业", "scope": "kernel" },
+        { "value": "Person", "label": "人物", "scope": "kernel" },
+        { "value": "TimePeriod", "label": "时间期间", "scope": "kernel" },
+        { "value": "CalendarScheme", "label": "年度口径", "scope": "kernel" },
+        { "value": "UnitOfMeasure", "label": "计量单位", "scope": "kernel" },
+        { "value": "Indicator", "label": "指标定义", "scope": "kernel" },
+        { "value": "IndicatorSeries", "label": "指标序列", "scope": "kernel" },
+        { "value": "DataPoint", "label": "数据点", "scope": "kernel" },
+        { "value": "StatisticalSource", "label": "统计来源", "scope": "kernel" },
+        { "value": "Event", "label": "事件", "scope": "kernel" },
+        { "value": "EventType", "label": "事件类型", "scope": "kernel" },
+        { "value": "Document", "label": "文档", "scope": "kernel" },
+        { "value": "DocumentSegment", "label": "文档段落", "scope": "kernel" },
+        { "value": "Evidence", "label": "证据", "scope": "kernel" },
+        { "value": "Dimension", "label": "维度", "scope": "kernel" },
+        { "value": "Scope", "label": "范围", "scope": "kernel" },
+        { "value": "Factor", "label": "因子", "scope": "kernel" },
+        { "value": "Assertion", "label": "断言", "scope": "kernel" },
+        { "value": "TransformationProcess", "label": "加工转化", "scope": "kernel" },
+        { "value": "SubstitutionRelation", "label": "替代关系", "scope": "kernel" },
+        { "value": "PriceTransmissionLink", "label": "价格传导", "scope": "kernel" },
+        { "value": "ImpactLink", "label": "政策影响", "scope": "kernel" },
+        { "value": "PolicyClause", "label": "政策条款", "scope": "policy_pack" },
+        { "value": "NormativeStatement", "label": "规范陈述", "scope": "policy_pack" },
+        { "value": "ClauseCondition", "label": "前提条件", "scope": "policy_pack" },
+        { "value": "ClauseException", "label": "例外", "scope": "policy_pack" },
+        { "value": "ClauseConsequence", "label": "后果", "scope": "policy_pack" },
+        { "value": "RuleParameter", "label": "参数", "scope": "policy_pack" },
+        { "value": "ClauseRelation", "label": "条款间关系", "scope": "policy_pack" },
+        { "value": "CompiledRule", "label": "已编译规则", "scope": "policy_pack" },
+        { "value": "RuleTestCase", "label": "规则测试情形", "scope": "policy_pack" }
+      ]
+    },
+    "ClauseLevel": {
+      "label": "条款层级",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "CHAPTER", "label": "章" },
+        { "value": "SECTION", "label": "节" },
+        { "value": "ARTICLE", "label": "条" },
+        { "value": "PARAGRAPH", "label": "款" },
+        { "value": "ITEM", "label": "项" }
+      ]
+    },
+    "ClauseType": {
+      "label": "条款类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "NORMATIVE", "label": "规范性" },
+        { "value": "DEFINITIONAL", "label": "定义性" },
+        { "value": "PROCEDURAL", "label": "程序性" },
+        { "value": "OBJECTIVE", "label": "目标性" },
+        { "value": "TRANSITIONAL", "label": "过渡与附则" }
+      ]
+    },
+    "StatementType": {
+      "label": "规范陈述类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "OBLIGATION", "label": "义务" },
+        { "value": "PROHIBITION", "label": "禁止" },
+        { "value": "PERMISSION", "label": "许可" },
+        { "value": "AUTHORIZATION", "label": "授权" },
+        { "value": "DEFINITION", "label": "定义" },
+        { "value": "TARGET", "label": "目标" }
+      ]
+    },
+    "ConditionOperator": {
+      "label": "条件运算符",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "AND", "label": "与" },
+        { "value": "OR", "label": "或" },
+        { "value": "NOT", "label": "非" },
+        { "value": "LEAF", "label": "叶子" }
+      ]
+    },
+    "Comparator": {
+      "label": "比较符",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": ">", "label": "大于" },
+        { "value": ">=", "label": "大于等于" },
+        { "value": "=", "label": "等于" },
+        { "value": "<", "label": "小于" },
+        { "value": "<=", "label": "小于等于" },
+        { "value": "IN", "label": "属于集合" },
+        { "value": "BETWEEN", "label": "区间" },
+        { "value": "EXISTS", "label": "存在" }
+      ]
+    },
+    "FactSource": {
+      "label": "事实来源",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "USER_INPUT", "label": "情形输入" },
+        { "value": "GRAPH_PROPERTY", "label": "图谱属性" },
+        { "value": "TIME_SERIES", "label": "时序值" }
+      ]
+    },
+    "ExceptionType": {
+      "label": "例外类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "SCOPE_EXCLUSION", "label": "范围排除" },
+        { "value": "PRIORITY_OVERRIDE", "label": "被更高优先级规则覆盖" },
+        { "value": "TEMPORAL", "label": "时间性例外" },
+        { "value": "PROCEDURAL", "label": "程序性例外" }
+      ]
+    },
+    "ConsequenceType": {
+      "label": "后果类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "MEASURE", "label": "措施" },
+        { "value": "SUBSIDY", "label": "补贴" },
+        { "value": "PENALTY", "label": "处罚" },
+        { "value": "TRIGGER_TOOL", "label": "启动政策工具" },
+        { "value": "PROCEDURE", "label": "程序后果" }
+      ]
+    },
+    "ClauseRelationType": {
+      "label": "条款间关系类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "CITES", "label": "引用" },
+        { "value": "EXCEPTED_BY", "label": "例外于" },
+        { "value": "PREVAILS_OVER", "label": "优先于" },
+        { "value": "AUTHORIZES", "label": "授权下位" },
+        { "value": "AMENDS", "label": "修订" },
+        { "value": "SUPERSEDES", "label": "取代" },
+        { "value": "REPEALS", "label": "废止" }
+      ]
+    },
+    "PriorityBasis": {
+      "label": "优先依据",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "UPPER_LAW", "label": "上位法" },
+        { "value": "NEWER", "label": "新规" },
+        { "value": "SPECIAL", "label": "特别规定" }
+      ]
+    },
+    "ConfirmationStatus": {
+      "label": "陈述确认状态",
+      "closed": true,
+      "default": "DRAFT",
+      "values": [
+        { "value": "DRAFT", "label": "草稿" },
+        { "value": "REVIEWED", "label": "已复核" },
+        { "value": "CONFIRMED", "label": "已确认" }
+      ]
+    },
+    "CompiledRuleStatus": {
+      "label": "已编译规则状态",
+      "closed": true,
+      "default": "DRAFT",
+      "values": [
+        { "value": "DRAFT", "label": "草稿" },
+        { "value": "BACKTRANSLATED", "label": "已回译" },
+        { "value": "TESTED", "label": "已测例" },
+        { "value": "CONFIRMED", "label": "已确认" }
+      ]
+    },
+    "JudgeOutcome": {
+      "label": "三态结论",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "APPLICABLE", "label": "适用" },
+        { "value": "NOT_APPLICABLE", "label": "不适用" },
+        { "value": "UNABLE", "label": "无法判定" }
+      ]
+    },
+    "ActivationStatus": {
+      "label": "官方启动状态",
+      "closed": true,
+      "default": "UNKNOWN",
+      "note": "默认必须为 UNKNOWN，不得默认 TRUE（方案定稿 §6）",
+      "values": [
+        { "value": "TRUE", "label": "已官方启动" },
+        { "value": "FALSE", "label": "已明确不启动" },
+        { "value": "UNKNOWN", "label": "无公告证据" }
+      ]
+    },
+    "GateSeverity": {
+      "label": "校验严重度",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "ERROR", "label": "错误（拒绝入库）" },
+        { "value": "WARN", "label": "告警（记录并继续）" }
+      ]
+    },
+    "TermType": {
+      "label": "术语类型",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "POLICY_TOOL", "label": "政策工具" },
+        { "value": "POLICY_TERM", "label": "政策一般术语" },
+        { "value": "MARKET_TERM", "label": "市场术语" },
+        { "value": "UNIT_TERM", "label": "计量与口径术语" },
+        { "value": "ORG_ALIAS", "label": "机构别名" },
+        { "value": "COMMODITY_ALIAS", "label": "品种别名" },
+        { "value": "PROCESS_TERM", "label": "加工与品质术语" },
+        { "value": "REGULATION_TERM", "label": "法规术语" }
+      ]
+    },
+    "AgrovocMatchType": {
+      "label": "外部概念匹配类型（SKOS）",
+      "closed": true,
+      "default": null,
+      "values": [
+        { "value": "exactMatch", "label": "完全等价（可自动应用）" },
+        { "value": "closeMatch", "label": "高度相似（可自动应用）" },
+        { "value": "broadMatch", "label": "本地方概念为其子类（需人工复核）" },
+        { "value": "narrowMatch", "label": "本地方概念为其上位（需人工复核）" },
+        { "value": "relatedMatch", "label": "仅相关，不可等价替换（需人工复核）" }
+      ]
+    }
+  }
+}

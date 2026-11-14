@@ -1,0 +1,409 @@
+name: grain-oil-kg
+
+x-api-service: &api-service
+  build:
+    context: ..
+    dockerfile: Dockerfile
+  image: grain-oil-kg-api:local
+  restart: unless-stopped
+  expose:
+    - "8000"
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+    interval: 15s
+    timeout: 5s
+    retries: 12
+    start_period: 120s
+
+x-api-environment: &api-environment
+  TZ: ${TZ:-Asia/Shanghai}
+  KG_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-grainoil}:${POSTGRES_PASSWORD:?请在 deploy/.env 中设置 POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-grainoil}
+  KG_JWT_SECRET: ${KG_JWT_SECRET:?请在 deploy/.env 中设置 KG_JWT_SECRET}
+  KG_GRAPH_BACKEND: nebula
+  KG_NEBULA_HOSTS: graphd0:9669,graphd1:9669
+  KG_NEBULA_USER: ${KG_NEBULA_USER:-root}
+  KG_NEBULA_PASSWORD: ${KG_NEBULA_PASSWORD:?请在 deploy/.env 中设置 KG_NEBULA_PASSWORD}
+  KG_NEBULA_SPACE: ${KG_NEBULA_SPACE:-grain_oil_kg}
+  KG_NEBULA_REPLICA_FACTOR: "3"
+  KG_ELASTICSEARCH_URL: http://elastic:${ELASTIC_PASSWORD:?请在 deploy/.env 中设置 ELASTIC_PASSWORD}@elasticsearch:9200
+  KG_MINIO_ENDPOINT: minio:9000
+  KG_MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-grainoil}
+  KG_MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?请在 deploy/.env 中设置 MINIO_ROOT_PASSWORD}
+  KG_MINIO_BUCKET: ${KG_MINIO_BUCKET:-grain-oil-docs}
+  KG_CORS_ORIGINS: ${KG_CORS_ORIGINS:-http://localhost:8991,http://127.0.0.1:8991}
+
+x-api-dependencies: &api-dependencies
+  postgres:
+    condition: service_healthy
+  elasticsearch:
+    condition: service_healthy
+  minio:
+    condition: service_healthy
+  nebula-init:
+    condition: service_completed_successfully
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      POSTGRES_DB: ${POSTGRES_DB:-grainoil}
+      POSTGRES_USER: ${POSTGRES_USER:-grainoil}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请在 deploy/.env 中设置 POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.5
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      discovery.type: single-node
+      xpack.security.enabled: "true"
+      xpack.security.http.ssl.enabled: "false"
+      xpack.security.transport.ssl.enabled: "false"
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:?请在 deploy/.env 中设置 ELASTIC_PASSWORD}
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS:--Xms1g -Xmx1g}
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -u \"elastic:$${ELASTIC_PASSWORD}\" \"http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s\" >/dev/null"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
+
+  minio:
+    build:
+      context: ..
+      dockerfile: deploy/minio.Dockerfile
+    image: grain-oil-minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-grainoil}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?请在 deploy/.env 中设置 MINIO_ROOT_PASSWORD}
+    ports:
+      - "${MINIO_PORT:-19000}:9000"
+      - "${MINIO_CONSOLE_PORT:-19001}:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9000/minio/health/live || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  metad0:
+    image: vesoft/nebula-metad:v3.8.0
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad0
+      - --ws_ip=metad0
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-metad0-data:/data/meta
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad0:19559/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  metad1:
+    image: vesoft/nebula-metad:v3.8.0
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad1
+      - --ws_ip=metad1
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-metad1-data:/data/meta
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad1:19559/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  metad2:
+    image: vesoft/nebula-metad:v3.8.0
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad2
+      - --ws_ip=metad2
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-metad2-data:/data/meta
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad2:19559/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  storaged0:
+    image: vesoft/nebula-storaged:v3.8.0
+    restart: unless-stopped
+    depends_on:
+      metad0:
+        condition: service_healthy
+      metad1:
+        condition: service_healthy
+      metad2:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged0
+      - --ws_ip=storaged0
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-storaged0-data:/data/storage
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged0:19779/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  storaged1:
+    image: vesoft/nebula-storaged:v3.8.0
+    restart: unless-stopped
+    depends_on:
+      metad0:
+        condition: service_healthy
+      metad1:
+        condition: service_healthy
+      metad2:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged1
+      - --ws_ip=storaged1
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-storaged1-data:/data/storage
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged1:19779/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  storaged2:
+    image: vesoft/nebula-storaged:v3.8.0
+    restart: unless-stopped
+    depends_on:
+      metad0:
+        condition: service_healthy
+      metad1:
+        condition: service_healthy
+      metad2:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged2
+      - --ws_ip=storaged2
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    volumes:
+      - nebula-storaged2-data:/data/storage
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged2:19779/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  graphd0:
+    image: vesoft/nebula-graphd:v3.8.0
+    restart: unless-stopped
+    depends_on:
+      metad0:
+        condition: service_healthy
+      metad1:
+        condition: service_healthy
+      metad2:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=graphd0
+      - --ws_ip=graphd0
+      - --port=9669
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --enable_authorize=true
+      - --v=0
+      - --minloglevel=0
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://graphd0:19669/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  graphd1:
+    image: vesoft/nebula-graphd:v3.8.0
+    restart: unless-stopped
+    depends_on:
+      metad0:
+        condition: service_healthy
+      metad1:
+        condition: service_healthy
+      metad2:
+        condition: service_healthy
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=graphd1
+      - --ws_ip=graphd1
+      - --port=9669
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --enable_authorize=true
+      - --v=0
+      - --minloglevel=0
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://graphd1:19669/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  nebula-init:
+    image: vesoft/nebula-console:v3.8.0
+    restart: "no"
+    depends_on:
+      graphd0:
+        condition: service_healthy
+      graphd1:
+        condition: service_healthy
+    environment:
+      NEBULA_USER: ${KG_NEBULA_USER:-root}
+      NEBULA_PASSWORD: ${KG_NEBULA_PASSWORD:?请在 deploy/.env 中设置 KG_NEBULA_PASSWORD}
+    entrypoint: ["sh", "-ec"]
+    command:
+      - |
+        if [ "$${NEBULA_USER}" != "root" ]; then
+          echo "NebulaGraph 自动初始化要求 KG_NEBULA_USER=root" >&2
+          exit 1
+        fi
+        attempt=0
+        while [ "$${attempt}" -lt 60 ]; do
+          if nebula-console -addr graphd0 -port 9669 -u root -p "$${NEBULA_PASSWORD}" \
+            -e 'ADD HOSTS "storaged0":9779,"storaged1":9779,"storaged2":9779'; then
+            sleep 5
+            exit 0
+          fi
+          nebula-console -addr graphd0 -port 9669 -u root -p nebula \
+            -e "ALTER USER root WITH PASSWORD '$${NEBULA_PASSWORD}'" || true
+          attempt=$$((attempt + 1))
+          sleep 2
+        done
+        echo "NebulaGraph 初始化失败：无法认证或注册 storaged" >&2
+        exit 1
+
+  api-a:
+    <<: *api-service
+    depends_on: *api-dependencies
+    environment:
+      <<: *api-environment
+      KG_AUTO_SEED: "true"
+      KG_SCHEDULER_ENABLED: "true"
+
+  api-b:
+    <<: *api-service
+    depends_on:
+      <<: *api-dependencies
+      api-a:
+        condition: service_healthy
+    environment:
+      <<: *api-environment
+      KG_AUTO_SEED: "false"
+      KG_SCHEDULER_ENABLED: "false"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      api-a:
+        condition: service_healthy
+      api-b:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-8991}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres-data:
+  elasticsearch-data:
+  minio-data:
+  nebula-metad0-data:
+  nebula-metad1-data:
+  nebula-metad2-data:
+  nebula-storaged0-data:
+  nebula-storaged1-data:
+  nebula-storaged2-data:

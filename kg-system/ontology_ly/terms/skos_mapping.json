@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "0.1.0",
+  "stage": "STAGE0",
+  "frozen": true,
+  "note": "上位层映射与对外交换的边界规定。运行时不使用 OWL/RDF；仅在下列两种场景导出只读快照。SKOS 只用于概念层对齐，不用于实例层。",
+  "skos": {
+    "purpose": "与 AGROVOC、中国农业叙词表做概念对齐，提升检索召回与冷启动实体链接。",
+    "allowedMatchTypes": [
+      { "code": "exactMatch", "meaning": "两个概念内涵与外延一致", "confidenceFloor": 0.95, "canAutoApply": true },
+      { "code": "closeMatch", "meaning": "高度相似但不完全等价", "confidenceFloor": 0.80, "canAutoApply": true },
+      { "code": "broadMatch", "meaning": "本地方概念是上位词的子类", "confidenceFloor": 0.75, "canAutoApply": false },
+      { "code": "narrowMatch", "meaning": "上位词是本地方概念的子类", "confidenceFloor": 0.75, "canAutoApply": false },
+      { "code": "relatedMatch", "meaning": "仅相关，不可用于等价替换", "confidenceFloor": 0.60, "canAutoApply": false }
+    ],
+    "mappingBoundary": {
+      "allowedSourceTypes": ["CommodityCategory", "Term"],
+      "forbiddenSourceTypes": ["Commodity", "CommodityForm", "Indicator", "IndicatorSeries", "Enterprise", "Event", "Assertion", "PolicyClause"],
+      "reason": "AGROVOC 是概念表（concept scheme），不是品种名录。把 Commodity 或 Indicator 映射进 AGROVOC 会制造「品种=概念」「指标=概念」的错误等价，导致检索时把上位词下所有子概念误召回。",
+      "instanceRule": "实例层与外部词表的关联只能通过 evidence 或 organization 别名表达，不得建立 Match 边。"
+    },
+    "fieldContract": {
+      "agrovocUri": "string, 外部概念 URI，仅 CommodityCategory 与 Term 可有值",
+      "agrovocMatchType": "enum, exactMatch / closeMatch / broadMatch / narrowMatch / relatedMatch",
+      "agrovocLabel": "string, 外部概念的中文或英文标签，取回时快照留存，便于比对",
+      "agrovocFetchedAt": "datetime, 取回时间；外部词表更新后须复核"
+    },
+    "reviewPolicy": {
+      "broadOrNarrowRequiresHuman": true,
+      "maxAutoMatchesPerRun": 200,
+      "mustKeepLocalLabel": true,
+      "note": "本地标签不得被外部标签覆盖；外部标签只作为 alias 追加。"
+    }
+  },
+  "owlExport": {
+    "allowed": true,
+    "triggerConditions": [
+      { "code": "EXT-EXCHANGE", "when": "对外机构要求以 RDF/OWL 格式交换本体结构", "output": "TBOX_ONLY", "readOnly": true },
+      { "code": "EXT-ALIGN-CHECK", "when": "与 AGROVOC 做结构对齐验证，需比对类层级与属性定义", "output": "TBOX_PLUS_SKOS", "readOnly": true }
+    ],
+    "forbiddenScenarios": [
+      "用 OWL 导出物回灌系统",
+      "把 ABOX（实例数据）作为交换格式",
+      "在导出物上做推理并把结论写回"
+    ],
+    "exportContract": {
+      "format": "Turtle (.ttl) 为主，需要时同时产 SHACL (.shacl.ttl) 形状",
+      "scope": "仅导出类型、属性、枚举、关系约束；不导出实例",
+      "naming": "类名使用本方案 typeName，IRI 前缀 ly:",
+      "versionStamp": "导出文件头必须写 ontologyVersion 与导出的 sourceBaseline",
+      "snapshotOnly": true
+    },
+    "shaclUse": {
+      "allowed": true,
+      "purpose": "仅用于对外交换时的结构校验，不作为本系统的运行时校验机制",
+      "runtimeGate": "本系统运行时校验一律走 gates/rules.json 的五道门，不走 SHACL"
+    }
+  }
+}

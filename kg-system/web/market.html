@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta name="description" content="粮油市场行情工作台：价格序列、事件时间线、多空断言与价格传导的只读研判视图。">
+  <title>粮油市场行情工作台</title>
+  <style>
+    :root{--paper:#f4f3ec;--surface:#fffef9;--ink:#173c34;--muted:#68766d;--line:#dce1d6;--green:#1c5b48;--green2:#2e7660;--gold:#c28c32;--gold-soft:#f3e8ce;--red:#a34b3f;--blue:#426c79;--shadow:0 18px 45px rgba(27,54,43,.07);--serif:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,serif;--sans:"Avenir Next","Microsoft YaHei UI","PingFang SC",sans-serif}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
+    .topbar{height:72px;padding:0 34px;display:flex;align-items:center;gap:22px;border-bottom:1px solid rgba(28,91,72,.12);background:rgba(244,243,236,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+    .back{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:8px 12px;border-radius:6px;background:var(--surface);transition:.2s}.back:hover{border-color:var(--green);color:var(--green)}
+    .brandline{display:flex;align-items:baseline;gap:12px}.brandline b{font-family:var(--serif);font-size:19px;letter-spacing:.08em}.brandline span{font-size:10px;letter-spacing:.24em;color:var(--gold)}
+    .live{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.live:before{content:"";width:7px;height:7px;border-radius:50%;background:#5b9870;box-shadow:0 0 0 4px rgba(91,152,112,.13)}
+    main{max-width:1560px;margin:auto;padding:32px 34px 56px}
+    .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:22px}.eyebrow{font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-bottom:9px}.page-head h1{font-family:var(--serif);font-size:29px;font-weight:600;letter-spacing:.05em;margin:0 0 8px}.page-head p{margin:0;color:var(--muted);line-height:1.8;max-width:780px}
+    .disclaimer{font-size:11px;color:#8a6a2a;background:var(--gold-soft);border:1px solid #e8d5aa;padding:8px 12px;border-radius:6px;white-space:nowrap}
+    .stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{background:var(--surface);border:1px solid var(--line);padding:17px 18px;border-radius:10px}.stat-label{color:var(--muted);font-size:11px}.stat-value{font-family:var(--serif);font-size:27px;margin:7px 0 2px;font-variant-numeric:tabular-nums}.stat-note{font-size:10px;color:#8b928b}
+    .layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;align-items:start;margin-bottom:16px}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-head{min-height:56px;padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.panel-head h2{font-family:var(--serif);font-size:17px;margin:0;font-weight:600}.panel-head small{color:var(--muted);font-size:11px}
+    .series-list{display:grid;gap:8px;padding:12px}.series-card{border:1px solid var(--line);background:#fafaf5;border-radius:9px;padding:13px 14px;text-align:left;width:100%;transition:.18s}.series-card:hover{border-color:var(--green);background:#f4f8f2}.series-card.active{border-color:var(--green);background:#eef4ec;box-shadow:inset 3px 0 0 var(--green)}.series-card b{display:block;font-family:var(--serif);font-size:14px;line-height:1.5}.series-card .sub{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px;font-size:10px;color:var(--muted)}.series-card .value{margin-top:9px;display:flex;align-items:baseline;gap:7px}.series-card .value strong{font-family:var(--serif);font-size:22px;font-weight:600}.series-card .value span{font-size:10px;color:var(--muted)}
+    .tag{display:inline-flex;align-items:center;padding:3px 7px;border-radius:4px;background:#e9f2e9;color:#356442;font-size:10px;letter-spacing:.02em}.tag.gold{background:var(--gold-soft);color:#77591e}.tag.blue{background:#e8eff2;color:#345a66}.tag.red{background:#f4e8df;color:var(--red)}.tag.gray{background:#f0f1e8;color:#68766d}
+    .detail-body{padding:18px}.detail-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.detail-title h3{font-family:var(--serif);font-size:22px;margin:0 0 6px}.detail-title p{margin:0;color:var(--muted);font-size:12px}.detail-tags{display:flex;gap:6px;flex-wrap:wrap}
+    .chart-wrap{margin:18px 0 8px;border:1px solid var(--line);border-radius:9px;background:#fcfcf7;padding:10px}.chart-wrap svg{display:block;width:100%;height:auto}.axis{stroke:#dce1d6;stroke-width:1}.axis-label{fill:#88918a;font-size:10px}.line-path{fill:none;stroke:var(--green);stroke-width:2}.line-dot{fill:var(--surface);stroke:var(--green);stroke-width:1.6}.line-dot:hover{fill:var(--gold);stroke:var(--gold)}
+    .mini-table{width:100%;border-collapse:collapse;margin-top:6px}.mini-table th,.mini-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:11px}.mini-table th{color:var(--muted);font-weight:500;background:#f7f7f0}.mini-table td.num{font-variant-numeric:tabular-nums}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.sub-panel{border:1px solid var(--line);border-radius:9px;overflow:hidden}.sub-head{padding:10px 12px;background:#f7f7f0;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}.sub-body{max-height:260px;overflow:auto;padding:10px 12px}
+    .event-item{border-left:2px solid var(--gold);padding:6px 0 10px 11px;margin-bottom:8px}.event-item:last-child{margin-bottom:0}.event-item b{font-family:var(--serif);font-size:12px;line-height:1.5}.event-item p{margin:4px 0 0;font-size:10px;color:var(--muted);line-height:1.7}
+    .assert-item{border-left:2px solid var(--green);padding:5px 0 9px 10px;margin-bottom:8px;font-size:11px;line-height:1.7}.assert-item:last-child{margin-bottom:0}.assert-item .who{color:var(--muted);font-size:10px}.assert-item .quote{font-family:var(--serif);color:#44544b;margin-top:3px}
+    .empty-note{color:var(--muted);font-size:12px;line-height:1.8;padding:8px 0}
+    .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filters input,.filters select{height:34px;border:1px solid var(--line);background:#fafaf5;border-radius:6px;padding:0 9px;color:var(--ink);outline:none;font-size:12px}.filters input:focus,.filters select:focus{border-color:var(--green)}
+    .timeline{padding:4px 18px 18px}.timeline-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:15px 0;border-bottom:1px solid var(--line)}.timeline-row:last-child{border:0}.timeline-date{font-family:var(--serif);font-size:14px;color:var(--green)}.timeline-date small{display:block;font-family:var(--sans);font-size:10px;color:var(--muted);margin-top:4px}.timeline-body h4{font-family:var(--serif);font-size:15px;margin:0 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.timeline-body p{margin:0;color:var(--muted);font-size:11px;line-height:1.8}.timeline-meta{font-size:10px;color:#8b928b;margin-top:5px}
+    .assert-columns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:16px}.stance-col{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fcfcf7}.stance-head{padding:10px 12px;font-size:12px;font-weight:600;border-bottom:1px solid var(--line)}.stance-col.bull .stance-head{background:#eaf2e9;color:#2f6243}.stance-col.bear .stance-head{background:#f5e9e4;color:#8c4338}.stance-col.neutral .stance-head{background:#edf1f2;color:#3d5f68}.stance-body{padding:10px 12px}.assert-card{border:1px solid var(--line);border-radius:7px;background:var(--surface);padding:10px 11px;margin-bottom:9px}.assert-card:last-child{margin-bottom:0}.assert-card .card-top{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted)}.assert-card b{display:block;font-family:var(--serif);font-size:12px;margin:5px 0 2px}.assert-card ul{margin:7px 0 0;padding:0;list-style:none;display:grid;gap:6px}.assert-card li{border-top:1px dashed var(--line);padding-top:6px;font-size:10px;line-height:1.65;color:#4d584f}.assert-card li em{font-style:normal;color:var(--gold)}
+    .graph-wrap{padding:12px 16px 18px}.graph-wrap svg{display:block;width:100%;height:auto}.node-box{fill:#f2f6ef;stroke:var(--green);stroke-width:1.4}.node-box:hover{fill:#e6efe3}.node-label{fill:var(--ink);font-size:12px;font-family:var(--sans)}.node-sub{fill:#7d897f;font-size:9px}.edge{fill:none;stroke:#b3bdae;stroke-width:1.6;stroke-linecap:round}.edge.cost{stroke:var(--gold)}.edge.arb{stroke:var(--blue);stroke-dasharray:5 4}.edge-label{fill:#7d897f;font-size:9px;font-family:var(--sans)}
+    .login{position:fixed;inset:0;z-index:20;background:rgba(237,236,227,.97);display:grid;place-items:center;padding:20px}.login.hidden{display:none}.login-card{width:min(430px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px rgba(23,60,52,.14);padding:38px 34px}.login-card h2{font-family:var(--serif);font-size:24px;margin:0 0 8px}.login-card p{color:var(--muted);font-size:12px;line-height:1.8;margin:0 0 24px}.login-card label{display:block;font-size:11px;color:var(--muted);margin:14px 0 6px}.login-card input{width:100%;height:42px;border:1px solid var(--line);border-radius:6px;background:#fafaf5;padding:0 11px;outline:none}.login-card input:focus{border-color:var(--green)}.login-card button{width:100%;height:44px;margin-top:22px;border:1px solid var(--green);background:var(--green);color:#fff;border-radius:7px}.login-hint{font-size:10px;color:#92988f;line-height:1.7;margin-top:14px}
+    .toast{position:fixed;right:26px;bottom:26px;background:var(--ink);color:#fff;padding:12px 17px;border-radius:8px;box-shadow:var(--shadow);z-index:30;opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s;max-width:420px}.toast.show{opacity:1;transform:none}.toast.error{background:var(--red)}
+    .asof-bar{padding:17px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.asof-bar h2{font-family:var(--serif);font-size:17px;margin:0;font-weight:600}.asof-bar small{color:var(--muted);font-size:11px}.asof-bar .grow{flex:1;min-width:180px}
+    #asof-range{width:min(360px,46vw);accent-color:var(--green);cursor:pointer}#asof-range:disabled{cursor:not-allowed;opacity:.5}
+    .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;letter-spacing:.02em;white-space:nowrap}
+    .badge-pending{background:#f0f1e8;color:#68766d}.badge-announced{background:#e8eff2;color:#345a66}.badge-effective{background:#e9f2e9;color:#356442}.badge-expired{background:#f4e8df;color:var(--red)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px}
+    .fs-chip{border:1px solid var(--line);background:#fafaf5;border-radius:20px;padding:8px 13px;color:var(--muted);font-size:11px;display:inline-flex;align-items:center;gap:7px;transition:.18s}
+    .fs-chip b{font-family:var(--serif);font-size:12px;font-weight:600;color:var(--ink)}.fs-chip:hover{border-color:var(--green);color:var(--green)}.fs-chip.active{border-color:var(--green);background:#eef4ec}.fs-chip.active b{color:var(--green)}
+    .drive-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px}.drive-row:last-child{border-bottom:0}.drive-row b{font-family:var(--serif);font-weight:600}.drive-row span{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+    .impact-row{border-left:2px solid var(--line);padding:8px 0 9px 11px;margin-bottom:9px;cursor:pointer;transition:.18s}.impact-row:last-child{margin-bottom:0}.impact-row:hover,.impact-row.active{border-left-color:var(--green);background:#fafcf7}.impact-row.is-triggered{border-left-color:var(--gold)}
+    .impact-main{font-size:12px;line-height:1.6}.impact-main .arrow{color:var(--gold);margin:0 4px}.impact-main a{border-bottom:1px dashed var(--gold);text-decoration:none}
+    .impact-meta{font-size:10px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    @media(max-width:1180px){.stats{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:1fr}.series-list{grid-template-columns:repeat(2,1fr)}.assert-columns{grid-template-columns:1fr}}
+    @media(max-width:700px){main{padding:22px 16px 40px}.topbar{padding:0 16px;gap:10px}.brandline span{display:none}.stats{grid-template-columns:repeat(2,1fr)}.series-list{grid-template-columns:1fr}.split{grid-template-columns:1fr}.timeline-row{grid-template-columns:1fr;gap:4px}.disclaimer{display:none}.page-head{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="login hidden" id="login-screen">
+    <form class="login-card" id="login-form">
+      <h2>进入市场行情工作台</h2>
+      <p>使用与知识图谱相同的系统账号完成身份认证。本工作台为只读视图。</p>
+      <label for="username">账号</label>
+      <input id="username" name="username" autocomplete="username" value="admin" required>
+      <label for="password">密码</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">登录系统</button>
+      <div class="login-hint">本地初始管理员：admin / admin123。</div>
+    </form>
+  </div>
+
+  <header class="topbar">
+    <a class="back" href="index.html">← 返回主工作台</a>
+    <a class="back" href="ops.html">运营工作台 →</a>
+    <div class="brandline"><b>粮油市场行情工作台</b><span>MARKET INTELLIGENCE</span></div>
+    <div class="live">只读视图 · 示例数据</div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">PRICE · EVENT · ASSERTION · TRANSMISSION</div>
+        <h1>市场价格与预期研判</h1>
+        <p>以四维口径承载价格序列，叠加事件时间线、多空断言与价格传导关系，形成可回溯的市场观察视图。</p>
+      </div>
+      <div class="disclaimer">种子数据均为构造示例，不构成真实行情或投资建议</div>
+    </div>
+
+    <section class="panel" style="margin-bottom:16px">
+      <div class="asof-bar">
+        <div>
+          <h2>观察时点</h2>
+          <small id="asof-caption">as of —</small>
+        </div>
+        <div class="grow"></div>
+        <input type="range" id="asof-range" min="0" max="0" step="1" value="0" aria-label="观察时点">
+        <span class="tag gold" id="asof-label">2024-12</span>
+        <button class="back" id="asof-reset" type="button" style="height:34px;padding:0 12px">重置到最新</button>
+      </div>
+    </section>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-head"><h2>指标序列</h2><small id="series-count">—</small></div>
+        <div class="series-list" id="series-list"><p class="empty-note" style="padding:12px">正在装载序列…</p></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>序列详情</h2><small id="detail-caption">价格走势、关联事件与同期断言</small></div>
+        <div class="detail-body" id="series-detail"><p class="empty-note">选择左侧序列查看价格走势与关联证据。</p></div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div><h2>形态链条</h2><small id="form-count">—</small></div>
+        <small>同一品种的交割与加工形态，点击切换观察序列</small>
+      </div>
+      <div class="chips" id="form-chips"><p class="empty-note">选择序列后显示形态链条。</p></div>
+    </section>
+
+    <div class="layout" style="margin-bottom:16px">
+      <section class="panel">
+        <div class="panel-head"><div><h2>因子驱动</h2><small id="drive-count">—</small></div></div>
+        <div class="detail-body" id="drive-panel"><p class="empty-note">该序列暂无因子驱动</p></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2>外部影响</h2><small id="impact-count">—</small></div>
+          <small>政策 / 事件对当前品种的影响链与证据</small>
+        </div>
+        <div class="detail-body" id="impact-panel"><p class="empty-note">该品种暂无外部影响关系。</p></div>
+        <div class="detail-body" id="evidence-box" style="display:none;border-top:1px dashed var(--line)"></div>
+      </section>
+    </div>
+
+    <section class="panel" id="timeline-panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div><h2>事件时间线</h2><small id="event-count">—</small></div>
+        <div class="filters">
+          <input type="month" id="from-period" aria-label="起始期间">
+          <span style="color:var(--muted);font-size:11px">至</span>
+          <input type="month" id="to-period" aria-label="结束期间">
+          <select id="event-category" aria-label="事件分类">
+            <option value="">全部分类</option>
+            <option value="POLICY">政策</option>
+            <option value="TRADE">贸易</option>
+            <option value="SUPPLY">供给</option>
+            <option value="MARKET">市场</option>
+          </select>
+          <button class="back" id="apply-timeline" style="height:34px;padding:0 12px">筛选</button>
+        </div>
+      </div>
+      <div class="timeline" id="timeline"><p class="empty-note">正在装载事件…</p></div>
+    </section>
+
+    <section class="panel" id="assertion-panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div><h2>多空断言</h2><small id="assertion-count">—</small></div>
+        <div class="filters">
+          <select id="assertion-subject" aria-label="选择序列">
+            <option value="">全部序列</option>
+          </select>
+        </div>
+      </div>
+      <div class="assert-columns" id="assert-columns"><p class="empty-note">正在装载断言…</p></div>
+    </section>
+
+    <section class="panel" id="transmission-panel">
+      <div class="panel-head">
+        <div><h2>价格传导</h2><small id="transmission-count">—</small></div>
+        <small>弹性为样本期估计值，非确定关系</small>
+      </div>
+      <div class="graph-wrap" id="transmission"><p class="empty-note">正在装载传导关系…</p></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const state = {
+      token: localStorage.getItem('kg_token') || '',
+      series: [],
+      current: '',
+      timeline: [],
+      assertions: [],
+      graph: null,
+      asOf: '',
+      periods: [],
+      detail: null,
+      commodityId: '',
+      impacts: [],
+      filters: { policy: '', event: '' }
+    };
+    const EVENT_BADGE = {
+      PENDING: 'badge-pending',
+      ANNOUNCED: 'badge-announced',
+      EFFECTIVE: 'badge-effective',
+      EXPIRED: 'badge-expired'
+    };
+    const EVENT_BADGE_LABEL = {
+      PENDING: '待公告',
+      ANNOUNCED: '已公告',
+      EFFECTIVE: '生效中',
+      EXPIRED: '已到期'
+    };
+    let asOfTimer = null;
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
+    ));
+    const num = (value) => value === null || value === undefined
+      ? '—'
+      : Number(value).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+
+    function toast(message, error = false) {
+      const element = $('#toast');
+      element.textContent = message;
+      element.className = 'toast show' + (error ? ' error' : '');
+      clearTimeout(element.timer);
+      element.timer = setTimeout(() => { element.className = 'toast'; }, 3200);
+    }
+
+    function showLogin() {
+      $('#login-screen').classList.remove('hidden');
+    }
+
+    async function api(path) {
+      const response = await fetch(path, {
+        headers: state.token ? { Authorization: `Bearer ${state.token}` } : {}
+      });
+      if (response.status === 401) {
+        state.token = '';
+        localStorage.removeItem('kg_token');
+        showLogin();
+        throw new Error('登录已失效，请重新登录');
+      }
+      if (!response.ok) {
+        let detail = `请求失败 (${response.status})`;
+        try { detail = (await response.json()).detail || detail; } catch (error) { /* 保留默认提示 */ }
+        throw new Error(detail);
+      }
+      return response.json();
+    }
+
+    function renderStats(overview) {
+      const caption = $('#asof-caption');
+      if (caption) {
+        caption.textContent = `as of ${overview.asOf || '—'} · 共 ${(overview.periods || []).length} 个期间`;
+      }
+      const cards = [
+        ['指标序列', overview.seriesCount, '四维口径 + 价格层级'],
+        ['价格数据点', overview.pointCount, `最新期间 ${overview.latestPeriod || '—'}`],
+        ['事件', overview.eventCount, '政策 / 贸易 / 供给'],
+        ['有效断言', overview.assertionCount, '同机构相似命题已合并'],
+        ['因子', overview.factorCount, '供给 / 成本 / 需求 / 贸易 / 政策'],
+        ['传导关系', overview.transmissionCount, '有向、有滞后']
+      ];
+      $('#stats').innerHTML = cards.map(([label, value, note]) => `
+        <div class="stat">
+          <div class="stat-label">${esc(label)}</div>
+          <div class="stat-value">${num(value)}</div>
+          <div class="stat-note">${esc(note)}</div>
+        </div>
+      `).join('') + `
+        <div class="stat" style="grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="stat-label">SERIES_SCOPE 维度</span>
+          ${overview.scopeDimensions.map((item) => `<span class="tag">${esc(item)}</span>`).join('')}
+          <span class="stat-note">价格层级与币种由序列字段承载；本视图不写入 CHANNEL。</span>
+        </div>
+      `;
+    }
+
+    function renderSeries(items) {
+      state.series = items;
+      $('#series-count').textContent = `${items.length} 条有效序列`;
+      $('#series-list').innerHTML = items.map((item) => `
+        <button class="series-card${item.seriesId === state.current ? ' active' : ''}" data-series="${esc(item.seriesId)}">
+          <b>${esc(item.indicatorName || item.seriesId)}</b>
+          <div class="sub">
+            <span class="tag">${esc(item.regionLabel || '—')}</span>
+            <span class="tag gold">${esc(item.priceBasis)}</span>
+            <span class="tag gray">${esc(item.unitCode || '')}</span>
+          </div>
+          <div class="value"><strong>${num(item.latestValue)}</strong><span>${esc(item.latestPeriod || '')} · ${esc(item.currencyCode || '')}</span></div>
+        </button>
+      `).join('') || '<p class="empty-note" style="padding:12px">暂无指标序列。</p>';
+      $$('.series-card').forEach((element) => {
+        element.addEventListener('click', () => selectSeries(element.dataset.series));
+      });
+      const select = $('#assertion-subject');
+      select.innerHTML = '<option value="">全部序列</option>' + items.map((item) => (
+        `<option value="${esc(item.seriesId)}">${esc(item.indicatorName || item.seriesId)}</option>`
+      )).join('');
+    }
+
+    function renderChart(points) {
+      if (!points.length) return '<p class="empty-note">该序列暂无价格数据点。</p>';
+      const width = 760, height = 220;
+      const pad = { left: 58, right: 18, top: 16, bottom: 30 };
+      const values = points.map((point) => Number(point.value));
+      const low = Math.min(...values), high = Math.max(...values);
+      const span = high - low || 1;
+      const innerWidth = width - pad.left - pad.right;
+      const innerHeight = height - pad.top - pad.bottom;
+      const x = (index) => pad.left + (points.length === 1 ? innerWidth / 2 : (innerWidth * index) / (points.length - 1));
+      const y = (value) => pad.top + ((high - value) / span) * innerHeight;
+      const line = points.map((point, index) => `${index ? 'L' : 'M'}${x(index).toFixed(1)},${y(Number(point.value)).toFixed(1)}`).join(' ');
+      const grid = [0, 1, 2, 3].map((step) => {
+        const value = low + (span * step) / 3;
+        const top = y(value);
+        return `<line class="axis" x1="${pad.left}" y1="${top}" x2="${width - pad.right}" y2="${top}"></line>
+          <text class="axis-label" x="${pad.left - 8}" y="${top + 3}" text-anchor="end">${num(value)}</text>`;
+      }).join('');
+      const ticks = points.map((point, index) => {
+        if (index % 3 !== 0 && index !== points.length - 1) return '';
+        return `<text class="axis-label" x="${x(index)}" y="${height - 8}" text-anchor="middle">${esc(point.periodId)}</text>`;
+      }).join('');
+      const dots = points.map((point, index) => `
+        <circle class="line-dot" cx="${x(index)}" cy="${y(Number(point.value))}" r="3.4">
+          <title>${esc(point.periodId)} · ${num(point.value)}</title>
+        </circle>
+      `).join('');
+      return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="价格走势图">
+        ${grid}${ticks}<path class="line-path" d="${line}"></path>${dots}
+      </svg>`;
+    }
+
+    async function selectSeries(seriesId) {
+      if (!seriesId) return;
+      state.current = seriesId;
+      $$('.series-card').forEach((element) => {
+        element.classList.toggle('active', element.dataset.series === seriesId);
+      });
+      const panel = $('#series-detail');
+      panel.innerHTML = '<p class="empty-note">正在读取序列详情…</p>';
+      try {
+        const data = await api(`/api/market/series/${encodeURIComponent(seriesId)}${asOfQuery()}`);
+        renderDetail(data);
+        syncUrl(seriesId);
+      } catch (error) {
+        panel.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+      }
+    }
+
+    function renderDetail(data, impactOverride) {
+      state.detail = data;
+      const series = data.series || {};
+      const place = data.marketPlace;
+      const points = [...(data.points || [])].sort((left, right) => String(left.periodId).localeCompare(String(right.periodId)));
+      const recent = points.slice(-6).reverse();
+      const events = (data.events || []).map((event) => `
+        <div class="event-item">
+          <b>${esc(event.eventTitle)}</b>
+          <p>${esc(event.eventCategory || '')} · ${esc(event.eventScale || '')} · ${esc(event.eventTime || '')}<br>${esc(event.typeName || '')}${event.toolVerb ? ' · ' + esc(event.toolVerb) : ''}</p>
+        </div>
+      `).join('') || '<p class="empty-note">该序列口径下暂无关联事件。</p>';
+      const assertions = (data.assertions || []).map((group) => `
+        <div class="assert-item">
+          <div class="who">${esc(group.stance)} · ${esc(group.predicate)} · ${esc(group.targetPeriodId)}</div>
+          ${(group.items || []).map((item) => `<div class="quote">${esc(item.assertedById)}：${esc(item.rationale || '')}${item.objectValue !== null && item.objectValue !== undefined ? `（目标 ${num(item.objectValue)}）` : ''}${(item.evidenceIds || []).length ? ' · 证据 ' + (item.evidenceIds || []).length + ' 条' : ''}</div>`).join('')}
+        </div>
+      `).join('') || '<p class="empty-note">暂无同期断言。</p>';
+      $('#detail-caption').textContent = `as of ${state.asOf || '最新'} · ${points.length} 个数据点 · ${(data.events || []).length} 个关联事件`;
+      $('#series-detail').innerHTML = `
+        <div class="detail-title">
+          <div>
+            <h3>${esc(series.indicatorName || series.seriesId)}</h3>
+            <p>${esc(series.commodityName || '')} · ${esc(series.sourceName || '')} · ${esc(series.startPeriodId || '')} 至 ${esc(series.endPeriodId || '')}</p>
+            <p style="margin-top:4px;font-size:11px">市场场所 <b style="color:var(--ink)">${esc(place ? (place.placeName || place.placeId) : '—')}</b>${place ? ' · ' + esc(place.marketType || '—') + (place.exchangeCode ? ' · ' + esc(place.exchangeCode) : '') : ''}</p>
+          </div>
+          <div class="detail-tags">
+            <span class="tag">${esc(series.priceBasis)}</span>
+            <span class="tag gold">${esc(series.taxBasis)}</span>
+            <span class="tag blue">${esc(series.currencyCode)} / ${esc(series.unitCode)}</span>
+            <span class="tag gray">${esc(series.status)}</span>
+            <span class="tag blue">as of ${esc(state.asOf || '—')}</span>
+          </div>
+        </div>
+        <div class="chart-wrap">${renderChart(points)}</div>
+        <table class="mini-table">
+          <thead><tr><th>期间</th><th>数值</th><th>质量标记</th><th>修订号</th></tr></thead>
+          <tbody>${recent.map((point) => `
+            <tr><td>${esc(point.periodId)}</td><td class="num">${num(point.value)}</td><td>${esc(point.qualityFlag)}</td><td class="num">${esc(point.revisionNo)}</td></tr>
+          `).join('')}</tbody>
+        </table>
+        <div class="split">
+          <div class="sub-panel"><div class="sub-head"><span>关联事件</span><span>${(data.events || []).length}</span></div><div class="sub-body">${events}</div></div>
+          <div class="sub-panel"><div class="sub-head"><span>同期断言</span><span>${(data.assertions || []).length}</span></div><div class="sub-body">${assertions}</div></div>
+        </div>
+      `;
+      renderForms(data.commodityForm);
+      renderDrives(data.factors);
+      renderImpacts(impactOverride || data.impacts);
+    }
+
+    async function renderForms(form) {
+      const box = $('#form-chips');
+      const caption = $('#form-count');
+      state.commodityId = form && form.commodityId ? form.commodityId : '';
+      if (!form || !form.commodityId) {
+        if (caption) caption.textContent = '—';
+        box.innerHTML = '<p class="empty-note">该序列未关联品种形态。</p>';
+        return;
+      }
+      box.innerHTML = '<p class="empty-note">正在读取形态链条…</p>';
+      try {
+        const data = await api(`/api/market/commodity-forms?commodityId=${encodeURIComponent(form.commodityId)}`);
+        const items = data.items || [];
+        if (caption) caption.textContent = `${items.length} 个形态 · ${form.commodityName || form.commodityId}`;
+        if (!items.length) {
+          box.innerHTML = '<p class="empty-note">该品种暂无形态记录。</p>';
+          return;
+        }
+        box.innerHTML = items.map((item) => {
+          const matched = state.series.find((candidate) => candidate.commodityFormId === item.formId);
+          const active = item.formId === form.formId;
+          return `<button class="fs-chip${active ? ' active' : ''}" type="button" data-target="${esc(matched ? matched.seriesId : '')}">
+            <b>${esc(item.formName || item.formId)}</b><span>${esc(item.formType || '')}</span>
+          </button>`;
+        }).join('');
+        $$('#form-chips .fs-chip').forEach((element) => {
+          element.addEventListener('click', () => {
+            const target = element.dataset.target;
+            if (target) {
+              selectSeries(target);
+              return;
+            }
+            $$('#form-chips .fs-chip').forEach((chip) => chip.classList.toggle('active', chip === element));
+            toast('该形态暂无对应价格序列，仅做高亮');
+          });
+        });
+      } catch (error) {
+        box.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+      }
+    }
+
+    function renderDrives(factors) {
+      const box = $('#drive-panel');
+      const list = Array.isArray(factors) ? factors : [];
+      $('#drive-count').textContent = `${list.length} 个因子`;
+      if (!list.length) {
+        box.innerHTML = '<p class="empty-note">该序列暂无因子驱动</p>';
+        return;
+      }
+      box.innerHTML = list.map((factor) => `
+        <div class="drive-row">
+          <b>${esc(factor.factorName || factor.factorId)}</b>
+          <span>弹性 ${factor.elasticity === null || factor.elasticity === undefined ? '—' : num(factor.elasticity)} · 滞后 ${factor.lagDays === null || factor.lagDays === undefined ? '—' : esc(factor.lagDays)} 天</span>
+        </div>
+      `).join('');
+    }
+
+    function renderImpacts(items) {
+      const box = $('#impact-panel');
+      let list = Array.isArray(items) ? items : [];
+      if (state.filters.policy) list = list.filter((item) => item.sourceId === state.filters.policy);
+      if (state.filters.event) list = list.filter((item) => item.sourceId === state.filters.event);
+      state.impacts = list;
+      $('#impact-count').textContent = `${list.length} 条影响`;
+      if (!list.length) {
+        box.innerHTML = `<p class="empty-note">${state.filters.policy || state.filters.event ? '当前深链筛选下暂无影响关系。' : '该品种暂无外部影响关系。'}</p>`;
+        return;
+      }
+      box.innerHTML = list.map((item, index) => {
+        const sourceName = esc(item.sourceName || item.sourceId || '—');
+        const source = item.sourceType === 'POLICY'
+          ? `<a href="index.html?entityType=${encodeURIComponent('政策法规')}&entityId=${encodeURIComponent(item.sourceId)}" target="_self">${sourceName}</a>`
+          : sourceName;
+        return `<div class="impact-row${item.triggered ? ' is-triggered' : ''}" data-impact="${index}" role="button" tabindex="0">
+          <div class="impact-main">${source} <span class="arrow">→</span> ${esc(item.targetName || item.targetId || '—')}</div>
+          <div class="impact-meta">
+            <span>${esc(item.impactDirection || item.direction || '—')}</span>
+            <span>滞后 ${item.lagDays === null || item.lagDays === undefined ? '—' : esc(item.lagDays)} 天</span>
+            <span>证据 ${esc(item.evidenceCount || 0)} 条</span>
+            <span class="badge ${item.triggered ? 'badge-effective' : 'badge-pending'}">${item.triggered ? '已触发' : '待触发'}</span>
+            ${item.eventStateLabel ? `<span class="tag gray">${esc(item.eventStateLabel)}</span>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      $$('#impact-panel .impact-row').forEach((element) => {
+        element.addEventListener('click', () => {
+          const item = state.impacts[Number(element.dataset.impact)];
+          if (item) loadEvidence('ImpactLink', item.linkId, element);
+        });
+        element.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          element.click();
+        });
+      });
+      $$('#impact-panel .impact-row a').forEach((anchor) => {
+        anchor.addEventListener('click', (event) => event.stopPropagation());
+      });
+    }
+
+    async function loadEvidence(targetType, targetId, rowElement) {
+      const box = $('#evidence-box');
+      box.style.display = 'block';
+      $$('#impact-panel .impact-row').forEach((element) => element.classList.toggle('active', element === rowElement));
+      box.innerHTML = '<p class="empty-note">正在读取证据引用…</p>';
+      try {
+        const data = await api(`/api/market/evidence?targetType=${encodeURIComponent(targetType)}&targetId=${encodeURIComponent(targetId)}`);
+        const items = data.items || [];
+        if (!items.length) {
+          box.innerHTML = '<p class="empty-note">该影响关系暂无证据引用。</p>';
+          return;
+        }
+        box.innerHTML = `<div class="sub-head" style="background:transparent;border:0;padding:0 0 8px">证据引用 · ${items.length} 条</div>` + items.map((item) => `
+          <div class="assert-item">
+            <div class="who">${esc(item.documentTitle || item.documentId || '')} · 第 ${esc(item.pageNo || '—')} 页 · ${esc(item.evidenceType || '')}${item.strength ? ' · ' + esc(item.strength) : ''}</div>
+            <div class="quote">${esc(item.quote || '（无引用文本）')}</div>
+          </div>
+        `).join('');
+      } catch (error) {
+        box.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+      }
+    }
+
+    function renderTimeline(items) {
+      let list = Array.isArray(items) ? items : [];
+      if (state.filters.event) list = list.filter((event) => event.eventId === state.filters.event);
+      state.timeline = list;
+      $('#event-count').textContent = `${list.length} 个事件`;
+      $('#timeline').innerHTML = list.map((event) => {
+        const stateCode = String(event.state || '').toUpperCase();
+        const badgeClass = EVENT_BADGE[stateCode] || 'badge-pending';
+        const badgeLabel = EVENT_BADGE_LABEL[stateCode] || event.stateLabel || '待公告';
+        return `
+        <div class="timeline-row">
+          <div class="timeline-date">${esc(event.eventTime)}<small>${esc(event.eventCategory || '')}</small></div>
+          <div class="timeline-body">
+            <h4>${esc(event.eventTitle)}<span class="tag ${event.eventCategory === 'POLICY' ? 'gold' : event.eventCategory === 'SUPPLY' ? 'red' : 'blue'}">${esc(event.typeName || event.eventCategory)}</span><span class="badge ${badgeClass}">${esc(badgeLabel)}</span></h4>
+            <p>${esc(event.eventScale || '')} · 影响方向 ${esc(event.defaultImpactDirection || '—')}${event.isPolicyTool ? ' · 政策工具：' + esc(event.toolVerb || '—') : ''}</p>
+            <div class="timeline-meta">公布 ${esc(event.announceTime || '—')} · 生效 ${esc(event.effectiveFrom || '—')} 至 ${esc(event.effectiveTo || '—')} · 严重度 ${esc(event.severity || '—')} · 触发影响 ${esc(event.triggeredImpactCount || 0)} 条</div>
+          </div>
+        </div>
+      `;
+      }).join('') || '<p class="empty-note">当前筛选条件下没有事件。</p>';
+    }
+
+    async function loadTimeline() {
+      const params = new URLSearchParams();
+      const from = $('#from-period').value;
+      const to = $('#to-period').value;
+      const category = $('#event-category').value;
+      if (from) params.set('from', from);
+      if (to) params.set('to', to);
+      if (category) params.set('category', category);
+      if (state.asOf) params.set('asOf', state.asOf);
+      const query = params.toString();
+      const data = await api('/api/market/timeline' + (query ? '?' + query : ''));
+      renderTimeline(data.items);
+    }
+
+    function renderAssertions(data) {
+      state.assertions = data.items;
+      $('#assertion-count').textContent = `${data.total} 组断言`;
+      const columns = [
+        ['看多', 'bull', '#2f6243'],
+        ['看空', 'bear', '#8c4338'],
+        ['中性', 'neutral', '#3d5f68']
+      ];
+      $('#assert-columns').innerHTML = columns.map(([label, key]) => {
+        const groups = data.items.filter((group) => group.stance === label);
+        return `<div class="stance-col ${key}">
+          <div class="stance-head">${label} · ${groups.length} 组</div>
+          <div class="stance-body">${groups.map((group) => `
+            <div class="assert-card">
+              <div class="card-top"><span>${esc(group.subjectId)}</span><span>${esc(group.targetPeriodId)}</span></div>
+              <b>${esc(group.predicate)}</b>
+              <ul>${group.items.map((item) => `
+                <li><em>${esc(item.assertedById)}</em> · ${esc(item.stanceStrength || '')} ${item.objectValue !== null && item.objectValue !== undefined ? '· 目标 ' + num(item.objectValue) : ''}${(item.evidenceIds || []).length ? ' · 证据 ' + (item.evidenceIds || []).length + ' 条' : ''}<br>${esc(item.rationale || '')}</li>
+              `).join('')}</ul>
+            </div>
+          `).join('') || '<p class="empty-note">暂无该类断言。</p>'}</div>
+        </div>`;
+      }).join('');
+    }
+
+    async function loadAssertions() {
+      const subject = $('#assertion-subject').value;
+      const data = await api('/api/market/assertions' + (subject ? `?subjectId=${encodeURIComponent(subject)}` : ''));
+      renderAssertions(data);
+    }
+
+    function renderTransmission(graph) {
+      state.graph = graph;
+      $('#transmission-count').textContent = `${graph.nodes.length} 个节点 · ${graph.edges.length} 条传导`;
+      if (!graph.nodes.length) {
+        $('#transmission').innerHTML = '<p class="empty-note">暂无价格传导关系。</p>';
+        return;
+      }
+      const layers = new Map(graph.nodes.map((node) => [node.id, 0]));
+      for (let pass = 0; pass < graph.nodes.length; pass += 1) {
+        graph.edges.forEach((edge) => {
+          layers.set(edge.to, Math.max(layers.get(edge.to) || 0, (layers.get(edge.from) || 0) + 1));
+        });
+      }
+      const grouped = {};
+      graph.nodes.forEach((node) => {
+        const layer = layers.get(node.id) || 0;
+        (grouped[layer] = grouped[layer] || []).push(node);
+      });
+      const width = 900, height = 300;
+      const maxLayer = Math.max(...Object.keys(grouped).map(Number));
+      const positions = {};
+      Object.entries(grouped).forEach(([layer, nodes]) => {
+        const x = 120 + (Number(layer) * (width - 240)) / Math.max(maxLayer, 1);
+        nodes.forEach((node, index) => {
+          const y = height / 2 + (index - (nodes.length - 1) / 2) * 100;
+          positions[node.id] = { x, y };
+        });
+      });
+      const edges = graph.edges.map((edge) => {
+        const from = positions[edge.from], to = positions[edge.to];
+        if (!from || !to) return '';
+        const startX = from.x + 78, endX = to.x - 78;
+        const middle = (startX + endX) / 2;
+        const className = edge.transmissionType === 'ARBITRAGE' ? 'arb' : 'cost';
+        return `<path class="edge ${className}" d="M${startX},${from.y} C${middle},${from.y} ${middle},${to.y} ${endX},${to.y}" marker-end="url(#arrow)"></path>
+          <text class="edge-label" x="${middle}" y="${(from.y + to.y) / 2 - 6}" text-anchor="middle">${esc(edge.transmissionType)} · e=${num(edge.elasticity)} · ${esc(edge.lagDays)}天</text>`;
+      }).join('');
+      const nodes = graph.nodes.map((node) => {
+        const position = positions[node.id];
+        return `<g class="graph-node" data-series="${esc(node.id)}" style="cursor:pointer">
+          <rect class="node-box" x="${position.x - 78}" y="${position.y - 26}" width="156" height="52" rx="9"></rect>
+          <text class="node-label" x="${position.x}" y="${position.y - 4}" text-anchor="middle">${esc((node.label || node.id).slice(0, 12))}</text>
+          <text class="node-sub" x="${position.x}" y="${position.y + 14}" text-anchor="middle">${esc(node.unitCode || '')}</text>
+        </g>`;
+      }).join('');
+      $('#transmission').innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="价格传导关系图">
+        <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#b3bdae"></path></marker></defs>
+        ${edges}${nodes}
+      </svg>`;
+      $$('#transmission .graph-node').forEach((element) => {
+        element.addEventListener('click', () => {
+          selectSeries(element.dataset.series);
+          document.querySelector('.layout').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function asOfQuery() {
+      return state.asOf ? `?asOf=${encodeURIComponent(state.asOf)}` : '';
+    }
+
+    function normalizeAsOf(raw) {
+      const text = String(raw || '').trim();
+      if (/^\d{4}-\d{2}$/.test(text)) {
+        const [year, month] = text.split('-').map(Number);
+        return new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
+      }
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+      return '';
+    }
+
+    function findPeriodIndex(periods, asOf) {
+      const list = Array.isArray(periods) ? periods : [];
+      if (!list.length) return -1;
+      const target = String(asOf || '').trim();
+      if (!target) return list.length - 1;
+      let index = list.findIndex((period) => period && period.endDate === target);
+      if (index >= 0) return index;
+      const month = target.slice(0, 7);
+      index = list.findIndex((period) => period && period.periodId === month);
+      if (index >= 0) return index;
+      index = list.findIndex((period) => period && period.startDate && period.endDate && period.startDate <= target && target <= period.endDate);
+      return index >= 0 ? index : list.length - 1;
+    }
+
+    function currentPeriodId() {
+      const period = state.periods[findPeriodIndex(state.periods, state.asOf)];
+      return period ? period.periodId : '';
+    }
+
+    function updateAsOfLabel(index) {
+      const period = state.periods[index];
+      const label = $('#asof-label');
+      if (label) label.textContent = period ? period.periodId : '—';
+      const caption = $('#asof-caption');
+      if (caption && period) {
+        caption.textContent = `观察时点 ${state.asOf || period.endDate || period.periodId} · 共 ${state.periods.length} 期`;
+      }
+    }
+
+    function setupAsOf(overview, index) {
+      state.periods = Array.isArray(overview.periods) ? overview.periods : [];
+      const max = Math.max(state.periods.length - 1, 0);
+      const active = index >= 0 && index < state.periods.length ? index : max;
+      if (!state.asOf && state.periods[active]) {
+        state.asOf = state.periods[active].endDate || `${state.periods[active].periodId}-01`;
+      }
+      if (!state.asOf && overview.asOf) state.asOf = overview.asOf;
+      const range = $('#asof-range');
+      if (!range) return;
+      range.min = '0';
+      range.max = String(max);
+      range.step = '1';
+      range.value = String(active);
+      range.disabled = state.periods.length === 0;
+      updateAsOfLabel(active);
+    }
+
+    function readDeepLink() {
+      const result = { series: '', asOf: '', tab: '', commodity: '', indicator: '', policy: '', event: '' };
+      try {
+        const params = new URLSearchParams(location.search || '');
+        Object.keys(result).forEach((key) => {
+          result[key] = String(params.get(key) || '').trim();
+        });
+      } catch (error) {
+        /* 非法查询串按无参数处理 */
+      }
+      return result;
+    }
+
+    async function resolveInitialSeries(deep, items) {
+      const list = Array.isArray(items) ? items : [];
+      if (!list.length) return '';
+      if (deep.series) {
+        const hit = list.find((item) => item.seriesId === deep.series);
+        if (hit) return hit.seriesId;
+      }
+      if (deep.indicator) {
+        const hit = list.find((item) => item.indicatorId === deep.indicator);
+        if (hit) return hit.seriesId;
+      }
+      if (deep.commodity) {
+        const direct = list.find((item) => item.commodityFormId === deep.commodity);
+        if (direct) return direct.seriesId;
+        try {
+          const forms = await api(`/api/market/commodity-forms?commodityId=${encodeURIComponent(deep.commodity)}`);
+          const formIds = (forms.items || []).map((item) => item.formId);
+          const viaForm = list.find((item) => formIds.includes(item.commodityFormId));
+          if (viaForm) return viaForm.seriesId;
+        } catch (error) {
+          /* 形态反查失败时回退到首条序列 */
+        }
+      }
+      return list[0].seriesId;
+    }
+
+    function syncUrl(seriesId) {
+      try {
+        const params = new URLSearchParams(location.search || '');
+        if (seriesId) params.set('series', seriesId);
+        const periodId = currentPeriodId();
+        if (periodId) params.set('asOf', periodId);
+        const query = params.toString();
+        if (history && typeof history.replaceState === 'function') {
+          history.replaceState(null, '', query ? `${location.pathname}?${query}` : location.pathname);
+        }
+      } catch (error) {
+        /* 地址栏同步失败不影响页面使用 */
+      }
+    }
+
+    function scrollToTab(tab) {
+      const targets = {
+        timeline: '#timeline-panel',
+        assertions: '#assertion-panel',
+        transmission: '#transmission-panel',
+        detail: '#series-detail',
+        drive: '#drive-panel',
+        impact: '#impact-panel'
+      };
+      const element = $(targets[String(tab || '').toLowerCase()] || '');
+      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function reloadForAsOf(index) {
+      const period = state.periods[index];
+      if (!period) return;
+      const asOf = period.endDate || `${period.periodId}-01`;
+      state.asOf = asOf;
+      const seriesId = state.current;
+      const timelineParams = new URLSearchParams();
+      const from = $('#from-period').value;
+      const to = $('#to-period').value;
+      const category = $('#event-category').value;
+      if (from) timelineParams.set('from', from);
+      if (to) timelineParams.set('to', to);
+      if (category) timelineParams.set('category', category);
+      timelineParams.set('asOf', asOf);
+      const assertionsUrl = '/api/market/assertions'
+        + (seriesId ? `?subjectId=${encodeURIComponent(seriesId)}&asOf=${encodeURIComponent(asOf)}` : `?asOf=${encodeURIComponent(asOf)}`);
+      const jobs = [
+        seriesId ? api(`/api/market/series/${encodeURIComponent(seriesId)}?asOf=${encodeURIComponent(asOf)}`) : Promise.resolve(null),
+        api('/api/market/timeline?' + timelineParams.toString()),
+        api(assertionsUrl),
+        state.commodityId
+          ? api(`/api/market/impacts?targetType=COMMODITY&targetId=${encodeURIComponent(state.commodityId)}&asOf=${encodeURIComponent(asOf)}`)
+          : Promise.resolve(null)
+      ];
+      const [detail, timeline, assertions, impacts] = await Promise.all(jobs);
+      if (detail) renderDetail(detail, impacts ? impacts.items : undefined);
+      renderTimeline(timeline.items);
+      renderAssertions(assertions);
+      if (!detail && impacts) renderImpacts(impacts.items);
+      updateAsOfLabel(index);
+      syncUrl(seriesId);
+    }
+
+    async function loadAll() {
+      const deep = readDeepLink();
+      state.filters = { policy: deep.policy, event: deep.event };
+      state.asOf = normalizeAsOf(deep.asOf);
+      const params = new URLSearchParams();
+      if (state.asOf) params.set('asOf', state.asOf);
+      const query = params.toString();
+      const suffix = query ? '?' + query : '';
+      const [overview, series, timeline, assertions, graph] = await Promise.all([
+        api('/api/market/overview' + suffix),
+        api('/api/market/series'),
+        api('/api/market/timeline' + suffix),
+        api('/api/market/assertions' + suffix),
+        api('/api/market/transmissions')
+      ]);
+      renderStats(overview);
+      setupAsOf(overview, findPeriodIndex(overview.periods, state.asOf || overview.asOf));
+      renderSeries(series.items);
+      renderTimeline(timeline.items);
+      renderAssertions(assertions);
+      renderTransmission(graph);
+      let target = state.current;
+      if (!target) target = await resolveInitialSeries(deep, series.items);
+      if (target) await selectSeries(target);
+      if (deep.tab) scrollToTab(deep.tab);
+    }
+
+    $('#login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = event.target.querySelector('button');
+      button.disabled = true;
+      try {
+        const body = new URLSearchParams({
+          username: $('#username').value,
+          password: $('#password').value
+        });
+        const response = await fetch('/api/auth/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
+        });
+        if (!response.ok) throw new Error('账号或密码错误');
+        const data = await response.json();
+        state.token = data.access_token;
+        localStorage.setItem('kg_token', state.token);
+        localStorage.setItem('kg_role', data.role || '');
+        localStorage.setItem('kg_user', $('#username').value);
+        $('#login-screen').classList.add('hidden');
+        await loadAll();
+        toast('身份认证成功');
+      } catch (error) {
+        toast(error.message, true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    $('#apply-timeline').addEventListener('click', async () => {
+      try { await loadTimeline(); } catch (error) { toast(error.message, true); }
+    });
+    $('#assertion-subject').addEventListener('change', async () => {
+      try { await loadAssertions(); } catch (error) { toast(error.message, true); }
+    });
+    $('#asof-range').addEventListener('input', (event) => {
+      const index = Number(event.target.value);
+      const period = state.periods[index];
+      if (!period) return;
+      $('#asof-label').textContent = period.periodId;
+      clearTimeout(asOfTimer);
+      asOfTimer = setTimeout(() => {
+        reloadForAsOf(index).catch((error) => toast(error.message, true));
+      }, 150);
+    });
+    $('#asof-reset').addEventListener('click', async () => {
+      const index = Math.max(state.periods.length - 1, 0);
+      const range = $('#asof-range');
+      if (range) range.value = String(index);
+      try {
+        await reloadForAsOf(index);
+      } catch (error) {
+        toast(error.message, true);
+      }
+    });
+
+    if (state.token) {
+      loadAll().catch((error) => toast(error.message, true));
+    } else {
+      showLogin();
+    }
+  </script>
+</body>
+</html>

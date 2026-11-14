@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-11-14T14:52:18",
+  "root": "C:\\粮油知识图谱\\kg-system\\ontology_ly",
+  "results": [
+    {
+      "gate": "G0",
+      "rule": "G0-1",
+      "status": "PASS",
+      "message": "15 个交付物全部存在且可解析"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3a",
+      "status": "PASS",
+      "message": "内核对象类型 25 个，落在预算 25—29"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3b",
+      "status": "PASS",
+      "message": "关系实体化类型 4 个，落在预算 4—6"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-7",
+      "status": "PASS",
+      "message": "275 个字段均有类型/必填/说明标注"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-2a",
+      "status": "PASS",
+      "message": "38 个类型均有合规 ID 前缀"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-2b",
+      "status": "PASS",
+      "message": "id_registry 覆盖 38 个类型，前缀一致"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-5a",
+      "status": "PASS",
+      "message": "66 处枚举引用全部命中 enums.json"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-6",
+      "status": "PASS",
+      "message": "68 个词表均非空，OTHER 类取值均标 explicitOnly"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-4",
+      "status": "PASS",
+      "message": "80 个 ref 目标均在内核 29 或政策包 9 类型内"
+    },
+    {
+      "gate": "G0",
+      "rule": "G0-8",
+      "status": "PASS",
+      "message": "10 个动作中 CRUD 式命名 0 个（0%），未超 40%"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-7",
+      "status": "PASS",
+      "message": "34 条语义边 + 7 条条款关系端点均存在"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-4",
+      "status": "PASS",
+      "message": "三座桥的写目标类型与边名均在定义内"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-8",
+      "status": "PASS",
+      "message": "条款条件 leftOperand 共 2 处，左侧类型与字段均可解析"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-4a",
+      "status": "PASS",
+      "message": "政策包 forbid 含 AP_POLICY_MAGNITUDE/impactMagnitude，且允许区未出现该字段"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-4b",
+      "status": "PASS",
+      "message": "市场包 forbid 含 ACTS_ON_FACTOR，且 MARKET_PACK 允许边未包含该边"
+    },
+    {
+      "gate": "G2",
+      "rule": "G2-12",
+      "status": "PASS",
+      "message": "去重键 4 项、阈值 0.85、neverMerge 3 组齐备，登记动作后置断言已引用该键"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-4a",
+      "status": "PASS",
+      "message": "30 条能力问题在 Stage 0 上限 5 内；Stage 2 共 1 条使用管理员开关上限 6：E1=6"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-4b",
+      "status": "PASS",
+      "message": "30 条能力问题的类型与关系引用全部存在"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3c",
+      "status": "PASS",
+      "message": "共 30 条（Stage 0 启用 24 条），落在 24—32"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-6a",
+      "status": "PASS",
+      "message": "38 个类型各声明唯一 domainCode，且与 id_registry 一致"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-6b",
+      "status": "PASS",
+      "message": "8 个域码各出现一次、归属唯一"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-5a",
+      "status": "PASS",
+      "message": "Commodity.commodityCode 已声明全局唯一（constraints + 字段 note）"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-5b",
+      "status": "PASS",
+      "message": "Factor.factorCode 已声明全局唯一"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3d",
+      "status": "PASS",
+      "message": "Dimension 固定 10 维，维度码与 DimensionCode 枚举一一对应，取值类型白名单合法"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3e",
+      "status": "PASS",
+      "message": "预算：内核 25/上限 29，关系实体 4/上限 6"
+    },
+    {
+      "gate": "G3",
+      "rule": "G3-3f",
+      "status": "PASS",
+      "message": "术语种子 100 条，落在 100—150"
+    },
+    {
+      "gate": "G4",
+      "rule": "G4-2",
+      "status": "PASS",
+      "message": "CORE 11 条与 §7.6 逐条一致，EXTENSION 8 条，合计 19 ≤ 20"
+    },
+    {
+      "gate": "G4",
+      "rule": "G4-3",
+      "status": "PASS",
+      "message": "全部 11 条核心码均已挂到现有门规则，共 35 条规则可选"
+    }
+  ],
+  "counts": {
+    "error": 0,
+    "warn": 0,
+    "pass": 28
+  },
+  "score": 100,
+  "passed": true,
+  "failedRules": [],
+  "warnRules": []
+}

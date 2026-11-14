@@ -1,0 +1,8 @@
+% 阶段 2 通用 Nemo 规则：优先级闭包、覆盖、成环检测与公共输出。
+prevails_t(?a, ?b) :- prevails(?a, ?b) .
+prevails_t(?a, ?c) :- prevails(?a, ?b), prevails_t(?b, ?c) .
+overridden_by(?c, ?a, ?b) :- fires(?c, ?b), prevails_t(?b, ?a) .
+overridden(?c, ?a) :- overridden_by(?c, ?a, ?b) .
+effective(?c, ?s) :- fires(?c, ?s), ~overridden(?c, ?s) .
+cycle(?a) :- prevails_t(?a, ?a) .
+output(?c, ?s, "APPLICABLE") :- effective(?c, ?s) .

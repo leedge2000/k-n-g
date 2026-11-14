@@ -1,0 +1,648 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 5",
+  "datasetTier": "technical-smoke",
+  "businessQualityGate": "NOT_ASSESSED",
+  "productionPerformanceGate": "NOT_ASSESSED",
+  "generatedAt": "2026-11-14T06:52:47.697677+00:00",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26100-SP0"
+  },
+  "source": {
+    "files": [
+      {
+        "path": "ontology_ly/packs/ops/stage5_运营口径清单.md",
+        "sha256": "7bfda16c35da7a31f8450de3c6c981e2566f0fc4cf2eb161e75993572d17579e"
+      },
+      {
+        "path": "seed/mapping.json",
+        "sha256": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5"
+      },
+      {
+        "path": "seed/business.json",
+        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+      }
+    ]
+  },
+  "sourceValidation": {
+    "passed": true,
+    "files": [
+      {
+        "path": "ontology_ly/packs/ops/stage5_运营口径清单.md",
+        "expected": "7bfda16c35da7a31f8450de3c6c981e2566f0fc4cf2eb161e75993572d17579e",
+        "actual": "7bfda16c35da7a31f8450de3c6c981e2566f0fc4cf2eb161e75993572d17579e",
+        "matched": true
+      },
+      {
+        "path": "seed/mapping.json",
+        "expected": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5",
+        "actual": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5",
+        "matched": true
+      },
+      {
+        "path": "seed/business.json",
+        "expected": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac",
+        "actual": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac",
+        "matched": true
+      }
+    ]
+  },
+  "formalDatabase": {
+    "path": "C:\\粮油知识图谱\\kg-system\\data\\grain_oil.db",
+    "before": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+    "after": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+    "unchanged": true
+  },
+  "evaluationIsolation": {
+    "passed": true,
+    "strategy": "每个情形冷/热两次独立副本库；正式库只读"
+  },
+  "metrics": {
+    "caseCount": 8,
+    "casePassRate": 1.0,
+    "metricAgreement": 1.0,
+    "alertLifecycleAgreement": 1.0,
+    "ingestAgreement": 1.0,
+    "evolutionAgreement": 1.0,
+    "rollbackRestoreIntegrity": 1.0,
+    "gateNegativeDetectionRate": 1.0,
+    "permissionAgreement": 1.0,
+    "knowledgeTablesUnchanged": 1.0
+  },
+  "cases": [
+    {
+      "caseId": "S5-OPS-01",
+      "title": "八个质量指标的方向、阈值与状态判定一致",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "metric",
+          "field": "metricDefinitions",
+          "expected": {
+            "SRC_COVERAGE": {
+              "direction": "GTE",
+              "threshold": 0.95
+            },
+            "ORPHAN_RATE": {
+              "direction": "LTE",
+              "threshold": 0.02
+            },
+            "DUP_PENDING": {
+              "direction": "LTE",
+              "threshold": 10
+            },
+            "CONFLICT_PENDING": {
+              "direction": "LTE",
+              "threshold": 0
+            },
+            "STALE_SOURCE": {
+              "direction": "LTE",
+              "threshold": 0
+            },
+            "CRAWL_FAIL_RATE": {
+              "direction": "LTE",
+              "threshold": 0.2
+            },
+            "REVIEW_BACKLOG": {
+              "direction": "LTE",
+              "threshold": 50
+            },
+            "RULE_COVERAGE": {
+              "direction": "GTE",
+              "threshold": 0.5
+            }
+          },
+          "actual": {
+            "SRC_COVERAGE": {
+              "direction": "GTE",
+              "threshold": 0.95
+            },
+            "ORPHAN_RATE": {
+              "direction": "LTE",
+              "threshold": 0.02
+            },
+            "DUP_PENDING": {
+              "direction": "LTE",
+              "threshold": 10.0
+            },
+            "CONFLICT_PENDING": {
+              "direction": "LTE",
+              "threshold": 0.0
+            },
+            "STALE_SOURCE": {
+              "direction": "LTE",
+              "threshold": 0.0
+            },
+            "CRAWL_FAIL_RATE": {
+              "direction": "LTE",
+              "threshold": 0.2
+            },
+            "REVIEW_BACKLOG": {
+              "direction": "LTE",
+              "threshold": 50.0
+            },
+            "RULE_COVERAGE": {
+              "direction": "GTE",
+              "threshold": 0.5
+            }
+          },
+          "matched": true
+        },
+        {
+          "group": "metric",
+          "field": "metricStatusConsistent",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-02",
+      "title": "冲突告警 OPEN→ACK→CLOSED 与重复操作拦截",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "alert",
+          "field": "inspectRaisesAlert:ALT-CONFLICT",
+          "expected": {
+            "status": "OPEN",
+            "severity": "P2"
+          },
+          "actual": {
+            "status": "OPEN",
+            "severity": "P2"
+          },
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "alertTransition:ALT-CONFLICT",
+          "expected": "ACK",
+          "actual": "ACK",
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "alertDuplicateTransition:ALT-CONFLICT",
+          "expected": 409,
+          "actual": 409,
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "alertTransition:ALT-CONFLICT",
+          "expected": "CLOSED",
+          "actual": "CLOSED",
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "alertDuplicateTransition:ALT-CONFLICT",
+          "expected": 409,
+          "actual": 409,
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "autoCloseRecovery:ALT-CONFLICT",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-03",
+      "title": "同一告警编码只保留一条 OPEN",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "alert",
+          "field": "inspectTwice:None",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "openAlertUniqueness:None",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "alert",
+          "field": "alertSeverity:ALT-CONFLICT",
+          "expected": "P2",
+          "actual": "P2",
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-04",
+      "title": "超期采集源、待审核积压与变更游标",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "ingest",
+          "field": "ingestSourceStale",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "ingest",
+          "field": "ingestBacklogConsistent",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "ingest",
+          "field": "ingestCursorPresent",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-05",
+      "title": "连续失败达到重试上限后拒绝重跑",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "ingest",
+          "field": "retryBlocked",
+          "expected": 409,
+          "actual": 409,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-06",
+      "title": "演进状态机、非法迁移与职责分离",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "evolution",
+          "field": "evolutionFlow",
+          "expected": [
+            "DRAFT",
+            "PENDING_REVIEW",
+            "APPROVED",
+            "PUBLISHED",
+            "ROLLED_BACK"
+          ],
+          "actual": [
+            "DRAFT",
+            "PENDING_REVIEW",
+            "APPROVED",
+            "PUBLISHED",
+            "ROLLED_BACK"
+          ],
+          "matched": true
+        },
+        {
+          "group": "evolution",
+          "field": "illegalTransition",
+          "expected": 409,
+          "actual": 409,
+          "matched": true
+        },
+        {
+          "group": "evolution",
+          "field": "separationOfDuties",
+          "expected": 409,
+          "actual": 409,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-07",
+      "title": "范围、规则、元数据三类目标发布与回滚还原",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "rollback",
+          "field": "scopeEvolutionRoundTrip",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "rollback",
+          "field": "ruleEvolutionWhitelist",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "rollback",
+          "field": "metaEvolutionSurvivesSync",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S5-OPS-08",
+      "title": "G5 负例、运营权限与知识表零写入",
+      "kind": "mixed",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "gate",
+          "field": "gateNegative:G5-3",
+          "expected": [
+            "G5-3"
+          ],
+          "actual": "G5-3 告警重复 OPEN：[('ALT-TEST', 2)]",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G5-6",
+          "expected": [
+            "G5-6"
+          ],
+          "actual": "G5-6 发布版本号不连续：[5]",
+          "matched": true
+        },
+        {
+          "group": "permission",
+          "field": "GET /api/ops/ingest [ROLE-04]",
+          "expected": 403,
+          "actual": 403,
+          "matched": true
+        },
+        {
+          "group": "permission",
+          "field": "POST /api/ops/inspect [ROLE-04]",
+          "expected": 403,
+          "actual": 403,
+          "matched": true
+        },
+        {
+          "group": "permission",
+          "field": "GET /api/ops/overview [ROLE-04]",
+          "expected": 200,
+          "actual": 200,
+          "matched": true
+        },
+        {
+          "group": "knowledge",
+          "field": "knowledgeTablesUnchanged",
+          "expected": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "actual": {
+            "政策法规": 12,
+            "指标数据": 14,
+            "年鉴记录": 120,
+            "农业情报": 12,
+            "知识关系": 15
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "hardGates": {
+    "deterministicOutput": {
+      "passed": true
+    },
+    "formalDataUnchanged": {
+      "passed": true
+    },
+    "sourceHashesValid": {
+      "passed": true
+    },
+    "isolatedDataset": {
+      "passed": true
+    },
+    "casePassRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "metricAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "alertLifecycleAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "ingestAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "evolutionAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "rollbackRestoreIntegrity": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "gateNegativeDetectionRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "permissionAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "knowledgeTablesUnchanged": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "overall": {
+      "passed": true
+    }
+  },
+  "summary": "阶段 5 技术冒烟：8 个固定情形，通过 8 个；业务质量与生产性能未评估。"
+}

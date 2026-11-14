@@ -1,0 +1,495 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "frozen": true,
+  "sourceBaseline": "STAGE0-执行分解.md §2 / §3",
+  "typeCount": 25,
+  "note": "本文件只定义 schema，不定义实例。所有类型共享 commonFields；类型内 fields 只列差异字段。4 个关系实体化类型见 relation_types.json。",
+  "commonFields": [
+    { "name": "id", "label": "主键", "type": "string", "required": true, "note": "按 id_registry.json 生成，写入即冻结" },
+    { "name": "name", "label": "中文名", "type": "string", "required": true, "note": "" },
+    { "name": "alias", "label": "别名", "type": "string[]", "required": false, "note": "别名/简称/英文名，供实体链接召回" },
+    { "name": "code", "label": "业务编码", "type": "string", "required": false, "note": "品种码、行政区划码、文号等" },
+    { "name": "description", "label": "说明", "type": "string", "required": false, "note": "一句话" },
+    { "name": "domainCode", "label": "域码", "type": "enum", "enumRef": "DomainCode", "required": true, "note": "PUB / S1~S7" },
+    { "name": "validFrom", "label": "业务生效日", "type": "date", "required": true, "note": "双时间·业务时间起点" },
+    { "name": "validTo", "label": "业务失效日", "type": "date", "required": false, "note": "null = 至今有效" },
+    { "name": "recordedAt", "label": "入库时间", "type": "datetime", "required": true, "note": "双时间·记录时间起点" },
+    { "name": "supersededAt", "label": "被取代时间", "type": "datetime", "required": false, "note": "派生缓存，真值以 SUPERSEDES/AMENDS/EXTENDS 边为准" },
+    { "name": "status", "label": "状态", "type": "enum", "enumRef": "ObjectStatus", "required": true, "note": "ACTIVE / MERGED / RETIRED / DRAFT" },
+    { "name": "version", "label": "版本", "type": "int", "required": true, "note": "从 1 起，实质修订 +1" },
+    { "name": "evidenceIds", "label": "证据", "type": "string[]", "required": true, "note": "至少 1 条 Evidence.id；DRAFT 除外" },
+    { "name": "confidence", "label": "置信度", "type": "float", "required": true, "note": "0—1，人工录入 = 1.0" },
+    { "name": "extractedBy", "label": "产生方式", "type": "enum", "enumRef": "ExtractedBy", "required": true, "note": "RULE / LLM / HUMAN / IMPORT" },
+    { "name": "authority", "label": "命名权威", "type": "enum", "enumRef": "NamingAuthority", "required": true, "note": "LY / AGROVOC / GB / ISO / CUSTOMS" },
+    { "name": "mergedIntoId", "label": "合并去向", "type": "string", "required": false, "note": "status=MERGED 时必填" }
+  ],
+  "types": [
+    {
+      "typeName": "CommodityCategory",
+      "labelZh": "品类类目",
+      "group": "品类域",
+      "idPrefix": "OBJ-CM",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "KtcCategory", "note": "现有知识分类可作初值来源，语义不同，需一次性映射，不直接复用主键" },
+      "constraints": ["树形，最多 4 层", "path 由 parentCategoryId 派生，不手工维护"],
+      "fields": [
+        { "name": "parentCategoryId", "label": "父类目", "type": "ref", "ref": "CommodityCategory", "required": false, "note": "根为 null" },
+        { "name": "categoryType", "label": "类目类型", "type": "enum", "enumRef": "CategoryType", "required": true, "note": "" },
+        { "name": "level", "label": "层级", "type": "int", "required": true, "note": "1—4" },
+        { "name": "path", "label": "物化路径", "type": "string", "required": true, "note": "如 粮油/谷物/小麦，派生字段" },
+        { "name": "agrovocUri", "label": "AGROVOC 映射", "type": "string", "required": false, "note": "仅根与一级节点建" }
+      ]
+    },
+    {
+      "typeName": "Commodity",
+      "labelZh": "品种",
+      "group": "品类域",
+      "idPrefix": "OBJ-CM",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "CmdCommodity", "note": "现有 id_prefix=CMD，迁移后统一改 OBJ-CM，旧 ID 记入 alias 保持外链可用" },
+      "constraints": ["commodityCode 全局唯一", "子域不得另建同名品种（门 3 G3-2）"],
+      "fields": [
+        { "name": "categoryId", "label": "所属类目", "type": "ref", "ref": "CommodityCategory", "required": true, "note": "" },
+        { "name": "commodityCode", "label": "品种短码", "type": "string", "required": true, "note": "全局唯一，如 SOYBEAN / CORN" },
+        { "name": "scientificName", "label": "拉丁学名", "type": "string", "required": false, "note": "" },
+        { "name": "stapleType", "label": "口粮属性", "type": "enum", "enumRef": "StapleType", "required": true, "note": "" },
+        { "name": "customsCode", "label": "HS 编码", "type": "string", "required": false, "note": "4—8 位前缀，非精确到单一品种" },
+        { "name": "isBt", "label": "是否转基因", "type": "bool", "required": false, "note": "仅大豆/玉米/菜籽用" }
+      ]
+    },
+    {
+      "typeName": "CommodityForm",
+      "labelZh": "形态规格",
+      "group": "品类域",
+      "idPrefix": "OBJ-CM",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Product", "note": "现有 Product 表达『产品』，新模型中可交易形态统一由 CommodityForm 表达；Product 的加工属性由 TransformationProcess 承载" },
+      "constraints": ["同一 commodityId 下 formType+grade 组合唯一", "质量等级与标准并入本类型，不单建 QualitySpec"],
+      "fields": [
+        { "name": "commodityId", "label": "所属品种", "type": "ref", "ref": "Commodity", "required": true, "note": "" },
+        { "name": "formType", "label": "形态类型", "type": "enum", "enumRef": "FormType", "required": true, "note": "" },
+        { "name": "derivedFromFormId", "label": "由何形态加工", "type": "ref", "ref": "CommodityForm", "required": false, "note": "" },
+        { "name": "standardCode", "label": "标准号", "type": "string", "required": false, "note": "如 GB 1351" },
+        { "name": "grade", "label": "等级", "type": "string", "required": false, "note": "如 一等 / 四级" },
+        { "name": "qualityParams", "label": "品质参数", "type": "json", "required": false, "note": "键名受控：水分/杂质/含油率/蛋白/酸价" }
+      ]
+    },
+    {
+      "typeName": "Region",
+      "labelZh": "行政区 / 经济区",
+      "group": "地理域",
+      "idPrefix": "OBJ-RG",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Region", "note": "现有 id_prefix=REG，迁移后改 OBJ-RG" },
+      "constraints": ["regionCode 唯一", "不得以 Region 表达『市场』或『港口』，后者用 MarketPlace / LogisticsNode"],
+      "fields": [
+        { "name": "regionCode", "label": "地区编码", "type": "string", "required": true, "note": "行政区划码或自定义码" },
+        { "name": "regionLevel", "label": "层级", "type": "enum", "enumRef": "RegionLevel", "required": true, "note": "" },
+        { "name": "parentRegionId", "label": "上级地区", "type": "ref", "ref": "Region", "required": false, "note": "" },
+        { "name": "isoCode", "label": "ISO 代码", "type": "string", "required": false, "note": "国家用 ISO 3166-1 alpha-2" },
+        { "name": "isProductionArea", "label": "主产区", "type": "bool", "required": false, "note": "" },
+        { "name": "isConsumptionArea", "label": "主销区", "type": "bool", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "MarketPlace",
+      "labelZh": "市场 / 交易场所",
+      "group": "地理域",
+      "idPrefix": "OBJ-MK",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["exchangeCode 在 marketType=FUTURES 时唯一"],
+      "fields": [
+        { "name": "marketType", "label": "市场类型", "type": "enum", "enumRef": "MarketType", "required": true, "note": "" },
+        { "name": "regionId", "label": "所在地区", "type": "ref", "ref": "Region", "required": true, "note": "" },
+        { "name": "operatorOrgId", "label": "运营方", "type": "ref", "ref": "Organization", "required": false, "note": "交易所/市场管理方" },
+        { "name": "exchangeCode", "label": "交易所代码", "type": "string", "required": false, "note": "DCE / ZCE / CBOT" },
+        { "name": "tradingHours", "label": "交易时段", "type": "string", "required": false, "note": "自由文本" }
+      ]
+    },
+    {
+      "typeName": "LogisticsNode",
+      "labelZh": "物流节点",
+      "group": "地理域",
+      "idPrefix": "OBJ-LG",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["capacity 与 capacityUnitId 同填或同空"],
+      "fields": [
+        { "name": "nodeType", "label": "节点类型", "type": "enum", "enumRef": "LogisticsNodeType", "required": true, "note": "" },
+        { "name": "regionId", "label": "所在地区", "type": "ref", "ref": "Region", "required": true, "note": "" },
+        { "name": "capacity", "label": "设计能力", "type": "float", "required": false, "note": "" },
+        { "name": "capacityUnitId", "label": "能力单位", "type": "ref", "ref": "UnitOfMeasure", "required": false, "note": "" },
+        { "name": "geo", "label": "经纬度", "type": "string", "required": false, "note": "lon,lat" }
+      ]
+    },
+    {
+      "typeName": "Organization",
+      "labelZh": "机构",
+      "group": "主体域",
+      "idPrefix": "OBJ-OR",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。现有 Enterprise 只覆盖企业，不覆盖政府部门/协会/交易所" },
+      "constraints": ["Enterprise 是本类型之外的企业细分，二者不互相替代"],
+      "fields": [
+        { "name": "orgType", "label": "机构类型", "type": "enum", "enumRef": "OrgType", "required": true, "note": "" },
+        { "name": "parentOrgId", "label": "上级机构", "type": "ref", "ref": "Organization", "required": false, "note": "" },
+        { "name": "regionId", "label": "所在地区", "type": "ref", "ref": "Region", "required": false, "note": "" },
+        { "name": "functionScope", "label": "职能范围", "type": "enum[]", "enumRef": "OrgFunctionScope", "required": false, "note": "多值" }
+      ]
+    },
+    {
+      "typeName": "Enterprise",
+      "labelZh": "企业",
+      "group": "主体域",
+      "idPrefix": "OBJ-EN",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Enterprise", "note": "现有 id_prefix=ENT，迁移后改 OBJ-EN" },
+      "constraints": ["creditCode 存在时全局唯一"],
+      "fields": [
+        { "name": "enterpriseType", "label": "企业类型", "type": "enum", "enumRef": "EnterpriseType", "required": true, "note": "" },
+        { "name": "regionId", "label": "注册地", "type": "ref", "ref": "Region", "required": true, "note": "" },
+        { "name": "creditCode", "label": "统一社会信用代码", "type": "string", "required": false, "note": "" },
+        { "name": "isListed", "label": "是否上市", "type": "bool", "required": false, "note": "" },
+        { "name": "capacity", "label": "加工/仓储能力", "type": "float", "required": false, "note": "" },
+        { "name": "capacityUnitId", "label": "能力单位", "type": "ref", "ref": "UnitOfMeasure", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "Person",
+      "labelZh": "人物",
+      "group": "主体域",
+      "idPrefix": "OBJ-PS",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": [],
+      "fields": [
+        { "name": "personRole", "label": "角色", "type": "enum", "enumRef": "PersonRole", "required": true, "note": "" },
+        { "name": "affiliationOrgId", "label": "所属机构", "type": "ref", "ref": "Organization", "required": false, "note": "" },
+        { "name": "title", "label": "职务", "type": "string", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "TimePeriod",
+      "labelZh": "时间期间",
+      "group": "时间域",
+      "idPrefix": "OBJ-TP",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。现有 IvdData / YrbYearbook 的期间是散落字段，需抽成对象" },
+      "constraints": ["startDate <= endDate", "非自然年必须填 calendarSchemeId"],
+      "fields": [
+        { "name": "periodType", "label": "期间类型", "type": "enum", "enumRef": "PeriodType", "required": true, "note": "" },
+        { "name": "startDate", "label": "起始日", "type": "date", "required": true, "note": "" },
+        { "name": "endDate", "label": "结束日", "type": "date", "required": true, "note": "" },
+        { "name": "calendarSchemeId", "label": "年度口径", "type": "ref", "ref": "CalendarScheme", "required": false, "note": "非自然年必填" },
+        { "name": "label", "label": "展示名", "type": "string", "required": true, "note": "如 2025/26年度" }
+      ]
+    },
+    {
+      "typeName": "CalendarScheme",
+      "labelZh": "年度口径",
+      "group": "时间域",
+      "idPrefix": "OBJ-TP",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["startMonth 1—12", "Stage 0 先建 3 个 scheme：CALENDAR / GRAIN-CN / MARKETING-USDA"],
+      "fields": [
+        { "name": "schemeType", "label": "口径类型", "type": "enum", "enumRef": "CalendarSchemeType", "required": true, "note": "" },
+        { "name": "startMonth", "label": "起始月", "type": "int", "required": true, "note": "1—12" },
+        { "name": "startDay", "label": "起始日", "type": "int", "required": true, "note": "" },
+        { "name": "appliesToCategoryId", "label": "适用品类", "type": "ref", "ref": "CommodityCategory", "required": false, "note": "作物收割年度按品类区分" },
+        { "name": "regionId", "label": "适用地区", "type": "ref", "ref": "Region", "required": false, "note": "不同国家年度起止不同" },
+        { "name": "note", "label": "说明", "type": "string", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "UnitOfMeasure",
+      "labelZh": "计量单位与换算",
+      "group": "指标域",
+      "idPrefix": "OBJ-UN",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。现有单位是字符串字段，是跨序列误比的主因" },
+      "constraints": ["unitCode 唯一", "dimension=PRICE 时 currencyCode 必填", "factor 仅在 baseUnitCode 非空时有意义"],
+      "fields": [
+        { "name": "unitCode", "label": "单位码", "type": "string", "required": true, "note": "t / kt / 10kt / CNY/t / USD/t / USC/bu / % / ha" },
+        { "name": "dimension", "label": "量纲", "type": "enum", "enumRef": "UnitDimension", "required": true, "note": "" },
+        { "name": "baseUnitCode", "label": "基准单位", "type": "string", "required": false, "note": "" },
+        { "name": "factor", "label": "换算系数", "type": "float", "required": false, "note": "到基准单位的系数" },
+        { "name": "precision", "label": "展示小数位", "type": "int", "required": false, "note": "" },
+        { "name": "currencyCode", "label": "币种", "type": "string", "required": false, "note": "价格类必填 CNY / USD" }
+      ]
+    },
+    {
+      "typeName": "Indicator",
+      "labelZh": "指标定义",
+      "group": "指标域",
+      "idPrefix": "OBJ-IN",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Indicator", "note": "现有 id_prefix=IND，迁移后改 OBJ-IN" },
+      "constraints": ["indicatorCode 全局唯一", "isDerived=true 时 calculationFormula 必填，且仅描述不执行"],
+      "fields": [
+        { "name": "indicatorCode", "label": "指标码", "type": "string", "required": true, "note": "全局唯一" },
+        { "name": "indicatorType", "label": "指标类型", "type": "enum", "enumRef": "IndicatorType", "required": true, "note": "" },
+        { "name": "unitId", "label": "默认单位", "type": "ref", "ref": "UnitOfMeasure", "required": true, "note": "" },
+        { "name": "defaultFrequency", "label": "默认频率", "type": "enum", "enumRef": "PeriodType", "required": true, "note": "" },
+        { "name": "statisticalSourceId", "label": "统计来源", "type": "ref", "ref": "StatisticalSource", "required": false, "note": "派生指标可为 null" },
+        { "name": "isDerived", "label": "是否派生", "type": "bool", "required": true, "note": "" },
+        { "name": "calculationFormula", "label": "计算公式", "type": "string", "required": false, "note": "仅描述，不执行" },
+        { "name": "direction", "label": "方向语义", "type": "enum", "enumRef": "IndicatorDirection", "required": false, "note": "供解释用，不做推理" }
+      ]
+    },
+    {
+      "typeName": "IndicatorSeries",
+      "labelZh": "指标序列",
+      "group": "指标域",
+      "idPrefix": "OBJ-IN",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。由现有 IvdData 按 (indicator, region, commodity, source, unit, priceBasis, taxBasis) 聚合派生" },
+      "constraints": ["口径载体：同一条序列内 unitId / priceBasis / taxBasis / currencyCode 必须恒定", "scopeId 必填（R2）"],
+      "fields": [
+        { "name": "indicatorId", "label": "指标", "type": "ref", "ref": "Indicator", "required": true, "note": "" },
+        { "name": "commodityFormId", "label": "品种形态", "type": "ref", "ref": "CommodityForm", "required": false, "note": "" },
+        { "name": "scopeId", "label": "范围", "type": "ref", "ref": "Scope", "required": true, "note": "承载地区/市场/税基/贸易口径" },
+        { "name": "frequency", "label": "频率", "type": "enum", "enumRef": "PeriodType", "required": true, "note": "" },
+        { "name": "statisticalSourceId", "label": "统计来源", "type": "ref", "ref": "StatisticalSource", "required": true, "note": "" },
+        { "name": "externalSeriesCode", "label": "外部序列号", "type": "string", "required": false, "note": "" },
+        { "name": "priceBasis", "label": "价格口径", "type": "enum", "enumRef": "PriceBasis", "required": false, "note": "价格类必填" },
+        { "name": "taxBasis", "label": "税基", "type": "enum", "enumRef": "TaxBasis", "required": false, "note": "" },
+        { "name": "currencyCode", "label": "币种", "type": "string", "required": false, "note": "" },
+        { "name": "startPeriodId", "label": "起始期间", "type": "ref", "ref": "TimePeriod", "required": false, "note": "" },
+        { "name": "endPeriodId", "label": "结束期间", "type": "ref", "ref": "TimePeriod", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "DataPoint",
+      "labelZh": "数据点",
+      "group": "指标域",
+      "idPrefix": "OBJ-DP",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "IvdData", "note": "现有 IvdData 直接对应；YrbYearbook 为批量来源，入库后同样落 DataPoint" },
+      "constraints": ["(seriesId, periodId) 组合唯一", "unitId 必须与所属序列单位一致（门 2 G2-1 / AP_UNIT_MISMATCH）"],
+      "fields": [
+        { "name": "seriesId", "label": "所属序列", "type": "ref", "ref": "IndicatorSeries", "required": true, "note": "" },
+        { "name": "periodId", "label": "期间", "type": "ref", "ref": "TimePeriod", "required": true, "note": "" },
+        { "name": "value", "label": "数值", "type": "float", "required": true, "note": "" },
+        { "name": "unitId", "label": "单位", "type": "ref", "ref": "UnitOfMeasure", "required": true, "note": "必须与序列一致" },
+        { "name": "publishedAt", "label": "发布时间", "type": "datetime", "required": true, "note": "≠ 数据期间" },
+        { "name": "revisionNo", "label": "修订号", "type": "int", "required": true, "note": "从 0 起" },
+        { "name": "qualityFlag", "label": "质量标记", "type": "enum", "enumRef": "QualityFlag", "required": true, "note": "" }
+      ]
+    },
+    {
+      "typeName": "StatisticalSource",
+      "labelZh": "统计来源",
+      "group": "指标域",
+      "idPrefix": "OBJ-SS",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。现有 CrsSource（采集源）是抓取技术源，不等同统计来源，二者不合并" },
+      "constraints": ["reliabilityScore 0—1"],
+      "fields": [
+        { "name": "sourceType", "label": "来源类型", "type": "enum", "enumRef": "StatisticalSourceType", "required": true, "note": "" },
+        { "name": "orgId", "label": "发布机构", "type": "ref", "ref": "Organization", "required": false, "note": "" },
+        { "name": "releasePattern", "label": "发布规律", "type": "string", "required": false, "note": "如『每月 14 日前后』" },
+        { "name": "reliabilityScore", "label": "可靠性", "type": "float", "required": false, "note": "0—1" },
+        { "name": "revisionPolicy", "label": "修订政策", "type": "enum", "enumRef": "RevisionPolicy", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "Event",
+      "labelZh": "事件",
+      "group": "事件域",
+      "idPrefix": "OBJ-EV",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Intel", "note": "现有 Intel（农业情报）可作事件初值来源，但 Intel 是文档型记录，需拆分" },
+      "constraints": ["政策类事件 scopeId 必填", "effectiveFrom <= effectiveTo（若非空）"],
+      "fields": [
+        { "name": "eventTypeId", "label": "事件类型", "type": "ref", "ref": "EventType", "required": true, "note": "" },
+        { "name": "eventTime", "label": "发生时间", "type": "date", "required": true, "note": "" },
+        { "name": "announceTime", "label": "公布时间", "type": "datetime", "required": false, "note": "政策类关键" },
+        { "name": "effectiveFrom", "label": "生效日", "type": "date", "required": false, "note": "" },
+        { "name": "effectiveTo", "label": "到期日", "type": "date", "required": false, "note": "" },
+        { "name": "eventScale", "label": "影响范围", "type": "enum", "enumRef": "EventScale", "required": true, "note": "" },
+        { "name": "scopeId", "label": "适用范围", "type": "ref", "ref": "Scope", "required": false, "note": "政策类必填" },
+        { "name": "actorOrgIds", "label": "参与主体", "type": "ref[]", "ref": "Organization", "required": false, "note": "多值" },
+        { "name": "severity", "label": "重要度", "type": "enum", "enumRef": "Severity", "required": false, "note": "" },
+        { "name": "parentEventId", "label": "上级事件", "type": "ref", "ref": "Event", "required": false, "note": "事件链" }
+      ]
+    },
+    {
+      "typeName": "EventType",
+      "labelZh": "事件类型",
+      "group": "事件域",
+      "idPrefix": "OBJ-EV",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["受控词表：Stage 0 只建类型不建实例", "isPolicyTool=true 的类型必须填 toolVerb"],
+      "fields": [
+        { "name": "eventCategory", "label": "事件大类", "type": "enum", "enumRef": "EventCategory", "required": true, "note": "" },
+        { "name": "isPolicyTool", "label": "是否政策工具", "type": "bool", "required": true, "note": "" },
+        { "name": "toolVerb", "label": "政策工具动词", "type": "string", "required": false, "note": "如『启动最低收购价收购』" },
+        { "name": "defaultImpactDirection", "label": "默认价格方向", "type": "enum", "enumRef": "ImpactDirection", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "Document",
+      "labelZh": "文档",
+      "group": "文档与证据域",
+      "idPrefix": "OBJ-DC",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "SourceDoc", "note": "现有 id_prefix=SOU，迁移后改 OBJ-DC" },
+      "constraints": ["checksum 为去重键，sha256 相同即同一文档"],
+      "fields": [
+        { "name": "docType", "label": "文档类型", "type": "enum", "enumRef": "DocumentType", "required": true, "note": "" },
+        { "name": "issuerOrgId", "label": "发布机构", "type": "ref", "ref": "Organization", "required": false, "note": "" },
+        { "name": "docNo", "label": "文号", "type": "string", "required": false, "note": "" },
+        { "name": "publishDate", "label": "发布日期", "type": "date", "required": true, "note": "" },
+        { "name": "effectiveDate", "label": "生效日期", "type": "date", "required": false, "note": "" },
+        { "name": "url", "label": "原文链接", "type": "string", "required": false, "note": "" },
+        { "name": "filePath", "label": "本地原件路径", "type": "string", "required": false, "note": "" },
+        { "name": "checksum", "label": "校验和", "type": "string", "required": true, "note": "sha256" },
+        { "name": "pageCount", "label": "页数", "type": "int", "required": false, "note": "" },
+        { "name": "authorityLevel", "label": "发文层级", "type": "enum", "enumRef": "AuthorityLevel", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "DocumentSegment",
+      "labelZh": "文档段落",
+      "group": "文档与证据域",
+      "idPrefix": "OBJ-DS",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "SourceDoc_Segment", "note": "与现有段落表对齐，不重建；现有字段 segmentId/docId/segmentNo/segmentText/pageNo/charStart/charEnd 全部复用" },
+      "constraints": ["(documentId, segmentNo) 唯一", "charEnd <= 文档全文长度"],
+      "fields": [
+        { "name": "documentId", "label": "所属文档", "type": "ref", "ref": "Document", "required": true, "note": "" },
+        { "name": "segmentNo", "label": "段号", "type": "int", "required": true, "note": "" },
+        { "name": "text", "label": "段落文本", "type": "string", "required": true, "note": "" },
+        { "name": "pageNo", "label": "页码", "type": "int", "required": false, "note": "" },
+        { "name": "charStart", "label": "全文起始偏移", "type": "int", "required": true, "note": "" },
+        { "name": "charEnd", "label": "全文结束偏移", "type": "int", "required": true, "note": "" },
+        { "name": "segmentType", "label": "段落类型", "type": "enum", "enumRef": "SegmentType", "required": true, "note": "" },
+        { "name": "embeddingRef", "label": "向量索引主键", "type": "string", "required": false, "note": "指针，不存向量本体" }
+      ]
+    },
+    {
+      "typeName": "Evidence",
+      "labelZh": "证据",
+      "group": "文档与证据域",
+      "idPrefix": "OBJ-ED",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。现有 RAG 段落命中可升格为 Evidence，但需补 targetType/targetId/quote" },
+      "constraints": ["quote ≤ 200 字", "quote 必须能在 DocumentSegment.text 中定位（门 2 G2-4）", "quoteHash = sha1(quote)"],
+      "fields": [
+        { "name": "targetType", "label": "被证明类型", "type": "enum", "enumRef": "ObjectTypeName", "required": true, "note": "29 取一" },
+        { "name": "targetId", "label": "被证明对象", "type": "string", "required": true, "note": "" },
+        { "name": "documentId", "label": "来源文档", "type": "ref", "ref": "Document", "required": true, "note": "" },
+        { "name": "segmentId", "label": "来源段落", "type": "ref", "ref": "DocumentSegment", "required": false, "note": "精确到段时必有" },
+        { "name": "quote", "label": "摘句", "type": "string", "required": true, "note": "≤200 字" },
+        { "name": "quoteHash", "label": "摘句指纹", "type": "string", "required": true, "note": "sha1(quote)，去重" },
+        { "name": "pageNo", "label": "页码", "type": "int", "required": false, "note": "" },
+        { "name": "evidenceType", "label": "证据类型", "type": "enum", "enumRef": "EvidenceType", "required": true, "note": "" },
+        { "name": "strength", "label": "证据强度", "type": "float", "required": true, "note": "0—1，DIRECT+原文=1.0" },
+        { "name": "verifiedBy", "label": "核验人", "type": "string", "required": false, "note": "" },
+        { "name": "verifiedAt", "label": "核验时间", "type": "datetime", "required": false, "note": "" }
+      ]
+    },
+    {
+      "typeName": "Dimension",
+      "labelZh": "维度定义",
+      "group": "维度与范围域",
+      "idPrefix": "DIM",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["固定 10 维，Stage 0 不允许扩展包新增（门 3 AP_DIM_CONFLICT）", "dimensionCode 唯一"],
+      "fields": [
+        { "name": "dimensionCode", "label": "维度码", "type": "enum", "enumRef": "DimensionCode", "required": true, "note": "" },
+        { "name": "valueObjectType", "label": "取值对象类型", "type": "enum[]", "enumRef": "ObjectTypeName", "required": true, "note": "该维度允许的对象类型白名单" },
+        { "name": "multiValued", "label": "是否多值", "type": "bool", "required": true, "note": "false 时同一 Scope 内最多 1 个成员" },
+        { "name": "hierarchical", "label": "是否可分层展开", "type": "bool", "required": true, "note": "" }
+      ],
+      "seedInstances": [
+        { "id": "DIM-PUB-COMMODITY", "dimensionCode": "COMMODITY", "label": "品种/形态", "valueObjectType": ["Commodity", "CommodityForm"], "multiValued": true, "hierarchical": true },
+        { "id": "DIM-PUB-GEOGRAPHY", "dimensionCode": "GEOGRAPHY", "label": "地区", "valueObjectType": ["Region"], "multiValued": true, "hierarchical": true },
+        { "id": "DIM-PUB-ACTOR", "dimensionCode": "ACTOR", "label": "主体", "valueObjectType": ["Organization", "Enterprise", "Person"], "multiValued": true, "hierarchical": false },
+        { "id": "DIM-PUB-CHANNEL", "dimensionCode": "CHANNEL", "label": "市场渠道", "valueObjectType": ["MarketPlace"], "multiValued": true, "hierarchical": false },
+        { "id": "DIM-PUB-TIME-WINDOW", "dimensionCode": "TIME_WINDOW", "label": "适用时间窗", "valueObjectType": ["TimePeriod"], "multiValued": false, "hierarchical": false },
+        { "id": "DIM-PUB-UNIT-BASIS", "dimensionCode": "UNIT_BASIS", "label": "单位与价格口径", "valueObjectType": ["UnitOfMeasure"], "multiValued": false, "hierarchical": false },
+        { "id": "DIM-PUB-POLICY-TOOL", "dimensionCode": "POLICY_TOOL", "label": "政策工具", "valueObjectType": ["EventType"], "multiValued": true, "hierarchical": true },
+        { "id": "DIM-PUB-TAX-BASIS", "dimensionCode": "TAX_BASIS", "label": "税基", "valueObjectType": [], "multiValued": false, "hierarchical": false, "inlineEnumRef": "TaxBasis" },
+        { "id": "DIM-PUB-QUALITY-GRADE", "dimensionCode": "QUALITY_GRADE", "label": "质量等级", "valueObjectType": [], "multiValued": false, "hierarchical": true, "inlineAttribute": "CommodityForm.grade" },
+        { "id": "DIM-PUB-TRADE-FLOW", "dimensionCode": "TRADE_FLOW", "label": "贸易流向", "valueObjectType": [], "multiValued": false, "hierarchical": false, "inlineEnumRef": "TradeFlow" }
+      ]
+    },
+    {
+      "typeName": "Scope",
+      "labelZh": "范围组合",
+      "group": "维度与范围域",
+      "idPrefix": "SCP",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表。是政策包与市场包共用的核心，必须在阶段 1 上线" },
+      "constraints": [
+        "normalizedKey = sha1(scopeType + 排序后的 dimensionCode:objectId 列表)，相同即同一 Scope，禁止重复建",
+        "members[].objectType 必须与 Dimension.valueObjectType 兼容（门 2 G2-5 / AP_SCOPE_LEAK）",
+        "members 按 dimensionCode 升序存储"
+      ],
+      "fields": [
+        { "name": "scopeCode", "label": "可读短码", "type": "string", "required": true, "note": "如 POL-MINPRICE-WHEAT-2024" },
+        { "name": "scopeType", "label": "范围类型", "type": "enum", "enumRef": "ScopeType", "required": true, "note": "" },
+        { "name": "members", "label": "维度成员", "type": "array", "required": true, "note": "[{dimensionCode, objectType, objectId}]" },
+        { "name": "isOpen", "label": "开放语义", "type": "bool", "required": true, "note": "是否含『全国所有』『全部品种』" },
+        { "name": "normalizedKey", "label": "归一化键", "type": "string", "required": true, "note": "用于集合比较与去重" },
+        { "name": "supersetOf", "label": "显式上位范围", "type": "ref[]", "ref": "Scope", "required": false, "note": "用于『政策范围 ⊇ 价格序列范围』判断" }
+      ]
+    },
+    {
+      "typeName": "Factor",
+      "labelZh": "驱动因子",
+      "group": "因子域",
+      "idPrefix": "FAC",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["factorCode 全局唯一", "factorCategory 七类固定，二级可扩展但需登记（门 3 G3-3）", "实例由扩展包提案（status=DRAFT + proposedBy），内核评审后 ACTIVE"],
+      "fields": [
+        { "name": "factorCode", "label": "因子码", "type": "string", "required": true, "note": "全局唯一" },
+        { "name": "factorCategory", "label": "一级分类", "type": "enum", "enumRef": "FactorCategory", "required": true, "note": "固定 7 类" },
+        { "name": "factorSubCategory", "label": "二级分类", "type": "string", "required": true, "note": "受控词表，可扩展" },
+        { "name": "defaultDirection", "label": "默认方向", "type": "enum", "enumRef": "FactorDirection", "required": true, "note": "对该品类价格" },
+        { "name": "measuredByIndicatorId", "label": "度量指标", "type": "ref", "ref": "Indicator", "required": false, "note": "可定量化的因子必填" },
+        { "name": "scopeId", "label": "作用范围", "type": "ref", "ref": "Scope", "required": false, "note": "" },
+        { "name": "mechanism", "label": "作用机理", "type": "string", "required": false, "note": "一句话" },
+        { "name": "proposedBy", "label": "提案方", "type": "enum", "enumRef": "FactorProposer", "required": true, "note": "" }
+      ]
+    },
+    {
+      "typeName": "Assertion",
+      "labelZh": "断言",
+      "group": "断言域",
+      "idPrefix": "AST",
+      "domainCode": "PUB",
+      "sqliteAlignment": { "table": "Intel", "note": "现有 Intel 混合了『事件』与『观点』，需拆分：事件归 Event，观点归 Assertion" },
+      "constraints": [
+        "scopeId + assertedById + ≥1 条 SUPPORTED_BY 边，缺一即门 2 拒绝",
+        "多空并存，永不合并；同机构同期间同命题按四元组 + 相似度≥0.85 去重",
+        "不得把断言当事实写入内核对象属性"
+      ],
+      "fields": [
+        { "name": "assertionType", "label": "断言类型", "type": "enum", "enumRef": "AssertionType", "required": true, "note": "" },
+        { "name": "subjectType", "label": "落点类型", "type": "enum", "enumRef": "ObjectTypeName", "required": true, "note": "通常 Commodity / IndicatorSeries / Factor / Event" },
+        { "name": "subjectId", "label": "落点对象", "type": "string", "required": true, "note": "" },
+        { "name": "predicate", "label": "谓词", "type": "enum", "enumRef": "AssertionPredicate", "required": true, "note": "" },
+        { "name": "objectValue", "label": "定量目标值", "type": "float", "required": false, "note": "" },
+        { "name": "objectUnitId", "label": "目标值单位", "type": "ref", "ref": "UnitOfMeasure", "required": false, "note": "objectValue 存在时必填" },
+        { "name": "rangeLow", "label": "区间下界", "type": "float", "required": false, "note": "" },
+        { "name": "rangeHigh", "label": "区间上界", "type": "float", "required": false, "note": "" },
+        { "name": "targetPeriodId", "label": "所指期间", "type": "ref", "ref": "TimePeriod", "required": true, "note": "" },
+        { "name": "scopeId", "label": "作用范围", "type": "ref", "ref": "Scope", "required": true, "note": "" },
+        { "name": "assertedByType", "label": "断言方类型", "type": "enum", "enumRef": "AssertedByType", "required": true, "note": "" },
+        { "name": "assertedById", "label": "断言方", "type": "string", "required": true, "note": "" },
+        { "name": "assertedAt", "label": "断言发表日", "type": "date", "required": true, "note": "" },
+        { "name": "horizon", "label": "时间跨度", "type": "enum", "enumRef": "Horizon", "required": true, "note": "" },
+        { "name": "rationale", "label": "理由摘要", "type": "string", "required": false, "note": "≤300 字" },
+        { "name": "stanceStrength", "label": "原话强度", "type": "enum", "enumRef": "StanceStrength", "required": false, "note": "不折算概率" }
+      ]
+    }
+  ]
+}

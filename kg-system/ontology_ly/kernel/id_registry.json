@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "frozen": true,
+  "sourceBaseline": "STAGE0-执行分解.md §4",
+  "format": {
+    "pattern": "<前缀>-<域码>-<语义片段>[-<限定>]",
+    "regex": "^(OBJ|LNK|DIM|SCP|FAC|AST)-(PUB|S[1-7])-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+    "domainCodeRule": "第二段必须是 domainCodes 中的码（PUB 或 S1—S7），不允许自由填写",
+    "semanticFragmentRule": "全大写；只允许 A-Z、0-9 与连字符；建议用英文短词或标准编码，长度 3—24；不得用中文、空格、下划线",
+    "qualifierRule": "可选，用于同一语义的年度/地区/版本区分，如 -2024 / -CN / -V2",
+    "immutable": "ID 一经写入即冻结，改义不改 ID；确需改义则新建对象并把旧 ID 记入 mergedIntoId 链"
+  },
+  "prefixes": [
+    { "prefix": "OBJ", "label": "对象类型实例", "appliesTo": "25 个内核对象类型 + 9 个政策包条款类型" },
+    { "prefix": "LNK", "label": "关系实体实例", "appliesTo": "4 个关系实体化类型" },
+    { "prefix": "DIM", "label": "维度定义", "appliesTo": "Dimension（固定 10 条）" },
+    { "prefix": "SCP", "label": "范围组合", "appliesTo": "Scope" },
+    { "prefix": "FAC", "label": "因子", "appliesTo": "Factor" },
+    { "prefix": "AST", "label": "断言", "appliesTo": "Assertion" },
+    { "prefix": "TRM", "label": "术语种子", "appliesTo": "terms/ly_terms.json 的 100 条术语", "appliesToGateG0-2": false, "note": "词表条目，不是对象实例；不参与 format.regex 校验" },
+    { "prefix": "FN", "label": "计算函数", "appliesTo": "kernel/functions.json 的 12 个 Function", "appliesToGateG0-2": false, "note": "函数签名标识，不是对象实例；形如 FN-<域码>-<函数名>" },
+    { "prefix": "ACT", "label": "受控动作", "appliesTo": "kernel/actions.json 的 10 个 Action", "appliesToGateG0-2": false, "note": "动作标识，不是对象实例；形如 ACT-<域码>-<动作名>" }
+  ],
+  "nonInstanceNamespaces": {
+    "note": "以下前缀不在 format.regex 内，不受门 G0-2 主键格式校验约束；其自身格式由各自交付物声明。",
+    "items": [
+      { "prefix": "TRM", "format": "^TRM-[A-Z]{2}-[0-9]{4}$", "example": "TRM-LY-0001", "source": "terms/ly_terms.json" },
+      { "prefix": "FN", "format": "^FN-[A-Z]{2,4}-[A-Z0-9]+(?:-[A-Z0-9]+)*$", "example": "FN-PUB-CRUSH-MARGIN", "source": "kernel/functions.json" },
+      { "prefix": "ACT", "format": "^ACT-[A-Z]{2,4}-[A-Z0-9]+(?:-[A-Z0-9]+)*$", "example": "ACT-PUB-WHATIF", "source": "kernel/actions.json" }
+    ]
+  },
+  "domainCodes": [
+    { "code": "PUB", "label": "共享内核", "owner": "kernel", "note": "所有跨包共享对象一律 PUB" },
+    { "code": "S1", "label": "口粮", "owner": "pack", "note": "稻谷/小麦/成品粮消费与收购" },
+    { "code": "S2", "label": "饲料粮", "owner": "pack", "note": "玉米/豆粕/饲料需求" },
+    { "code": "S3", "label": "油脂油料", "owner": "pack", "note": "大豆/菜籽/棕榈/油脂" },
+    { "code": "S4", "label": "政策与储备", "owner": "pack", "note": "含全部条款级 9 类型" },
+    { "code": "S5", "label": "进出口与贸易", "owner": "pack", "note": "海关/关税/配额" },
+    { "code": "S6", "label": "价格与期货", "owner": "pack", "note": "现货/期货/基差" },
+    { "code": "S7", "label": "加工产业链", "owner": "pack", "note": "压榨/制粉/饲料加工" }
+  ],
+  "typePatterns": [
+    { "typeName": "CommodityCategory", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-CAT-GRAIN" },
+    { "typeName": "Commodity", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-CM-WHEAT" },
+    { "typeName": "CommodityForm", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-CM-WHEAT-FLOUR" },
+    { "typeName": "Region", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-RG-CN-HENAN" },
+    { "typeName": "MarketPlace", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-MK-DCE" },
+    { "typeName": "LogisticsNode", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-LG-PORT-QINGDAO" },
+    { "typeName": "Organization", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-OR-NDRC" },
+    { "typeName": "Enterprise", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-EN-SINOGRAIN" },
+    { "typeName": "Person", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-PS-000123" },
+    { "typeName": "TimePeriod", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-TP-2024" },
+    { "typeName": "CalendarScheme", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-TP-MY-USDA" },
+    { "typeName": "UnitOfMeasure", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-UN-CNY-T" },
+    { "typeName": "Indicator", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-IN-WHEAT-SPOT" },
+    { "typeName": "IndicatorSeries", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-IN-WHEAT-SPOT-HENAN-M" },
+    { "typeName": "DataPoint", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-DP-0000001" },
+    { "typeName": "StatisticalSource", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-SS-NBS" },
+    { "typeName": "Event", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-S4-EV-MINPRICE-WHEAT-2024" },
+    { "typeName": "EventType", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-EV-MINPRICE" },
+    { "typeName": "Document", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-DC-2024-0001" },
+    { "typeName": "DocumentSegment", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-DS-2024-0001-0032" },
+    { "typeName": "Evidence", "prefix": "OBJ", "defaultDomain": "PUB", "example": "OBJ-PUB-ED-0000001" },
+    { "typeName": "Dimension", "prefix": "DIM", "defaultDomain": "PUB", "example": "DIM-PUB-GEOGRAPHY" },
+    { "typeName": "Scope", "prefix": "SCP", "defaultDomain": "PUB", "example": "SCP-PUB-POL-MINPRICE-WHEAT-2024" },
+    { "typeName": "Factor", "prefix": "FAC", "defaultDomain": "PUB", "example": "FAC-PUB-SUPPLY-IMPORT" },
+    { "typeName": "Assertion", "prefix": "AST", "defaultDomain": "PUB", "example": "AST-PUB-USDA-2024-WHEAT-UP" },
+    { "typeName": "TransformationProcess", "prefix": "LNK", "defaultDomain": "PUB", "example": "LNK-PUB-TR-SOYBEAN-CRUSH" },
+    { "typeName": "SubstitutionRelation", "prefix": "LNK", "defaultDomain": "PUB", "example": "LNK-PUB-SB-CORN-WHEAT-FEED" },
+    { "typeName": "PriceTransmissionLink", "prefix": "LNK", "defaultDomain": "PUB", "example": "LNK-PUB-PT-CBOT-DCE-SOY" },
+    { "typeName": "ImpactLink", "prefix": "LNK", "defaultDomain": "PUB", "example": "LNK-S4-IM-MINPRICE-WHEAT" },
+    { "typeName": "PolicyClause", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-CL-POL-2024-0001-ART05" },
+    { "typeName": "NormativeStatement", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-NS-POL-2024-0001-ART05-01" },
+    { "typeName": "ClauseCondition", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-CD-POL-2024-0001-ART05-01-C1" },
+    { "typeName": "ClauseException", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-CE-POL-2024-0001-ART05-02-E1" },
+    { "typeName": "ClauseConsequence", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-CQ-POL-2024-0001-ART05-01-R1" },
+    { "typeName": "RuleParameter", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-RP-POL-2024-0001-PRICE-FLOOR" },
+    { "typeName": "ClauseRelation", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-CR-POL-2024-0001-ART05-REF-ART03" },
+    { "typeName": "CompiledRule", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-RL-MINPRICE-WHEAT-2024-V1" },
+    { "typeName": "RuleTestCase", "prefix": "OBJ", "defaultDomain": "S4", "example": "OBJ-S4-TC-MINPRICE-WHEAT-2024-001" }
+  ],
+  "legacyAlignment": {
+    "note": "与 app/catalog.py 现有 18 条 EntitySpec / 19 个对象类型对齐。迁移时新 ID 由本表规则重铸，旧 ID 写入对象 alias 数组，保留外部链接可用；不原地改旧表主键。",
+    "mappings": [
+      { "legacyEntityType": "来源文档", "legacyTable": "SourceDoc", "legacyPrefix": "SOU", "targetType": "Document", "action": "重铸 ID，旧 ID 入 alias" },
+      { "legacyEntityType": "文档段落", "legacyTable": "SourceDoc_Segment", "legacyPrefix": null, "targetType": "DocumentSegment", "action": "复用现有表与主键，仅补 OBJ-DS 映射列" },
+      { "legacyEntityType": "政策法规", "legacyTable": "Policy", "legacyPrefix": "POL", "targetType": "Document", "action": "docType=POLICY_DOC；条款级拆到 PolicyClause" },
+      { "legacyEntityType": "政策条款", "legacyTable": "Policy_Clause", "legacyPrefix": null, "targetType": "PolicyClause", "action": "保留原主键作 sourceClauseId，新建 OBJ-S4-CL-*" },
+      { "legacyEntityType": "指标定义", "legacyTable": "Indicator", "legacyPrefix": "IND", "targetType": "Indicator", "action": "重铸 ID；原有『指标即序列』的假设拆为 Indicator + IndicatorSeries" },
+      { "legacyEntityType": "指标数据", "legacyTable": "IvdData", "legacyPrefix": "IVD", "targetType": "DataPoint", "action": "按 (indicator, region, commodity, source, unit, priceBasis, taxBasis) 先聚序列再落点" },
+      { "legacyEntityType": "年鉴记录", "legacyTable": "YrbYearbook", "legacyPrefix": "YRB", "targetType": "DataPoint", "action": "同上；年鉴作为批量来源，保留页来源证据" },
+      { "legacyEntityType": "农业情报", "legacyTable": "Intel", "legacyPrefix": "INT", "targetType": "Event", "action": "先按是否有『可核实发生』二分为 Event / Assertion，禁止一条 Intel 双挂" },
+      { "legacyEntityType": "品种", "legacyTable": "CmdCommodity", "legacyPrefix": "CMD", "targetType": "Commodity", "action": "重铸 ID" },
+      { "legacyEntityType": "产品", "legacyTable": "Product", "legacyPrefix": "PRD", "targetType": "CommodityForm", "action": "产品形态并入 CommodityForm；加工参数移入 TransformationProcess" },
+      { "legacyEntityType": "地区", "legacyTable": "Region", "legacyPrefix": "REG", "targetType": "Region", "action": "重铸 ID" },
+      { "legacyEntityType": "企业", "legacyTable": "Enterprise", "legacyPrefix": "ENT", "targetType": "Enterprise", "action": "重铸 ID" },
+      { "legacyEntityType": "本体概念", "legacyTable": "Concept", "legacyPrefix": "CON", "targetType": "CommodityCategory", "action": "概念树映射为品类类目；非品类的抽象概念不迁入本体，留在检索层" },
+      { "legacyEntityType": "知识关系", "legacyTable": "Relation", "legacyPrefix": "REL", "targetType": null, "action": "不建独立对象；按谓词归并到 34 条语义边或断言层，逐条人工定夺" },
+      { "legacyEntityType": "质量治理记录", "legacyTable": "QisRecord", "legacyPrefix": "QIS", "targetType": null, "action": "治理数据不入本体，保留为运维表" },
+      { "legacyEntityType": "采集源", "legacyTable": "CrsSource", "legacyPrefix": "CRS", "targetType": null, "action": "技术采集源，不是统计来源；不迁入本体" },
+      { "legacyEntityType": "采集执行记录", "legacyTable": "CrsSource_CrawlRun", "legacyPrefix": "RUN", "targetType": null, "action": "运维表，不迁入本体" },
+      { "legacyEntityType": "知识分类", "legacyTable": "KtcCategory", "legacyPrefix": "KTC", "targetType": "CommodityCategory", "action": "仅品类相关分支迁入；其余分类留在检索层" }
+    ]
+  },
+  "reservedFragments": [
+    "CAT", "CM", "RG", "MK", "LG", "OR", "EN", "PS", "TP", "UN", "IN", "DP", "SS", "EV", "DC", "DS", "ED",
+    "TR", "SB", "PT", "IM", "CL", "NS", "CD", "CE", "CQ", "RP", "CR", "RL", "TC"
+  ],
+  "reservedNote": "上述片段仅作为类型段使用，不得占用为业务语义片段，避免 OBJ-PUB-CM-WHEAT 与 OBJ-PUB-RG-CM 之类的歧义。"
+}

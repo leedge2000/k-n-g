@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0",
+  "note": "规则试验的唯一事实来源。pyDatalog 与 Soufflé 两路必须读取同一份 cases.json，保证对比公平。expect 为人工标注的期望结论。",
+  "cases": [
+    {
+      "id": "TC1",
+      "scenarioName": "河南 7 月 到库价 1.15 三等 无地方收储",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "expect": "APPLICABLE",
+      "expectReason": "四个前提全成立且无例外"
+    },
+    {
+      "id": "TC2",
+      "scenarioName": "到库价 1.25 高于最低收购价 1.19",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.25,
+      "grade": 3,
+      "local_reserve_active": false,
+      "expect": "NOT_APPLICABLE",
+      "expectReason": "C1-3 价格不低于最低收购价"
+    },
+    {
+      "id": "TC3",
+      "scenarioName": "广东 不在 6 省执行区",
+      "region": "GUANGDONG",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "expect": "NOT_APPLICABLE",
+      "expectReason": "C1-1 区域不在执行范围"
+    },
+    {
+      "id": "TC4",
+      "scenarioName": "10 月 超出 6.1—9.30 执行期",
+      "region": "HENAN",
+      "date": "2025-10-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "expect": "NOT_APPLICABLE",
+      "expectReason": "C1-2 超出执行期"
+    },
+    {
+      "id": "TC5",
+      "scenarioName": "到库价缺失",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": null,
+      "grade": 3,
+      "local_reserve_active": false,
+      "expect": "UNABLE",
+      "expectReason": "缺 price 事实，Datalog 无法判定"
+    },
+    {
+      "id": "TC6",
+      "scenarioName": "该省已启动地方收储",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": true,
+      "expect": "NOT_APPLICABLE",
+      "expectReason": "E1 例外排除"
+    },
+    {
+      "id": "TC7",
+      "scenarioName": "等级 4 等 低于三等标准",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 4,
+      "local_reserve_active": false,
+      "expect": "NOT_APPLICABLE",
+      "expectReason": "C1-4 质量等级不达标"
+    }
+  ]
+}

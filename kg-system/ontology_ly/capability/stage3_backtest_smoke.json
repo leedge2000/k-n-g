@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 3",
+  "datasetTier": "technical-smoke",
+  "description": "阶段 3 市场包回溯固定截面：全部期望值来自 seed_market 合成种子，仅用于技术冒烟，不代表真实行情或业务金标。",
+  "source": {
+    "files": [
+      {
+        "path": "ontology_ly/packs/market/stage3_市场包口径清单.md",
+        "sha256": "4542e8bd619c1bad8a762466faea32589d1b010e16729d2771ada2491c268fab"
+      },
+      {
+        "path": "ontology_ly/packs/market/stage4_联动与扩面口径清单.md",
+        "sha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "S3-BT-01",
+      "title": "首期发布日之前：无点位、无事件、无断言",
+      "asOf": "2024-02-01",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 0,
+          "eventCount": 0,
+          "assertionCount": 0,
+          "latestPeriod": null
+        },
+        "series": {
+          "pointCount": 0,
+          "lastPeriodId": null,
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [],
+        "timeline": [],
+        "assertionTotal": 0,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    },
+    {
+      "caseId": "S3-BT-02",
+      "title": "托市启动前后：两个点位，EV-1001 生效并触发影响",
+      "asOf": "2024-03-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 16,
+          "eventCount": 2,
+          "assertionCount": 0,
+          "latestPeriod": "2024-02"
+        },
+        "series": {
+          "pointCount": 2,
+          "lastPeriodId": "2024-02",
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EFFECTIVE", "triggeredImpactCount": 1}
+        ],
+        "timeline": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1005", "state": "ANNOUNCED", "triggeredImpactCount": 0}
+        ],
+        "assertionTotal": 0,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    },
+    {
+      "caseId": "S3-BT-03",
+      "title": "小麦预案生效：五个点位，EV-1004 生效并触发影响",
+      "asOf": "2024-06-20",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 40,
+          "eventCount": 4,
+          "assertionCount": 0,
+          "latestPeriod": "2024-05"
+        },
+        "series": {
+          "pointCount": 5,
+          "lastPeriodId": "2024-05",
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EFFECTIVE", "triggeredImpactCount": 1}
+        ],
+        "timeline": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1005", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1004", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1002", "state": "ANNOUNCED", "triggeredImpactCount": 0}
+        ],
+        "assertionTotal": 0,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    },
+    {
+      "caseId": "S3-BT-04",
+      "title": "干旱预警期间：七个点位，EV-1001 到期，EV-1003 生效",
+      "asOf": "2024-08-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 56,
+          "eventCount": 6,
+          "assertionCount": 0,
+          "latestPeriod": "2024-07"
+        },
+        "series": {
+          "pointCount": 7,
+          "lastPeriodId": "2024-07",
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0}
+        ],
+        "timeline": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1005", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1004", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1002", "state": "EFFECTIVE", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1006", "state": "EFFECTIVE", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1003", "state": "EFFECTIVE", "triggeredImpactCount": 0}
+        ],
+        "assertionTotal": 0,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    },
+    {
+      "caseId": "S3-BT-05",
+      "title": "轮换收储期间：九个点位，EV-1003/1004 到期，EV-1006 生效",
+      "asOf": "2024-10-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 72,
+          "eventCount": 6,
+          "assertionCount": 6,
+          "latestPeriod": "2024-09"
+        },
+        "series": {
+          "pointCount": 9,
+          "lastPeriodId": "2024-09",
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0}
+        ],
+        "timeline": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1005", "state": "EFFECTIVE", "triggeredImpactCount": 1},
+          {"eventId": "OBJ-PUB-EV-1004", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1002", "state": "EFFECTIVE", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1006", "state": "EFFECTIVE", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1003", "state": "EXPIRED", "triggeredImpactCount": 0}
+        ],
+        "assertionTotal": 6,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    },
+    {
+      "caseId": "S3-BT-06",
+      "title": "全年收官：十二个点位，断言六组",
+      "asOf": "2025-01-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "expected": {
+        "overview": {
+          "seriesCount": 8,
+          "pointCount": 96,
+          "eventCount": 6,
+          "assertionCount": 6,
+          "latestPeriod": "2024-12"
+        },
+        "series": {
+          "pointCount": 12,
+          "lastPeriodId": "2024-12",
+          "unitCode": "CNY/t",
+          "priceBasis": "EX_FARM"
+        },
+        "events": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0}
+        ],
+        "timeline": [
+          {"eventId": "OBJ-PUB-EV-1001", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1005", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1004", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1002", "state": "EFFECTIVE", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1006", "state": "EXPIRED", "triggeredImpactCount": 0},
+          {"eventId": "OBJ-PUB-EV-1003", "state": "EXPIRED", "triggeredImpactCount": 0}
+        ],
+        "assertionTotal": 6,
+        "transmission": {"nodes": 6, "edges": 4}
+      }
+    }
+  ]
+}

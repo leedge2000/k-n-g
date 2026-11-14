@@ -1,0 +1,52 @@
+// ============================================================
+// 小麦最低收购价 · 规则试验（Soufflé 版）
+// 与 judge_pydatalog.py 使用同一份 cases.json 与同一批派生布尔事实
+// 分工：
+//   - Python 负责数值/集合比较（fact_* 输入表）与事实完备性（fact_complete）
+//   - Soufflé 负责声明式判定（applicable / not_applicable / unable）
+// 运行：souffle -F facts wheat_minprice.dl -D output
+// ============================================================
+
+// ---------- 输入：派生布尔事实（由 Python 预计算） ----------
+.decl allowed_region(region: symbol)
+.decl case_exists(case_id: symbol)
+.decl fact_complete(case_id: symbol)
+.decl in_region(case_id: symbol, region: symbol)
+.decl within_window(case_id: symbol)
+.decl price_below_floor(case_id: symbol)
+.decl quality_ok(case_id: symbol)
+.decl reserve_active(case_id: symbol)
+
+// ---------- 派生 ----------
+.decl region_ok(case_id: symbol)
+.decl applicable(case_id: symbol)
+.decl not_applicable(case_id: symbol)
+.decl unable(case_id: symbol)
+
+.input allowed_region
+.input case_exists
+.input fact_complete
+.input in_region
+.input within_window
+.input price_below_floor
+.input quality_ok
+.input reserve_active
+
+// 区域在 6 省之内
+region_ok(C) :- case_exists(C), in_region(C, R), allowed_region(R).
+
+// 四条件全成立且无例外（分层否定：reserve_active 为更低层）
+applicable(C) :-
+    case_exists(C), fact_complete(C),
+    region_ok(C), within_window(C), price_below_floor(C), quality_ok(C),
+    !reserve_active(C).
+
+// 事实不全 → UNABLE（Datalog 本身无法表达，须由 fact_complete 输入承载）
+unable(C) :- case_exists(C), !fact_complete(C).
+
+// 事实齐备但不成立 → NOT_APPLICABLE
+not_applicable(C) :- case_exists(C), fact_complete(C), !applicable(C).
+
+.output applicable
+.output not_applicable
+.output unable

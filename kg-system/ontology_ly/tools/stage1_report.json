@@ -1,0 +1,4050 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 1",
+  "datasetTier": "seed-smoke",
+  "generatedAt": "2026-11-14T03:25:21+00:00",
+  "businessQualityGate": "NOT_ASSESSED",
+  "productionPerformanceGate": "NOT_ASSESSED",
+  "boundary": "种子冒烟基线不代表真实业务召回质量，也不代表并发 50 的生产性能验收。",
+  "productionTargetsForLaterAssessment": {
+    "commonQuery": {
+      "p95Ms": 3000,
+      "concurrency": 50
+    },
+    "fullTextSearch": {
+      "p95Ms": 1000
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "os": "Windows-11-10.0.26100-SP0",
+    "sqlite": "3.49.1"
+  },
+  "configuration": {
+    "graphBackend": "relational",
+    "embeddingBackend": "hash",
+    "embeddingModel": "hash",
+    "rerankMode": "lexical",
+    "llmEnabled": false,
+    "llmEntityExtraction": false,
+    "topK": 10,
+    "answer": true,
+    "warmRounds": 3,
+    "metricsSource": "cold"
+  },
+  "inputs": {
+    "database": {
+      "path": "data/grain_oil.db",
+      "sha256": "c0abefe9e8f7b71376a4d01ea8958d05a996ee078571c4e2ec29846b54ea4e88"
+    },
+    "snapshotBeforeInitialization": {
+      "sha256": "c0abefe9e8f7b71376a4d01ea8958d05a996ee078571c4e2ec29846b54ea4e88"
+    },
+    "gold": {
+      "path": "ontology_ly/capability/stage1_retrieval_gold.json",
+      "sha256": "0e6a9c02c35e7f66ad245e9f38f021ff98b952a178b54aa423747ada0aaf57be"
+    }
+  },
+  "scope": {
+    "dimensionCount": 10,
+    "scopeCount": 8,
+    "expectedDimensionCount": 10
+  },
+  "goldValidation": {
+    "queryCount": 10,
+    "uniqueRelevantSegmentCount": 8,
+    "structuralErrors": [],
+    "invalidSegments": [],
+    "passed": true
+  },
+  "modes": {
+    "naive": {
+      "success": true,
+      "queryCount": 10,
+      "metricsSource": "cold",
+      "metrics": {
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.9,
+        "ndcg@10": 0.928185,
+        "zeroResultRate": 0.0,
+        "zeroHitRate": 0.0
+      },
+      "questions": [
+        {
+          "queryId": "S1-Q001",
+          "query": "2025年早籼稻最低收购价是多少？",
+          "relevantSegmentIds": [
+            "SOU0001-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0009-S1770",
+            "SOU0009-S343",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1616"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q002",
+          "query": "最低收购价政策执行情况要加强什么工作？",
+          "relevantSegmentIds": [
+            "SOU0001-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0001-S001",
+            "SOU0009-S1226",
+            "SOU0009-S1573"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q003",
+          "query": "2024年全国粮食播种面积和粮食产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0009-S1513",
+            "SOU0009-S345",
+            "SOU0009-S1514",
+            "SOU0006-S147",
+            "SOU0009-S1503",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0009-S1218"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食产量",
+              "entityId": "IND0003",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q004",
+          "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001",
+            "CMD0002",
+            "CMD0003",
+            "CMD0004"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY",
+            "OBJ-PUB-CM-WHEAT",
+            "OBJ-PUB-CM-CORN",
+            "OBJ-PUB-CM-SOYBEAN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1570",
+            "SOU0009-S064",
+            "SOU0009-S1503",
+            "SOU0009-S1515",
+            "SOU0009-S060",
+            "SOU0009-S068",
+            "SOU0009-S065",
+            "SOU0009-S746"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "小麦",
+              "entityId": "CMD0002",
+              "ontologyId": "OBJ-PUB-CM-WHEAT"
+            },
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "大豆",
+              "entityId": "CMD0004",
+              "ontologyId": "OBJ-PUB-CM-SOYBEAN"
+            },
+            {
+              "name": "大豆产量",
+              "entityId": "IND0006",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q005",
+          "query": "2024年重庆粮食播种面积和总产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S1503",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S216",
+            "SOU0006-S391",
+            "SOU0002-S002"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q006",
+          "query": "2024年重庆玉米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S810",
+            "SOU0009-S839",
+            "SOU0006-S184",
+            "SOU0009-S927",
+            "SOU0009-S919"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "玉米产量",
+              "entityId": "IND0005",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q007",
+          "query": "What is world rice production for 2026/27 Sep?",
+          "relevantSegmentIds": [
+            "SOU0004-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ],
+          "matchedEntities": [],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q008",
+          "query": "China rice production for 2026/27 Sep, milled basis",
+          "relevantSegmentIds": [
+            "SOU0004-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S256"
+          ],
+          "matchedEntities": [
+            {
+              "name": "basis",
+              "entityId": "OBJ-PUB-IN-BASIS",
+              "ontologyId": "OBJ-PUB-IN-BASIS"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q009",
+          "query": "苞米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1503",
+            "SOU0002-S001",
+            "SOU0009-S1515",
+            "SOU0003-S001",
+            "SOU0009-S1512",
+            "SOU0007-S1007"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6309297535714575,
+          "firstRelevantRank": 2
+        },
+        {
+          "queryId": "S1-Q010",
+          "query": "全国与重庆2024年稻谷产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0009-S068",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0006-S359",
+            "SOU0009-S1570",
+            "SOU0009-S1771",
+            "SOU0009-S1503"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "稻谷产量",
+              "entityId": "IND0002",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6509209298071326,
+          "firstRelevantRank": 2
+        }
+      ],
+      "latency": {
+        "method": "nearest-rank",
+        "coldDefinition": "该模式下每个问题的第一次查询",
+        "warmDefinition": "同一实例后续三轮全部问题",
+        "cold": {
+          "samples": 10,
+          "p50Ms": 30.87,
+          "p95Ms": 56.965,
+          "maxMs": 56.965
+        },
+        "warm": {
+          "samples": 30,
+          "p50Ms": 30.896,
+          "p95Ms": 62.27,
+          "maxMs": 69.839
+        },
+        "warmRounds": {
+          "1": {
+            "samples": 10,
+            "p50Ms": 30.907,
+            "p95Ms": 69.839,
+            "maxMs": 69.839
+          },
+          "2": {
+            "samples": 10,
+            "p50Ms": 30.84,
+            "p95Ms": 55.172,
+            "maxMs": 55.172
+          },
+          "3": {
+            "samples": 10,
+            "p50Ms": 30.896,
+            "p95Ms": 62.27,
+            "maxMs": 62.27
+          }
+        }
+      },
+      "deterministicRanking": true,
+      "determinismComparisons": [
+        {
+          "queryId": "S1-Q001",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0009-S1770",
+            "SOU0009-S343",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1616"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0009-S1770",
+            "SOU0009-S343",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1616"
+          ]
+        },
+        {
+          "queryId": "S1-Q002",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0001-S001",
+            "SOU0009-S1226",
+            "SOU0009-S1573"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0001-S001",
+            "SOU0009-S1226",
+            "SOU0009-S1573"
+          ]
+        },
+        {
+          "queryId": "S1-Q003",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0009-S1513",
+            "SOU0009-S345",
+            "SOU0009-S1514",
+            "SOU0006-S147",
+            "SOU0009-S1503",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0009-S1218"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0009-S1513",
+            "SOU0009-S345",
+            "SOU0009-S1514",
+            "SOU0006-S147",
+            "SOU0009-S1503",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0009-S1218"
+          ]
+        },
+        {
+          "queryId": "S1-Q004",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1570",
+            "SOU0009-S064",
+            "SOU0009-S1503",
+            "SOU0009-S1515",
+            "SOU0009-S060",
+            "SOU0009-S068",
+            "SOU0009-S065",
+            "SOU0009-S746"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1570",
+            "SOU0009-S064",
+            "SOU0009-S1503",
+            "SOU0009-S1515",
+            "SOU0009-S060",
+            "SOU0009-S068",
+            "SOU0009-S065",
+            "SOU0009-S746"
+          ]
+        },
+        {
+          "queryId": "S1-Q005",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S1503",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S216",
+            "SOU0006-S391",
+            "SOU0002-S002"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S1503",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S216",
+            "SOU0006-S391",
+            "SOU0002-S002"
+          ]
+        },
+        {
+          "queryId": "S1-Q006",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S810",
+            "SOU0009-S839",
+            "SOU0006-S184",
+            "SOU0009-S927",
+            "SOU0009-S919"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S810",
+            "SOU0009-S839",
+            "SOU0006-S184",
+            "SOU0009-S927",
+            "SOU0009-S919"
+          ]
+        },
+        {
+          "queryId": "S1-Q007",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ]
+        },
+        {
+          "queryId": "S1-Q008",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S256"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S256"
+          ]
+        },
+        {
+          "queryId": "S1-Q009",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1503",
+            "SOU0002-S001",
+            "SOU0009-S1515",
+            "SOU0003-S001",
+            "SOU0009-S1512",
+            "SOU0007-S1007"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1503",
+            "SOU0002-S001",
+            "SOU0009-S1515",
+            "SOU0003-S001",
+            "SOU0009-S1512",
+            "SOU0007-S1007"
+          ]
+        },
+        {
+          "queryId": "S1-Q010",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0009-S068",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0006-S359",
+            "SOU0009-S1570",
+            "SOU0009-S1771",
+            "SOU0009-S1503"
+          ],
+          "round3SegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0009-S068",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0006-S359",
+            "SOU0009-S1570",
+            "SOU0009-S1771",
+            "SOU0009-S1503"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "local": {
+      "success": true,
+      "queryCount": 10,
+      "metricsSource": "cold",
+      "metrics": {
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.9,
+        "ndcg@10": 0.932436,
+        "zeroResultRate": 0.0,
+        "zeroHitRate": 0.0
+      },
+      "questions": [
+        {
+          "queryId": "S1-Q001",
+          "query": "2025年早籼稻最低收购价是多少？",
+          "relevantSegmentIds": [
+            "SOU0001-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1570"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q002",
+          "query": "最低收购价政策执行情况要加强什么工作？",
+          "relevantSegmentIds": [
+            "SOU0001-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S367"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q003",
+          "query": "2024年全国粮食播种面积和粮食产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0005-S001",
+            "SOU0009-S1220",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0006-S432"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食产量",
+              "entityId": "IND0003",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q004",
+          "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001",
+            "CMD0002",
+            "CMD0003",
+            "CMD0004"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY",
+            "OBJ-PUB-CM-WHEAT",
+            "OBJ-PUB-CM-CORN",
+            "OBJ-PUB-CM-SOYBEAN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0001-S001",
+            "SOU0009-S1517",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493",
+            "SOU0009-S1772",
+            "SOU0009-S414"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "小麦",
+              "entityId": "CMD0002",
+              "ontologyId": "OBJ-PUB-CM-WHEAT"
+            },
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "大豆",
+              "entityId": "CMD0004",
+              "ontologyId": "OBJ-PUB-CM-SOYBEAN"
+            },
+            {
+              "name": "大豆产量",
+              "entityId": "IND0006",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q005",
+          "query": "2024年重庆粮食播种面积和总产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1220",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q006",
+          "query": "2024年重庆玉米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S060",
+            "SOU0009-S746",
+            "SOU0009-S019",
+            "SOU0009-S1692",
+            "SOU0009-S682"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "玉米产量",
+              "entityId": "IND0005",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6309297535714575,
+          "firstRelevantRank": 2
+        },
+        {
+          "queryId": "S1-Q007",
+          "query": "What is world rice production for 2026/27 Sep?",
+          "relevantSegmentIds": [
+            "SOU0004-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ],
+          "matchedEntities": [],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q008",
+          "query": "China rice production for 2026/27 Sep, milled basis",
+          "relevantSegmentIds": [
+            "SOU0004-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727"
+          ],
+          "matchedEntities": [
+            {
+              "name": "basis",
+              "entityId": "OBJ-PUB-IN-BASIS",
+              "ontologyId": "OBJ-PUB-IN-BASIS"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q009",
+          "query": "苞米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1517",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S060",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q010",
+          "query": "全国与重庆2024年稻谷产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1771",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1492",
+            "SOU0009-S377"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "稻谷产量",
+              "entityId": "IND0002",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6934264036172708,
+          "firstRelevantRank": 2
+        }
+      ],
+      "latency": {
+        "method": "nearest-rank",
+        "coldDefinition": "该模式下每个问题的第一次查询",
+        "warmDefinition": "同一实例后续三轮全部问题",
+        "cold": {
+          "samples": 10,
+          "p50Ms": 30.653,
+          "p95Ms": 58.377,
+          "maxMs": 58.377
+        },
+        "warm": {
+          "samples": 30,
+          "p50Ms": 31.426,
+          "p95Ms": 61.463,
+          "maxMs": 61.832
+        },
+        "warmRounds": {
+          "1": {
+            "samples": 10,
+            "p50Ms": 29.647,
+            "p95Ms": 60.694,
+            "maxMs": 60.694
+          },
+          "2": {
+            "samples": 10,
+            "p50Ms": 32.004,
+            "p95Ms": 61.832,
+            "maxMs": 61.832
+          },
+          "3": {
+            "samples": 10,
+            "p50Ms": 31.292,
+            "p95Ms": 56.943,
+            "maxMs": 56.943
+          }
+        }
+      },
+      "deterministicRanking": true,
+      "determinismComparisons": [
+        {
+          "queryId": "S1-Q001",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1570"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1570"
+          ]
+        },
+        {
+          "queryId": "S1-Q002",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S367"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S367"
+          ]
+        },
+        {
+          "queryId": "S1-Q003",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0005-S001",
+            "SOU0009-S1220",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0006-S432"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0005-S001",
+            "SOU0009-S1220",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0006-S432"
+          ]
+        },
+        {
+          "queryId": "S1-Q004",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0001-S001",
+            "SOU0009-S1517",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493",
+            "SOU0009-S1772",
+            "SOU0009-S414"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0001-S001",
+            "SOU0009-S1517",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493",
+            "SOU0009-S1772",
+            "SOU0009-S414"
+          ]
+        },
+        {
+          "queryId": "S1-Q005",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1220",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0005-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1220",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ]
+        },
+        {
+          "queryId": "S1-Q006",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S060",
+            "SOU0009-S746",
+            "SOU0009-S019",
+            "SOU0009-S1692",
+            "SOU0009-S682"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S060",
+            "SOU0009-S746",
+            "SOU0009-S019",
+            "SOU0009-S1692",
+            "SOU0009-S682"
+          ]
+        },
+        {
+          "queryId": "S1-Q007",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S726",
+            "SOU0007-S750"
+          ]
+        },
+        {
+          "queryId": "S1-Q008",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727"
+          ]
+        },
+        {
+          "queryId": "S1-Q009",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1517",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S060",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S1517",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S060",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ]
+        },
+        {
+          "queryId": "S1-Q010",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1771",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1492",
+            "SOU0009-S377"
+          ],
+          "round3SegmentIds": [
+            "SOU0009-S1517",
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1771",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1492",
+            "SOU0009-S377"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "global": {
+      "success": true,
+      "queryCount": 10,
+      "metricsSource": "cold",
+      "metrics": {
+        "hit@5": 0.9,
+        "hit@10": 1.0,
+        "recall@5": 0.9,
+        "recall@10": 1.0,
+        "mrr@10": 0.8625,
+        "ndcg@10": 0.894639,
+        "zeroResultRate": 0.0,
+        "zeroHitRate": 0.0
+      },
+      "questions": [
+        {
+          "queryId": "S1-Q001",
+          "query": "2025年早籼稻最低收购价是多少？",
+          "relevantSegmentIds": [
+            "SOU0001-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S349"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q002",
+          "query": "最低收购价政策执行情况要加强什么工作？",
+          "relevantSegmentIds": [
+            "SOU0001-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0001-S002",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 0.0,
+          "hit@10": 1.0,
+          "recall@5": 0.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.125,
+          "ndcg@10": 0.31546487678572877,
+          "firstRelevantRank": 8
+        },
+        {
+          "queryId": "S1-Q003",
+          "query": "2024年全国粮食播种面积和粮食产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S345",
+            "SOU0009-S1503",
+            "SOU0009-S333"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食产量",
+              "entityId": "IND0003",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q004",
+          "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001",
+            "CMD0002",
+            "CMD0003",
+            "CMD0004"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY",
+            "OBJ-PUB-CM-WHEAT",
+            "OBJ-PUB-CM-CORN",
+            "OBJ-PUB-CM-SOYBEAN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1777",
+            "SOU0009-S414",
+            "SOU0009-S1771"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "小麦",
+              "entityId": "CMD0002",
+              "ontologyId": "OBJ-PUB-CM-WHEAT"
+            },
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "大豆",
+              "entityId": "CMD0004",
+              "ontologyId": "OBJ-PUB-CM-SOYBEAN"
+            },
+            {
+              "name": "大豆产量",
+              "entityId": "IND0006",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q005",
+          "query": "2024年重庆粮食播种面积和总产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S391"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q006",
+          "query": "2024年重庆玉米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1308",
+            "SOU0006-S359",
+            "SOU0006-S184"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "玉米产量",
+              "entityId": "IND0005",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6309297535714575,
+          "firstRelevantRank": 2
+        },
+        {
+          "queryId": "S1-Q007",
+          "query": "What is world rice production for 2026/27 Sep?",
+          "relevantSegmentIds": [
+            "SOU0004-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S036",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S043",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S595"
+          ],
+          "matchedEntities": [],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q008",
+          "query": "China rice production for 2026/27 Sep, milled basis",
+          "relevantSegmentIds": [
+            "SOU0004-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S728",
+            "SOU0007-S619",
+            "SOU0007-S727",
+            "SOU0007-S729",
+            "SOU0007-S293"
+          ],
+          "matchedEntities": [
+            {
+              "name": "basis",
+              "entityId": "OBJ-PUB-IN-BASIS",
+              "ontologyId": "OBJ-PUB-IN-BASIS"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q009",
+          "query": "苞米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1308",
+            "SOU0009-S1272",
+            "SOU0009-S1503",
+            "SOU0009-S1513"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q010",
+          "query": "全国与重庆2024年稻谷产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0006-S184"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "稻谷产量",
+              "entityId": "IND0002",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        }
+      ],
+      "latency": {
+        "method": "nearest-rank",
+        "coldDefinition": "该模式下每个问题的第一次查询",
+        "warmDefinition": "同一实例后续三轮全部问题",
+        "cold": {
+          "samples": 10,
+          "p50Ms": 30.849,
+          "p95Ms": 57.198,
+          "maxMs": 57.198
+        },
+        "warm": {
+          "samples": 30,
+          "p50Ms": 32.128,
+          "p95Ms": 58.614,
+          "maxMs": 60.695
+        },
+        "warmRounds": {
+          "1": {
+            "samples": 10,
+            "p50Ms": 31.086,
+            "p95Ms": 60.695,
+            "maxMs": 60.695
+          },
+          "2": {
+            "samples": 10,
+            "p50Ms": 32.219,
+            "p95Ms": 57.819,
+            "maxMs": 57.819
+          },
+          "3": {
+            "samples": 10,
+            "p50Ms": 31.813,
+            "p95Ms": 58.614,
+            "maxMs": 58.614
+          }
+        }
+      },
+      "deterministicRanking": true,
+      "determinismComparisons": [
+        {
+          "queryId": "S1-Q001",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S349"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0009-S1772",
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S349"
+          ]
+        },
+        {
+          "queryId": "S1-Q002",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0001-S002",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ],
+          "round3SegmentIds": [
+            "SOU0009-S1769",
+            "SOU0009-S341",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S343",
+            "SOU0009-S1771",
+            "SOU0009-S1770",
+            "SOU0001-S002",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ]
+        },
+        {
+          "queryId": "S1-Q003",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S345",
+            "SOU0009-S1503",
+            "SOU0009-S333"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0009-S345",
+            "SOU0009-S1503",
+            "SOU0009-S333"
+          ]
+        },
+        {
+          "queryId": "S1-Q004",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1777",
+            "SOU0009-S414",
+            "SOU0009-S1771"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1777",
+            "SOU0009-S414",
+            "SOU0009-S1771"
+          ]
+        },
+        {
+          "queryId": "S1-Q005",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S391"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0009-S1513",
+            "SOU0009-S1514",
+            "SOU0006-S184",
+            "SOU0006-S359",
+            "SOU0006-S391"
+          ]
+        },
+        {
+          "queryId": "S1-Q006",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1308",
+            "SOU0006-S359",
+            "SOU0006-S184"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1308",
+            "SOU0006-S359",
+            "SOU0006-S184"
+          ]
+        },
+        {
+          "queryId": "S1-Q007",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S036",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S043",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S595"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S036",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S043",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S595"
+          ]
+        },
+        {
+          "queryId": "S1-Q008",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S728",
+            "SOU0007-S619",
+            "SOU0007-S727",
+            "SOU0007-S729",
+            "SOU0007-S293"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S292",
+            "SOU0007-S036",
+            "SOU0006-S048",
+            "SOU0007-S728",
+            "SOU0007-S619",
+            "SOU0007-S727",
+            "SOU0007-S729",
+            "SOU0007-S293"
+          ]
+        },
+        {
+          "queryId": "S1-Q009",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1308",
+            "SOU0009-S1272",
+            "SOU0009-S1503",
+            "SOU0009-S1513"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1322",
+            "SOU0009-S1308",
+            "SOU0009-S1272",
+            "SOU0009-S1503",
+            "SOU0009-S1513"
+          ]
+        },
+        {
+          "queryId": "S1-Q010",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0006-S184"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0006-S184"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "hybrid": {
+      "success": true,
+      "queryCount": 10,
+      "metricsSource": "cold",
+      "metrics": {
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.95,
+        "ndcg@10": 0.955065,
+        "zeroResultRate": 0.0,
+        "zeroHitRate": 0.0
+      },
+      "questions": [
+        {
+          "queryId": "S1-Q001",
+          "query": "2025年早籼稻最低收购价是多少？",
+          "relevantSegmentIds": [
+            "SOU0001-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S285"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q002",
+          "query": "最低收购价政策执行情况要加强什么工作？",
+          "relevantSegmentIds": [
+            "SOU0001-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1226"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q003",
+          "query": "2024年全国粮食播种面积和粮食产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S432",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食产量",
+              "entityId": "IND0003",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q004",
+          "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001",
+            "CMD0002",
+            "CMD0003",
+            "CMD0004"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY",
+            "OBJ-PUB-CM-WHEAT",
+            "OBJ-PUB-CM-CORN",
+            "OBJ-PUB-CM-SOYBEAN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1516",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "小麦",
+              "entityId": "CMD0002",
+              "ontologyId": "OBJ-PUB-CM-WHEAT"
+            },
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "大豆",
+              "entityId": "CMD0004",
+              "ontologyId": "OBJ-PUB-CM-SOYBEAN"
+            },
+            {
+              "name": "大豆产量",
+              "entityId": "IND0006",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q005",
+          "query": "2024年重庆粮食播种面积和总产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0003-S002",
+            "SOU0009-S1214",
+            "SOU0005-S001"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q006",
+          "query": "2024年重庆玉米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S060"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "玉米产量",
+              "entityId": "IND0005",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6309297535714575,
+          "firstRelevantRank": 2
+        },
+        {
+          "queryId": "S1-Q007",
+          "query": "What is world rice production for 2026/27 Sep?",
+          "relevantSegmentIds": [
+            "SOU0004-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ],
+          "matchedEntities": [],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q008",
+          "query": "China rice production for 2026/27 Sep, milled basis",
+          "relevantSegmentIds": [
+            "SOU0004-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S293",
+            "SOU0007-S727"
+          ],
+          "matchedEntities": [
+            {
+              "name": "basis",
+              "entityId": "OBJ-PUB-IN-BASIS",
+              "ontologyId": "OBJ-PUB-IN-BASIS"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q009",
+          "query": "苞米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1517",
+            "SOU0009-S1503"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q010",
+          "query": "全国与重庆2024年稻谷产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1780"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "稻谷产量",
+              "entityId": "IND0002",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 0.9197207891481876,
+          "firstRelevantRank": 1
+        }
+      ],
+      "latency": {
+        "method": "nearest-rank",
+        "coldDefinition": "该模式下每个问题的第一次查询",
+        "warmDefinition": "同一实例后续三轮全部问题",
+        "cold": {
+          "samples": 10,
+          "p50Ms": 30.804,
+          "p95Ms": 60.459,
+          "maxMs": 60.459
+        },
+        "warm": {
+          "samples": 30,
+          "p50Ms": 32.094,
+          "p95Ms": 58.07,
+          "maxMs": 59.311
+        },
+        "warmRounds": {
+          "1": {
+            "samples": 10,
+            "p50Ms": 30.634,
+            "p95Ms": 57.85,
+            "maxMs": 57.85
+          },
+          "2": {
+            "samples": 10,
+            "p50Ms": 32.666,
+            "p95Ms": 58.07,
+            "maxMs": 58.07
+          },
+          "3": {
+            "samples": 10,
+            "p50Ms": 31.295,
+            "p95Ms": 59.311,
+            "maxMs": 59.311
+          }
+        }
+      },
+      "deterministicRanking": true,
+      "determinismComparisons": [
+        {
+          "queryId": "S1-Q001",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S285"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S285"
+          ]
+        },
+        {
+          "queryId": "S1-Q002",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1226"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1226"
+          ]
+        },
+        {
+          "queryId": "S1-Q003",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S432",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S432",
+            "SOU0006-S257",
+            "SOU0009-S1218",
+            "SOU0009-S1214"
+          ]
+        },
+        {
+          "queryId": "S1-Q004",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1516",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1772",
+            "SOU0009-S1516",
+            "SOU0009-S1771",
+            "SOU0009-S1494",
+            "SOU0009-S1493"
+          ]
+        },
+        {
+          "queryId": "S1-Q005",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0003-S002",
+            "SOU0009-S1214",
+            "SOU0005-S001"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0003-S002",
+            "SOU0009-S1214",
+            "SOU0005-S001"
+          ]
+        },
+        {
+          "queryId": "S1-Q006",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S060"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S746",
+            "SOU0009-S682",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S060"
+          ]
+        },
+        {
+          "queryId": "S1-Q007",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S293",
+            "SOU0007-S043",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ]
+        },
+        {
+          "queryId": "S1-Q008",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S293",
+            "SOU0007-S727"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S293",
+            "SOU0007-S727"
+          ]
+        },
+        {
+          "queryId": "S1-Q009",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1517",
+            "SOU0009-S1503"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1322",
+            "SOU0009-S1272",
+            "SOU0009-S1517",
+            "SOU0009-S1503"
+          ]
+        },
+        {
+          "queryId": "S1-Q010",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1780"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S1570",
+            "SOU0009-S068",
+            "SOU0009-S1780"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "mix": {
+      "success": true,
+      "queryCount": 10,
+      "metricsSource": "cold",
+      "metrics": {
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.95,
+        "ndcg@10": 0.955065,
+        "zeroResultRate": 0.0,
+        "zeroHitRate": 0.0
+      },
+      "questions": [
+        {
+          "queryId": "S1-Q001",
+          "query": "2025年早籼稻最低收购价是多少？",
+          "relevantSegmentIds": [
+            "SOU0001-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1570"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q002",
+          "query": "最低收购价政策执行情况要加强什么工作？",
+          "relevantSegmentIds": [
+            "SOU0001-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ],
+          "matchedEntities": [
+            {
+              "name": "最低收购价",
+              "entityId": "OBJ-PUB-EV-MINPRICE",
+              "ontologyId": "OBJ-PUB-EV-MINPRICE"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q003",
+          "query": "2024年全国粮食播种面积和粮食产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1214",
+            "SOU0009-S1218"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食产量",
+              "entityId": "IND0003",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q004",
+          "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001",
+            "CMD0002",
+            "CMD0003",
+            "CMD0004"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY",
+            "OBJ-PUB-CM-WHEAT",
+            "OBJ-PUB-CM-CORN",
+            "OBJ-PUB-CM-SOYBEAN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S871",
+            "SOU0009-S670"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "小麦",
+              "entityId": "CMD0002",
+              "ontologyId": "OBJ-PUB-CM-WHEAT"
+            },
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "大豆",
+              "entityId": "CMD0004",
+              "ontologyId": "OBJ-PUB-CM-SOYBEAN"
+            },
+            {
+              "name": "大豆产量",
+              "entityId": "IND0006",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q005",
+          "query": "2024年重庆粮食播种面积和总产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0003-S002",
+            "SOU0009-S1513",
+            "SOU0002-S002",
+            "SOU0009-S1514",
+            "SOU0006-S257"
+          ],
+          "matchedEntities": [
+            {
+              "name": "粮食",
+              "entityId": "CMD0005",
+              "ontologyId": null
+            },
+            {
+              "name": "粮食播种面积",
+              "entityId": "IND0001",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q006",
+          "query": "2024年重庆玉米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1308",
+            "SOU0009-S1322",
+            "SOU0009-S682",
+            "SOU0009-S746",
+            "SOU0009-S1272"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            },
+            {
+              "name": "玉米产量",
+              "entityId": "IND0005",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q007",
+          "query": "What is world rice production for 2026/27 Sep?",
+          "relevantSegmentIds": [
+            "SOU0004-S001"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S043",
+            "SOU0007-S293",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ],
+          "matchedEntities": [],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q008",
+          "query": "China rice production for 2026/27 Sep, milled basis",
+          "relevantSegmentIds": [
+            "SOU0004-S002"
+          ],
+          "expectedEntityIds": [],
+          "expectedOntologyIds": [],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S293"
+          ],
+          "matchedEntities": [
+            {
+              "name": "basis",
+              "entityId": "OBJ-PUB-IN-BASIS",
+              "ontologyId": "OBJ-PUB-IN-BASIS"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 1.0,
+          "firstRelevantRank": 1
+        },
+        {
+          "queryId": "S1-Q009",
+          "query": "苞米产量是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0003"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-CORN"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1517",
+            "SOU0009-S1503",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ],
+          "matchedEntities": [
+            {
+              "name": "玉米",
+              "entityId": "CMD0003",
+              "ontologyId": "OBJ-PUB-CM-CORN"
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 0.5,
+          "ndcg@10": 0.6309297535714575,
+          "firstRelevantRank": 2
+        },
+        {
+          "queryId": "S1-Q010",
+          "query": "全国与重庆2024年稻谷产量分别是多少？",
+          "relevantSegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002"
+          ],
+          "expectedEntityIds": [
+            "CMD0001"
+          ],
+          "expectedOntologyIds": [
+            "OBJ-PUB-CM-RICE-PADDY"
+          ],
+          "success": true,
+          "error": null,
+          "rankedSegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0009-S1780"
+          ],
+          "matchedEntities": [
+            {
+              "name": "稻谷",
+              "entityId": "CMD0001",
+              "ontologyId": "OBJ-PUB-CM-RICE-PADDY"
+            },
+            {
+              "name": "稻谷产量",
+              "entityId": "IND0002",
+              "ontologyId": null
+            }
+          ],
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr@10": 1.0,
+          "ndcg@10": 0.9197207891481876,
+          "firstRelevantRank": 1
+        }
+      ],
+      "latency": {
+        "method": "nearest-rank",
+        "coldDefinition": "该模式下每个问题的第一次查询",
+        "warmDefinition": "同一实例后续三轮全部问题",
+        "cold": {
+          "samples": 10,
+          "p50Ms": 42.892,
+          "p95Ms": 65.908,
+          "maxMs": 65.908
+        },
+        "warm": {
+          "samples": 30,
+          "p50Ms": 42.247,
+          "p95Ms": 70.476,
+          "maxMs": 74.617
+        },
+        "warmRounds": {
+          "1": {
+            "samples": 10,
+            "p50Ms": 43.295,
+            "p95Ms": 74.617,
+            "maxMs": 74.617
+          },
+          "2": {
+            "samples": 10,
+            "p50Ms": 41.594,
+            "p95Ms": 68.902,
+            "maxMs": 68.902
+          },
+          "3": {
+            "samples": 10,
+            "p50Ms": 42.247,
+            "p95Ms": 70.476,
+            "maxMs": 70.476
+          }
+        }
+      },
+      "deterministicRanking": true,
+      "determinismComparisons": [
+        {
+          "queryId": "S1-Q001",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1570"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1772",
+            "SOU0009-S343",
+            "SOU0009-S341",
+            "SOU0009-S1770",
+            "SOU0009-S1769",
+            "SOU0001-S002",
+            "SOU0009-S361",
+            "SOU0009-S1570"
+          ]
+        },
+        {
+          "queryId": "S1-Q002",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ],
+          "round3SegmentIds": [
+            "SOU0001-S002",
+            "SOU0009-S1772",
+            "SOU0009-S341",
+            "SOU0009-S1769",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S343",
+            "SOU0009-S1770",
+            "SOU0005-S001",
+            "SOU0009-S1573"
+          ]
+        },
+        {
+          "queryId": "S1-Q003",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1214",
+            "SOU0009-S1218"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S001",
+            "SOU0003-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0009-S345",
+            "SOU0001-S001",
+            "SOU0006-S257",
+            "SOU0006-S432",
+            "SOU0009-S1214",
+            "SOU0009-S1218"
+          ]
+        },
+        {
+          "queryId": "S1-Q004",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S871",
+            "SOU0009-S670"
+          ],
+          "round3SegmentIds": [
+            "SOU0002-S002",
+            "SOU0003-S002",
+            "SOU0009-S1515",
+            "SOU0009-S1517",
+            "SOU0001-S001",
+            "SOU0009-S1516",
+            "SOU0009-S1772",
+            "SOU0009-S1771",
+            "SOU0009-S871",
+            "SOU0009-S670"
+          ]
+        },
+        {
+          "queryId": "S1-Q005",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0003-S002",
+            "SOU0009-S1513",
+            "SOU0002-S002",
+            "SOU0009-S1514",
+            "SOU0006-S257"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S001",
+            "SOU0002-S001",
+            "SOU0006-S147",
+            "SOU0006-S322",
+            "SOU0001-S001",
+            "SOU0003-S002",
+            "SOU0009-S1513",
+            "SOU0002-S002",
+            "SOU0009-S1514",
+            "SOU0006-S257"
+          ]
+        },
+        {
+          "queryId": "S1-Q006",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1308",
+            "SOU0009-S1322",
+            "SOU0009-S682",
+            "SOU0009-S746",
+            "SOU0009-S1272"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S670",
+            "SOU0009-S871",
+            "SOU0009-S1308",
+            "SOU0009-S1322",
+            "SOU0009-S682",
+            "SOU0009-S746",
+            "SOU0009-S1272"
+          ]
+        },
+        {
+          "queryId": "S1-Q007",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S043",
+            "SOU0007-S293",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S001",
+            "SOU0004-S002",
+            "SOU0008-S033",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S043",
+            "SOU0007-S293",
+            "SOU0007-S261",
+            "SOU0007-S595"
+          ]
+        },
+        {
+          "queryId": "S1-Q008",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S293"
+          ],
+          "round3SegmentIds": [
+            "SOU0004-S002",
+            "SOU0004-S001",
+            "SOU0007-S256",
+            "SOU0007-S292",
+            "SOU0006-S048",
+            "SOU0007-S036",
+            "SOU0007-S619",
+            "SOU0007-S728",
+            "SOU0007-S727",
+            "SOU0007-S293"
+          ]
+        },
+        {
+          "queryId": "S1-Q009",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1517",
+            "SOU0009-S1503",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0002-S002",
+            "SOU0009-S1516",
+            "SOU0009-S1308",
+            "SOU0009-S871",
+            "SOU0009-S670",
+            "SOU0009-S1517",
+            "SOU0009-S1503",
+            "SOU0009-S1322",
+            "SOU0009-S1272"
+          ]
+        },
+        {
+          "queryId": "S1-Q010",
+          "equal": true,
+          "round2SegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0009-S1780"
+          ],
+          "round3SegmentIds": [
+            "SOU0003-S002",
+            "SOU0009-S1517",
+            "SOU0002-S002",
+            "SOU0009-S1772",
+            "SOU0001-S001",
+            "SOU0009-S1771",
+            "SOU0009-S1492",
+            "SOU0009-S068",
+            "SOU0009-S1570",
+            "SOU0009-S1780"
+          ]
+        }
+      ],
+      "errors": []
+    }
+  },
+  "citations": {
+    "level": "response",
+    "checkedResponses": 200,
+    "passedResponses": 200,
+    "failedResponses": 0,
+    "checkedCitations": 600,
+    "verificationRate": 1.0,
+    "failures": []
+  },
+  "deterministicRanking": true,
+  "evaluationIsolation": {
+    "passed": true,
+    "files": {
+      "data/grain_oil.db": {
+        "before": {
+          "exists": true,
+          "sha256": "c0abefe9e8f7b71376a4d01ea8958d05a996ee078571c4e2ec29846b54ea4e88",
+          "sizeBytes": 1253376
+        },
+        "after": {
+          "exists": true,
+          "sha256": "c0abefe9e8f7b71376a4d01ea8958d05a996ee078571c4e2ec29846b54ea4e88",
+          "sizeBytes": 1253376
+        },
+        "unchanged": true
+      },
+      "data/rag/config.json": {
+        "before": {
+          "exists": true,
+          "sha256": "5098a31194ea8d2721b0df72f49083562c9dde08033d78ba144742e4b84e3d93",
+          "sizeBytes": 205
+        },
+        "after": {
+          "exists": true,
+          "sha256": "5098a31194ea8d2721b0df72f49083562c9dde08033d78ba144742e4b84e3d93",
+          "sizeBytes": 205
+        },
+        "unchanged": true
+      },
+      "data/rag/vectors.npy": {
+        "before": {
+          "exists": true,
+          "sha256": "6622b8f08592ec2f768789067462057fe3524c05c6433fe3291fcbe6a09e8938",
+          "sizeBytes": 6932608
+        },
+        "after": {
+          "exists": true,
+          "sha256": "6622b8f08592ec2f768789067462057fe3524c05c6433fe3291fcbe6a09e8938",
+          "sizeBytes": 6932608
+        },
+        "unchanged": true
+      },
+      "data/rag/meta.json": {
+        "before": {
+          "exists": true,
+          "sha256": "59d652eb2ab48931f6faa9bbee75f4967dcbab89f581cc20da2484b65bd4044e",
+          "sizeBytes": 55147
+        },
+        "after": {
+          "exists": true,
+          "sha256": "59d652eb2ab48931f6faa9bbee75f4967dcbab89f581cc20da2484b65bd4044e",
+          "sizeBytes": 55147
+        },
+        "unchanged": true
+      },
+      "data/rag/entities.json": {
+        "before": {
+          "exists": true,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "sizeBytes": 2
+        },
+        "after": {
+          "exists": true,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "sizeBytes": 2
+        },
+        "unchanged": true
+      }
+    }
+  },
+  "hardGates": {
+    "fiveModesSucceeded": {
+      "passed": true,
+      "expected": [
+        "global",
+        "hybrid",
+        "local",
+        "mix",
+        "naive"
+      ],
+      "actual": {
+        "naive": true,
+        "local": true,
+        "global": true,
+        "hybrid": true,
+        "mix": true
+      }
+    },
+    "seedSmokeHitAt10": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": {
+        "naive": 1.0,
+        "local": 1.0,
+        "global": 1.0,
+        "hybrid": 1.0,
+        "mix": 1.0
+      }
+    },
+    "citationVerificationRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "deterministicRanking": {
+      "passed": true,
+      "expected": true,
+      "actual": {
+        "naive": true,
+        "local": true,
+        "global": true,
+        "hybrid": true,
+        "mix": true
+      }
+    },
+    "goldSegmentsValid": {
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    "dimensionCount": {
+      "passed": true,
+      "expected": 10,
+      "actual": 10
+    }
+  },
+  "allHardGatesPassed": true,
+  "passed": true
+}

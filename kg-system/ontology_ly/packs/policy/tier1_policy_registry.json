@@ -1,0 +1,30 @@
+{
+  "registryVersion": "stage2-tier1-v1",
+  "policies": [
+    {
+      "policyId": "POL0001",
+      "docNumber": "发改价格〔2025〕308号",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "国家发展改革委等四部门发文"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的最低收购价参数"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0001-C001..C003 明确品种、每50公斤和具体价格"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0001-C001",
+        "POL0001-C002",
+        "POL0001-C003"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/rice_minprice_2025.rls"
+    }
+  ]
+}

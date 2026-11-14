@@ -1,0 +1,564 @@
+{
+  "schemaVersion": "0.1.0",
+  "stage": "STAGE0",
+  "frozen": true,
+  "note": "五道校验门 + 反模式码 + 预算。每道门的每条规则必须可判定（能给出 PASS/FAIL 与定位信息），不允许出现「人工判断是否符合规范」这类不可判定规则。不可判定的检查一律列为人工评审项，不进自动化门。",
+  "numbering": "本文件是规则编号的唯一真相。能力问题的 gate 字段、工具输出、文档 §7 均以此编号为准；同一门规则下的并列子检查用 a/b/c 后缀，父编号不变。旧稿编号映射见 STAGE0-执行分解.md §7.7。",
+  "gateSequence": ["G0", "G1", "G2", "G3", "G4"],
+  "gates": [
+    {
+      "gateId": "G0",
+      "name": "结构门",
+      "purpose": "定义自洽：类型、字段、主键、枚举、引用目标是否成体系。",
+      "runsOn": "本体定义变更时、每次发布前",
+      "rules": [
+        {
+          "ruleId": "G0-1",
+          "name": "交付物齐全",
+          "check": "15 项交付物文件全部存在且可被 json.load 解析",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G0-2",
+          "name": "主键唯一且合规",
+          "check": "全部实例 id 在全集内唯一，且匹配 id_registry.format.regex",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G0-3",
+          "name": "公共字段完整",
+          "check": "每个实例含 commonFields 的全部必填项，且非空（id/name/domainCode/validFrom/recordedAt/status/version/confidence/extractedBy/authority）",
+          "severity": "ERROR",
+          "antiPattern": "AP_DOUBLE_TIME_MISSING"
+        },
+        {
+          "ruleId": "G0-4",
+          "name": "引用可解析",
+          "check": "每个 ref 字段指向的目标 id 存在，且目标类型与字段声明一致",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G0-5",
+          "name": "枚举值合法",
+          "check": "每个 enum 字段取值属于 enums.json 对应词表",
+          "severity": "ERROR",
+          "antiPattern": "AP_CATCHALL_ENUM"
+        },
+        {
+          "ruleId": "G0-6",
+          "name": "无兜底枚举",
+          "check": "任何枚举的 OTHER/DEFAULT 值必须带 explicitOnly=true，否则判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_CATCHALL_ENUM"
+        },
+        {
+          "ruleId": "G0-7",
+          "name": "字段值类型匹配",
+          "check": "每个字段实际取值形态与其声明类型一致：date 为 YYYY-MM-DD，datetime 为 ISO 8601，float/int 为数值，ref 为非空字符串且满足 G0-4，enum 满足 G0-5",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G0-8",
+          "name": "动作命名非 CRUD",
+          "check": "actions.json 中 actionId 或 name 仅由 CRUD 动词（GET/CREATE/UPDATE/DELETE/INSERT/REMOVE/SET）构成的动作占比不得超过 40%；超出判 WARN，输出命中动作",
+          "severity": "WARN",
+          "antiPattern": "AP_CRUD"
+        }
+      ]
+    },
+    {
+      "gateId": "G1",
+      "name": "片级门",
+      "purpose": "单条抽取结果是否可信：有没有证据、能不能定位、类型是否合法。",
+      "runsOn": "每次文档抽取后，逐条",
+      "rules": [
+        {
+          "ruleId": "G1-1",
+          "name": "证据非空",
+          "check": "status != DRAFT 的实例 evidenceIds >= 1",
+          "severity": "ERROR",
+          "antiPattern": "AP_ORPHAN_EVIDENCE"
+        },
+        {
+          "ruleId": "G1-2",
+          "name": "原文可定位",
+          "check": "Evidence.quote 长度 <= 200 字，且 quote 能在其 DocumentSegment.segmentText 中按 substring 命中；或提供 charStart/charEnd 且偏移落在段落范围内",
+          "severity": "ERROR",
+          "antiPattern": "AP_ORPHAN_EVIDENCE"
+        },
+        {
+          "ruleId": "G1-3",
+          "name": "类型已注册",
+          "check": "抽取出的 type 属于内核 29 类型，或属于当前已启用的扩展包类型；未知类型进草稿区不报错",
+          "severity": "WARN",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G1-4",
+          "name": "置信度与来源组合合法",
+          "check": "extractedBy=HUMAN 时 confidence 必须为 1.0；extractedBy=RULE 时 confidence 不得 > 0.9；extractedBy=LLM 时必须有模型标识与提示词版本",
+          "severity": "WARN",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G1-5",
+          "name": "版本链无环",
+          "check": "SUPERSEDES / AMENDS / EXTENDS 三类版本边构成的图不得成环；成环判 FAIL 并输出环上的对象 id 序列",
+          "severity": "ERROR",
+          "antiPattern": null
+        }
+      ]
+    },
+    {
+      "gateId": "G2",
+      "name": "语义门",
+      "purpose": "跨对象的一致性：时间、口径、越权、可达性。这是最容易出隐蔽错误的一道门。",
+      "runsOn": "入库前，逐对象与逐边",
+      "rules": [
+        {
+          "ruleId": "G2-1",
+          "name": "双时间完整",
+          "check": "validFrom 与 recordedAt 非空；validTo 为 null 或 >= validFrom；supersededAt 为 null 或 >= recordedAt；validTo < validFrom 判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_DOUBLE_TIME_MISSING"
+        },
+        {
+          "ruleId": "G2-2",
+          "name": "Scope 必填",
+          "check": "声明的 scopeRequired 类型（IndicatorSeries/DataPoint/Assertion/Factor/PriceTransmissionLink/SubstitutionRelation/NormativeStatement）必须 scopeId 非空且可解析",
+          "severity": "ERROR",
+          "antiPattern": "AP_SCOPE_LEAK"
+        },
+        {
+          "ruleId": "G2-3",
+          "name": "口径可比",
+          "check": "任何跨序列运算，两侧 UnitOfMeasure.dimension 一致、priceBasis 一致、taxBasis 一致、currencyCode 一致；否则拒绝运算，不得自动换算",
+          "severity": "ERROR",
+          "antiPattern": "AP_UNIT_MISMATCH"
+        },
+        {
+          "ruleId": "G2-4",
+          "name": "桥不越权",
+          "check": "写入者角色与目标类型/边必须命中对应桥契约的 allowedWrites；命中 forbidden 即 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_BRIDGE_ILLEGAL_WRITE"
+        },
+        {
+          "ruleId": "G2-5",
+          "name": "关系实体化判别式",
+          "check": "普通边携带的业务参数 >= 2，或边需要有效期，或边需要独立证据时，必须建关系实体；违反判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_RELATION_PARAM_LEAK"
+        },
+        {
+          "ruleId": "G2-6",
+          "name": "断言不写事实",
+          "check": "Assertion 及其下游不得修改任何内核对象的属性值；命中判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_ASSERTION_AS_FACT"
+        },
+        {
+          "ruleId": "G2-7",
+          "name": "边端点类型合法",
+          "check": "每条边的 FROM/TO 类型命中 relation_types.json 的 fromTypes/toTypes 白名单",
+          "severity": "ERROR",
+          "antiPattern": "AP_BRIDGE_ILLEGAL_WRITE"
+        },
+        {
+          "ruleId": "G2-8",
+          "name": "条款条件可解析",
+          "check": "ClauseCondition.leftOperand 必须是内核已定义属性路径（如 Enterprise.enterpriseType）或已注册 indicatorCode；CompiledRule.confirmationStatus 必须为 CONFIRMED 才允许参与判定",
+          "severity": "ERROR",
+          "antiPattern": "AP_ACTIVATION_ASSUMED"
+        },
+        {
+          "ruleId": "G2-9",
+          "name": "退场可解释",
+          "check": "status=RETIRED 的对象必须能被四选一解释：有 SUPERSEDES / AMENDS / EXTENDS 入边（分别对应 SUPERSEDED / AMENDED / EXTENDED），或无上述入边但 validTo 非空且已过期（EXPIRED）。四者皆不成立判 FAIL，不得用 status 硬改退场",
+          "severity": "ERROR",
+          "antiPattern": "AP_ACTIVATION_ASSUMED"
+        },
+        {
+          "ruleId": "G2-10",
+          "name": "有效期重叠须解释",
+          "check": "同一实体、同一业务口径的多条记录，validFrom—validTo 区间不得无故重叠；重叠必须由 AMENDS 或 SUPERSEDES 边解释，否则判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_TIME_OVERLAP"
+        },
+        {
+          "ruleId": "G2-11",
+          "name": "Scope 维度合法性",
+          "check": "Scope.members[].objectType 必须与 Dimension.valueObjectType 兼容；multiValued=false 的维度在单个 Scope 内最多 1 个成员；同一 dimensionCode 不得绑定两种 valueObjectType",
+          "severity": "ERROR",
+          "antiPattern": "AP_DIM_CONFLICT"
+        },
+        {
+          "ruleId": "G2-12",
+          "name": "断言去重契约完整",
+          "check": "bridges/assertion.json 的 deduplication 必须声明 key=[assertedById,targetPeriodId,subjectId,predicate]、similarityThreshold=0.85、neverMerge 非空、onDuplicate 非空，且 ACT-PUB-REGISTER-ASSERTION 的 postconditions 引用该去重键；缺任一项判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": "AP_DUP_ASSERT"
+        }
+      ]
+    },
+    {
+      "gateId": "G3",
+      "name": "全量门",
+      "purpose": "整体一致性与可重复性：有没有悬挂、重跑是否一致、规模是否失控、能力问题是否走得通。",
+      "runsOn": "每次发布前、每次批量入库后",
+      "rules": [
+        {
+          "ruleId": "G3-1",
+          "name": "引用完整性",
+          "check": "全图无悬挂引用；被 MERGED 的对象无 ACTIVE 引用残留；无孤立 Evidence",
+          "severity": "ERROR",
+          "antiPattern": "AP_ORPHAN_EVIDENCE"
+        },
+        {
+          "ruleId": "G3-2",
+          "name": "幂等重跑",
+          "check": "同一输入重复执行，输出对象集合的规范化 hash 一致；不一致判 FAIL",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G3-3",
+          "name": "预算未超",
+          "check": "各类计数落在 budget 的 lower 与 hardUpper 之间；低于 lower 说明交付不全，高于 hardUpper 说明建模失控",
+          "severity": "ERROR",
+          "antiPattern": "AP_DIM_CONFLICT"
+        },
+        {
+          "ruleId": "G3-4",
+          "name": "能力问题路径可达",
+          "check": "每条 stage <= 当前阶段 的能力问题，其 requiredTypes 与 requiredEdges 均已存在，且存在不超过 maxHops 的查询路径；不可达判 FAIL 并输出缺失项",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G3-5",
+          "name": "业务编码全局唯一",
+          "check": "Commodity.commodityCode 与 Factor.factorCode 全局唯一；子域引用必须指向 PUB 的品种，不得另建同名品种；factorCategory 七类固定，二级扩展须登记",
+          "severity": "ERROR",
+          "antiPattern": "AP_ID_REUSE"
+        },
+        {
+          "ruleId": "G3-6",
+          "name": "域码归属唯一",
+          "check": "每个类型的 domainCode 唯一且与 id_registry 一致；8 个域码各归属唯一，不得一码多域或一域多码",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G3-7",
+          "name": "Scope 跨包一致",
+          "check": "同一实体在不同包内的 Scope.normalizedKey 必须一致；不一致以内核为准并在报告中告警",
+          "severity": "WARN",
+          "antiPattern": "AP_SCOPE_LEAK"
+        }
+      ]
+    },
+    {
+      "gateId": "G4",
+      "name": "评分门",
+      "purpose": "把前四道门的结论折算成单一口径，供发布决策。",
+      "runsOn": "门 0—门 3 全部执行后",
+      "scoring": {
+        "formula": "score = max(0, min(100, 100 - n_err * 12 - n_warn * 2))",
+        "passCondition": "n_err == 0 且 score >= 80",
+        "blockCondition": "n_err > 0 或 score < 80",
+        "outputs": ["score", "n_err", "n_warn", "failedRuleIds", "antiPatternHitCounts", "locators"]
+      },
+      "rules": [
+        {
+          "ruleId": "G4-1",
+          "name": "评分折算",
+          "check": "按 score = max(0, min(100, 100 - n_err*12 - n_warn*2)) 计算；n_err == 0 且 score >= 80 判通过，否则阻塞发布",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G4-2",
+          "name": "反模式码两级登记合规",
+          "check": "CORE 集合与 §7.6 逐条一致；每个码 tier ∈ {CORE, EXTENSION}；无重复码；CORE+EXTENSION 合计 11—20",
+          "severity": "ERROR",
+          "antiPattern": null
+        },
+        {
+          "ruleId": "G4-3",
+          "name": "反模式码接线完整",
+          "check": "每条 CORE 码的 detectedBy 至少指向一条门规则；为空须在 note 中说明属实例层检查，否则记 WARN",
+          "severity": "WARN",
+          "antiPattern": null
+        }
+      ]
+    }
+  ],
+  "antiPatterns": {
+    "baselineCount": 11,
+    "incrementCount": 8,
+    "totalCount": 19,
+    "note": "按 CORE / EXTENSION 两级登记。CORE 11 条与 STAGE0-执行分解.md §7.6 逐条一致，是 Stage 0 的交付口径；EXTENSION 8 条来自《本体模型选型说明》裁决与三座桥契约，属已接线或已文档化的补充检查。合计 19 条，不超过预算硬上限 20。级别以各码的 tier 字段为唯一真相。",
+    "codes": [
+      {
+        "code": "AP_UNIT_MISMATCH",
+        "tier": "CORE",
+        "name": "单位/口径混算",
+        "trigger": "跨序列运算两侧单位维度、价格口径、税基或币种不一致",
+        "detectedBy": ["G2-3"],
+        "severity": "ERROR",
+        "example": "把以「万吨」计的产量与以「吨」计的进口量直接相加"
+      },
+      {
+        "code": "AP_SCOPE_LEAK",
+        "tier": "CORE",
+        "name": "口径泄漏",
+        "trigger": "scopeRequired 类型缺 scopeId，或用自建维度字段替代 Scope",
+        "detectedBy": ["G2-2", "G2-11"],
+        "severity": "ERROR",
+        "example": "IndicatorSeries 只写 regionId 不写 scopeId"
+      },
+      {
+        "code": "AP_POLICY_MAGNITUDE",
+        "tier": "CORE",
+        "name": "政策被量化",
+        "trigger": "政策包为 IMPACTS 边填写 impactMagnitude，或为政策事件编造数值影响",
+        "detectedBy": ["G2-4"],
+        "severity": "ERROR",
+        "example": "「该政策将推动价格上涨 5%」写入政策侧边属性"
+      },
+      {
+        "code": "AP_BRIDGE_ILLEGAL_WRITE",
+        "tier": "EXTENSION",
+        "name": "桥越权写入",
+        "trigger": "写入者角色不在桥契约 allowedWrites 内，或边端点类型不在白名单",
+        "detectedBy": ["G2-4", "G2-7"],
+        "severity": "ERROR",
+        "example": "政策包直接写 DRIVES 边连接因子与价格序列"
+      },
+      {
+        "code": "AP_DIM_CONFLICT",
+        "tier": "CORE",
+        "name": "维度冲突",
+        "trigger": "同一 Scope 内同一 dimensionCode 出现多个互斥成员，或规模超预算",
+        "detectedBy": ["G2-11", "G3-3"],
+        "severity": "ERROR",
+        "example": "一个 Scope 同时含「现货」与「期货」两种 CHANNEL 成员"
+      },
+      {
+        "code": "AP_ACTIVATION_ASSUMED",
+        "tier": "EXTENSION",
+        "name": "生效状态臆断",
+        "trigger": "officiallyActivated 未被显式给定却被当作 TRUE；或未 CONFIRMED 的规则参与判定",
+        "detectedBy": ["G2-8"],
+        "severity": "ERROR",
+        "example": "政策文本存在即视为已启动"
+      },
+      {
+        "code": "AP_ASSERTION_AS_FACT",
+        "tier": "EXTENSION",
+        "name": "断言当事实",
+        "trigger": "断言内容被写入内核对象属性，或断言影响事实层判定",
+        "detectedBy": ["G2-6"],
+        "severity": "ERROR",
+        "example": "机构预测「小麦将涨」被写成 Commodity 的价格属性"
+      },
+      {
+        "code": "AP_ORPHAN_EVIDENCE",
+        "tier": "EXTENSION",
+        "name": "证据悬空",
+        "trigger": "非草稿实例无证据，或证据引用不存在的段落，或 quote 无法在段落内定位",
+        "detectedBy": ["G1-1", "G1-2", "G3-1"],
+        "severity": "ERROR",
+        "example": "Evidence 指向已删除的 DocumentSegment"
+      },
+      {
+        "code": "AP_DOUBLE_TIME_MISSING",
+        "tier": "EXTENSION",
+        "name": "双时间缺失",
+        "trigger": "缺 validFrom/recordedAt，或 validTo 早于 validFrom",
+        "detectedBy": ["G0-3", "G2-1"],
+        "severity": "ERROR",
+        "example": "只记业务生效日，不记入库时间，无法回答「当时系统知道什么」"
+      },
+      {
+        "code": "AP_CATCHALL_ENUM",
+        "tier": "EXTENSION",
+        "name": "兜底枚举",
+        "trigger": "枚举含 OTHER/UNKNOWN 但未标 explicitOnly，被当作默认值吸收未知取值",
+        "detectedBy": ["G0-5", "G0-6"],
+        "severity": "ERROR",
+        "example": "statisticalSourceType 的 OTHER 被大量数据点使用"
+      },
+      {
+        "code": "AP_RELATION_PARAM_LEAK",
+        "tier": "EXTENSION",
+        "name": "关系参数外挂",
+        "trigger": "边携带 >= 2 个业务参数或需独立证据，却仍建成普通边",
+        "detectedBy": ["G2-5"],
+        "severity": "ERROR",
+        "example": "把出油率、出粕率、加工能力直接挂在 COMMODITY_TO_FORM 边上"
+      },
+      {
+        "code": "AP_FCN_RULE_MIXED",
+        "tier": "EXTENSION",
+        "name": "函数与规则混类",
+        "trigger": "把条款推理规则登记为 Function，或用 Function 报错代替 UNABLE 三态结论",
+        "detectedBy": ["G2-8"],
+        "severity": "ERROR",
+        "example": "把「最低收购价是否启动」写成返回 boolean 的函数"
+      },
+      {
+        "code": "AP_ORPHAN_FACTOR",
+        "tier": "CORE",
+        "name": "因子悬空",
+        "trigger": "Factor 无任何 DRIVES / ACTS_ON_FACTOR 边",
+        "detectedBy": ["G3-1"],
+        "severity": "WARN",
+        "example": "某品种成本因子只建了对象，没有连到任何价格序列或成本项"
+      },
+      {
+        "code": "AP_ASSERT_NO_EVIDENCE",
+        "tier": "CORE",
+        "name": "断言无证据",
+        "trigger": "Assertion 无 SUPPORTED_BY 边",
+        "detectedBy": ["G1-1"],
+        "severity": "ERROR",
+        "example": "机构看多断言入库，但没有挂任何证据"
+      },
+      {
+        "code": "AP_DUP_ASSERT",
+        "tier": "CORE",
+        "name": "断言重复计数",
+        "trigger": "同机构、同期间、同命题的断言被重复计入统计",
+        "detectedBy": ["G2-12"],
+        "severity": "WARN",
+        "note": "Stage 0 校验去重契约（键、阈值、neverMerge、动作后置断言）是否完整；实例层相似度比对在入库前按同一契约执行。",
+        "example": "同一机构同一周的两条相同预测被当成两次独立表态"
+      },
+      {
+        "code": "AP_TIME_OVERLAP",
+        "tier": "CORE",
+        "name": "有效期重叠",
+        "trigger": "有效期重叠且无 AMENDS / SUPERSEDES 解释",
+        "detectedBy": ["G2-10"],
+        "severity": "WARN",
+        "example": "两条同名政策同时有效却互不引用，无法判断哪条在管"
+      },
+      {
+        "code": "AP_ID_REUSE",
+        "tier": "CORE",
+        "name": "ID 复用",
+        "trigger": "同一 ID 对应不同语义",
+        "detectedBy": ["G0-2"],
+        "severity": "ERROR",
+        "example": "OBJ-CM-000123 先指小麦，后又被用于指面粉"
+      },
+      {
+        "code": "AP_CRUD",
+        "tier": "CORE",
+        "name": "CRUD 式命名",
+        "trigger": "动作 / 行为命名中 CRUD 词占比超过 40%",
+        "detectedBy": ["G0-8"],
+        "severity": "WARN",
+        "note": "Stage 0 在 actions.json 的 actionId 与 name 上判定；实例层动作扩展包由同一规则在入库前复用。",
+        "example": "Actions 里出现 get_price / update_scope / delete_fact 这类进程式命名"
+      },
+      {
+        "code": "AP_COVERAGE",
+        "tier": "CORE",
+        "name": "问题无覆盖路径",
+        "trigger": "某能力问题不存在合规可答路径",
+        "detectedBy": ["G3-4"],
+        "severity": "ERROR",
+        "example": "24 条能力问题里有一条在图上找不到不超过 3 跳的路径"
+      }
+    ]
+  },
+  "budget": [
+    {
+      "key": "kernelObjectTypes",
+      "lower": 25,
+      "recommendedUpper": 25,
+      "hardUpper": 25,
+      "unit": "个",
+      "rationale": "已冻结。超出一个即触发内核评审，不得在包内私自扩。"
+    },
+    {
+      "key": "relationEntityTypes",
+      "lower": 4,
+      "recommendedUpper": 4,
+      "hardUpper": 6,
+      "unit": "个",
+      "rationale": "4 个已满足 R5 判别式；再增需逐条论证参数与证据需求。"
+    },
+    {
+      "key": "semanticEdges",
+      "lower": 30,
+      "recommendedUpper": 34,
+      "hardUpper": 40,
+      "unit": "条",
+      "rationale": "34 条对齐现有 REFERENCES 基线；边数暴涨通常意味着把属性误建成边。"
+    },
+    {
+      "key": "enumCount",
+      "lower": 40,
+      "recommendedUpper": 60,
+      "hardUpper": 80,
+      "unit": "个",
+      "rationale": "低于 40 说明词表覆盖不足；高于 80 说明在把业务规则塞进枚举。"
+    },
+    {
+      "key": "policyClauseTypes",
+      "lower": 9,
+      "recommendedUpper": 9,
+      "hardUpper": 12,
+      "unit": "个",
+      "rationale": "条款子模型 9 个已覆盖条件/例外/后果/参数/关系/编译/用例。"
+    },
+    {
+      "key": "capabilityQuestions",
+      "lower": 24,
+      "recommendedUpper": 30,
+      "hardUpper": 30,
+      "unit": "条",
+      "rationale": "30 条已定；每增一条必须能对应至少一个新类型或新边。"
+    },
+    {
+      "key": "termSeeds",
+      "lower": 80,
+      "recommendedUpper": 100,
+      "hardUpper": 200,
+      "unit": "条",
+      "rationale": "100 条为冷启动基线；上限控制人工校核成本。"
+    },
+    {
+      "key": "evidencePerObject",
+      "lower": 1,
+      "recommendedUpper": 5,
+      "hardUpper": 9,
+      "unit": "条",
+      "rationale": "超过 9 条通常说明对象粒度太粗，应拆分。"
+    },
+    {
+      "key": "quoteLength",
+      "lower": 1,
+      "recommendedUpper": 200,
+      "hardUpper": 200,
+      "unit": "字",
+      "rationale": "超过 200 字无法核对，且易把整段当证据。"
+    },
+    {
+      "key": "capabilityMaxHops",
+      "lower": 2,
+      "recommendedUpper": 3,
+      "hardUpper": 5,
+      "unit": "跳",
+      "rationale": "超过 5 跳的回答不可解释，且 Kùzu 路径查询成本陡增。"
+    }
+  ]
+}

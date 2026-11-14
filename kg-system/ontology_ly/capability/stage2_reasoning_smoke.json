@@ -1,0 +1,190 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 2",
+  "datasetTier": "technical-smoke",
+  "notice": "固定技术情形只验证推理契约；临时 CONFIRMED 不代表专家确认，预期结果不是独立业务金标。",
+  "source": {
+    "annotationRule": "POL0001 预期只依据 seed/business.json 的三条条款和主条件；合成安全情形只验证显式构造的技术故障与保护边界。",
+    "files": [
+      {
+        "path": "seed/business.json",
+        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+      },
+      {
+        "path": "ontology_ly/packs/policy/tier1_policy_registry.json",
+        "sha256": "6f5542a8ab2d1122fc685eceb5725cd56cd2f82635eaa0805ac3fe3add288e25"
+      },
+      {
+        "path": "ontology_ly/packs/policy/rules/stage2_nemo.rls",
+        "sha256": "9b96dbecf461a1988535c995ffdc38bb7b538a507afa8fd4e43912d2c732cec9"
+      },
+      {
+        "path": "ontology_ly/packs/policy/rules/rice_minprice_2025.rls",
+        "sha256": "05f62255a53d35be5351abe8e089e5a01fdec42da29b8d7b654f0bf6bc6e9a98"
+      }
+    ]
+  },
+  "suites": {
+    "pol0001": {
+      "title": "POL0001 端到端技术情形",
+      "cases": [
+        {
+          "caseId": "S2-POL-001",
+          "title": "早籼稻命中对应陈述",
+          "setup": "confirmed",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "APPLICABLE",
+          "expectedReasonContains": "主条件"
+        },
+        {
+          "caseId": "S2-POL-002",
+          "title": "中晚籼稻命中对应陈述",
+          "setup": "confirmed",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "中晚籼稻"},
+          "targetClauseId": "POL0001-C002",
+          "expectedOutcome": "APPLICABLE",
+          "expectedReasonContains": "主条件"
+        },
+        {
+          "caseId": "S2-POL-003",
+          "title": "粳稻命中对应陈述",
+          "setup": "confirmed",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "粳稻"},
+          "targetClauseId": "POL0001-C003",
+          "expectedOutcome": "APPLICABLE",
+          "expectedReasonContains": "主条件"
+        },
+        {
+          "caseId": "S2-POL-004",
+          "title": "主条件明确为假不是缺事实",
+          "setup": "confirmed",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "粳稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "NOT_APPLICABLE",
+          "expectedReasonContains": "不成立"
+        },
+        {
+          "caseId": "S2-POL-005",
+          "title": "缺品种事实返回 UNABLE",
+          "setup": "confirmed",
+          "asOf": "2025-06-01",
+          "facts": {},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "缺事实"
+        }
+      ]
+    },
+    "syntheticSafety": {
+      "title": "合成安全情形",
+      "cases": [
+        {
+          "caseId": "S2-SAF-001",
+          "title": "集合比较缺事实",
+          "setup": "collection_missing",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "缺事实"
+        },
+        {
+          "caseId": "S2-SAF-002",
+          "title": "非法数值不可猜成条件为假",
+          "setup": "invalid_numeric",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻", "price": "not-a-number"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "不可求值"
+        },
+        {
+          "caseId": "S2-SAF-003",
+          "title": "未知比较符返回 UNABLE",
+          "setup": "unknown_comparator",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "不可求值"
+        },
+        {
+          "caseId": "S2-SAF-004",
+          "title": "主条件为真但例外未知",
+          "setup": "exception_unknown",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "例外"
+        },
+        {
+          "caseId": "S2-SAF-005",
+          "title": "高优先级规则覆盖",
+          "setup": "priority_override",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "NOT_APPLICABLE",
+          "expectedReasonContains": "覆盖"
+        },
+        {
+          "caseId": "S2-SAF-006",
+          "title": "优先级成环不得强行裁决",
+          "setup": "priority_cycle",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "成环"
+        },
+        {
+          "caseId": "S2-SAF-007",
+          "title": "同条款多 statement 不折叠",
+          "setup": "multi_statement",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedStatementCount": 2,
+          "expectedOutcome": "APPLICABLE",
+          "expectedReasonContains": "主条件"
+        },
+        {
+          "caseId": "S2-SAF-008",
+          "title": "Nemo 异常不得静默 fallback",
+          "setup": "engine_failure",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "Nemo"
+        },
+        {
+          "caseId": "S2-SAF-009",
+          "title": "缺完整证明链必须降级",
+          "setup": "missing_proof_chain",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "证明链不完整"
+        },
+        {
+          "caseId": "S2-SAF-010",
+          "title": "DRAFT 不得经单数接口 fallback 为可适用",
+          "setup": "draft",
+          "asOf": "2025-06-01",
+          "facts": {"targetObject": "早籼稻"},
+          "targetClauseId": "POL0001-C001",
+          "expectedOutcome": "UNABLE",
+          "expectedReasonContains": "确认"
+        }
+      ]
+    }
+  }
+}

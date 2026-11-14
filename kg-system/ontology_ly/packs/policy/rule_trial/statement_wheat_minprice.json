@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0 · 规则路线试验",
+  "note": "本文件是试验用样本，只覆盖《小麦和稻谷最低收购价执行预案》的一条规范陈述。数值参数为示例值，正式使用前必须按原文逐条核对。",
+  "statement": {
+    "statementId": "OBJ-NS-POL-2025-0001-ART05-01",
+    "clauseId": "OBJ-S4-CL-POL-2025-0001-ART05",
+    "clausePath": "第三章>第五条>第一款",
+    "clauseNo": "第五条",
+    "text": "在河北、江苏、安徽、山东、河南、湖北等6省，当年6月1日至9月30日，当小麦到库价格低于国家公布的最低收购价时，由中储粮集团公司按最低收购价收购三等及以上标准的小麦。",
+    "statementType": "AUTHORIZATION",
+    "actionVerb": "按最低收购价收购",
+    "objectFormIds": ["OBJ-PUB-CM-WHEAT-GRADE3"],
+    "vaguenessFlag": false,
+    "confirmationStatus": "CONFIRMED",
+    "confirmedBy": "trial-author",
+    "confirmedAt": "2026-11-13T10:00:00+08:00"
+  },
+  "conditions": [
+    {
+      "conditionId": "C1",
+      "parentConditionId": null,
+      "operator": "AND",
+      "leaf": false,
+      "note": "根节点：全部子条件同时成立"
+    },
+    {
+      "conditionId": "C1-1",
+      "parentConditionId": "C1",
+      "operator": "LEAF",
+      "leftOperand": "Region.regionCode",
+      "comparator": "IN",
+      "rightValue": "HEBEI,JIANGSU,ANHUI,SHANDONG,HENAN,HUBEI",
+      "factSource": "GRAPH_PROPERTY",
+      "factKey": "region",
+      "description": "执行区域限定为 6 省"
+    },
+    {
+      "conditionId": "C1-2",
+      "parentConditionId": "C1",
+      "operator": "LEAF",
+      "leftOperand": "Event.eventDate",
+      "comparator": "BETWEEN",
+      "rightValue": "06-01",
+      "rightValueUpper": "09-30",
+      "factSource": "USER_INPUT",
+      "factKey": "date",
+      "description": "执行期当年 6 月 1 日至 9 月 30 日（按 MM-DD 比较）"
+    },
+    {
+      "conditionId": "C1-3",
+      "parentConditionId": "C1",
+      "operator": "LEAF",
+      "leftOperand": "IndicatorSeries.PRICE_PURCHASE_WHEAT",
+      "comparator": "<",
+      "rightIndicatorId": "OBJ-PUB-IN-POLICY-FLOOR-WHEAT",
+      "factSource": "TIME_SERIES",
+      "factKey": "price",
+      "description": "到库价低于国家公布的最低收购价；比较由 FN-PUB-POLICY-THRESHOLD 预先算成布尔事实"
+    },
+    {
+      "conditionId": "C1-4",
+      "parentConditionId": "C1",
+      "operator": "LEAF",
+      "leftOperand": "CommodityForm.grade",
+      "comparator": "<=",
+      "rightValue": "3",
+      "factSource": "GRAPH_PROPERTY",
+      "factKey": "grade",
+      "description": "国标三等及以上（等级数字越小越高，故判据为 grade ≤ 3）"
+    }
+  ],
+  "exceptions": [
+    {
+      "exceptionId": "E1",
+      "exceptionType": "PRIORITY_OVERRIDE",
+      "leftOperand": "PolicyTool.LOCAL_RESERVE",
+      "comparator": "EXISTS",
+      "factSource": "USER_INPUT",
+      "factKey": "local_reserve_active",
+      "description": "该省已启动地方性临时收储时，本条不再单独触发",
+      "note": "试验用简化例外，正式条款以原文为准"
+    }
+  ],
+  "parameters": [
+    {
+      "paramName": "最低收购价",
+      "paramValue": 1.19,
+      "unitId": "元/斤",
+      "effectiveFrom": "2025-06-01",
+      "note": "示例值，待原文核对"
+    },
+    {
+      "paramName": "质量标准",
+      "paramValue": 3,
+      "unitId": "国标等级",
+      "effectiveFrom": "2025-06-01"
+    }
+  ],
+  "consequence": {
+    "consequenceType": "TRIGGER_TOOL",
+    "triggerEventTypeId": "OBJ-PUB-ET-MIN-PURCHASE-START",
+    "description": "启动最低收购价执行预案，由中储粮按最低价挂牌收购"
+  },
+  "requiredFacts": ["region", "date", "price", "grade", "local_reserve_active"]
+}

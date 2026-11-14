@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 4",
+  "datasetTier": "technical-smoke",
+  "description": "阶段 4 联动与扩面固定情形：期望值来自 seed_market 合成种子与阶段 4 口径清单，仅用于技术冒烟，不代表真实行情或业务金标。",
+  "source": {
+    "files": [
+      {
+        "path": "ontology_ly/packs/market/stage4_联动与扩面口径清单.md",
+        "sha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745"
+      },
+      {
+        "path": "seed/mapping.json",
+        "sha256": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5"
+      },
+      {
+        "path": "seed/business.json",
+        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "S4-LK-01",
+      "title": "事件四态边界：未公告、已公告、生效中、已到期",
+      "kind": "service",
+      "checks": [
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1001", "asOf": "2024-02-01", "expected": "PENDING"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1001", "asOf": "2024-02-18", "expected": "ANNOUNCED"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1001", "asOf": "2024-06-15", "expected": "EFFECTIVE"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1001", "asOf": "2024-10-01", "expected": "EXPIRED"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1001", "asOf": "2025-01-31", "expected": "EXPIRED"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1004", "asOf": "2024-05-25", "expected": "ANNOUNCED"},
+        {"group": "eventState", "type": "eventState", "eventId": "OBJ-PUB-EV-1004", "asOf": "2024-06-15", "expected": "EFFECTIVE"}
+      ]
+    },
+    {
+      "caseId": "S4-LK-02",
+      "title": "影响触发滞后边界与政策边恒触发",
+      "kind": "service",
+      "checks": [
+        {"group": "impact", "type": "impactTriggered", "linkId": "LNK-IM-0001", "asOf": "2024-02-19", "expected": false},
+        {"group": "impact", "type": "impactTriggered", "linkId": "LNK-IM-0001", "asOf": "2024-02-20", "expected": true},
+        {"group": "impact", "type": "impactTriggered", "linkId": "LNK-IM-0003", "asOf": "2024-04-14", "expected": false},
+        {"group": "impact", "type": "impactTriggered", "linkId": "LNK-IM-0003", "asOf": "2024-04-15", "expected": true},
+        {"group": "impact", "type": "impactTriggered", "linkId": "LNK-IM-0004", "asOf": "2023-01-01", "expected": true}
+      ]
+    },
+    {
+      "caseId": "S4-LK-03",
+      "title": "八条序列的形态、渠道、价格基础与单位回填",
+      "kind": "service",
+      "checks": [
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0001", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0001"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0001", "field": "priceBasis", "expected": "EX_FARM"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0001", "field": "unitCode", "expected": "CNY/t"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0001", "expected": "OBJ-PUB-MK-0001"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0002", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0003"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0002", "expected": "OBJ-PUB-MK-0002"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0003", "field": "commodityFormId", "expected": "CMD0006"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0003", "field": "unitCode", "expected": "CNY/kg"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0003", "expected": "OBJ-PUB-MK-0002"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0004", "field": "commodityFormId", "expected": "CMD0007"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0004", "field": "priceBasis", "expected": "RETAIL"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0004", "expected": "OBJ-PUB-MK-0003"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0005", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0002"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0005", "expected": "OBJ-PUB-MK-0002"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0006", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0004"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0006", "expected": "OBJ-PUB-MK-0002"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0007", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0007"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0007", "field": "priceBasis", "expected": "WHOLESALE"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0007", "expected": "OBJ-PUB-MK-0003"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0008", "field": "commodityFormId", "expected": "OBJ-PUB-CM-0008"},
+        {"group": "scope", "type": "seriesField", "seriesId": "OBJ-PUB-IN-0008", "field": "unitCode", "expected": "CNY/t"},
+        {"group": "scope", "type": "seriesChannel", "seriesId": "OBJ-PUB-IN-0008", "expected": "OBJ-PUB-MK-0003"}
+      ]
+    },
+    {
+      "caseId": "S4-LK-04",
+      "title": "只读联动路由的字段、计数与错误码",
+      "kind": "api",
+      "checks": [
+        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "asOf", "expected": "2024-06-30"},
+        {"group": "route", "type": "apiLength", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "scopeDimensions", "expected": 5},
+        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.commodityForms", "expected": 8},
+        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.places", "expected": 3},
+        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.impacts", "expected": 4},
+        {"group": "route", "type": "apiField", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "commodityForm.formId", "expected": "OBJ-PUB-CM-0001"},
+        {"group": "route", "type": "apiField", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "marketPlace.placeId", "expected": "OBJ-PUB-MK-0001"},
+        {"group": "route", "type": "apiLength", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "impacts", "expected": 1},
+        {"group": "route", "type": "apiEveryHas", "path": "/api/market/timeline", "params": {"asOf": "2024-06-30"}, "listField": "items", "field": "triggeredImpactCount"},
+        {"group": "route", "type": "apiLength", "path": "/api/market/commodity-forms", "params": {"commodityId": "CMD0001"}, "field": "items", "expected": 2},
+        {"group": "route", "type": "apiLength", "path": "/api/market/places", "params": {"marketType": "SPOT"}, "field": "items", "expected": 2},
+        {"group": "route", "type": "apiLength", "path": "/api/market/impacts", "params": {"asOf": "2024-04-15"}, "field": "items", "expected": 4},
+        {"group": "route", "type": "apiLength", "path": "/api/market/evidence", "params": {"targetType": "ImpactLink", "targetId": "LNK-IM-0001"}, "field": "items", "expected": 1},
+        {"group": "route", "type": "apiField", "path": "/api/market/factors/FAC0001", "params": {}, "field": "drives[0].seriesId", "expected": "OBJ-PUB-IN-0005"},
+        {"group": "route", "type": "apiStatus", "path": "/api/market/evidence", "params": {}, "expected": 400},
+        {"group": "route", "type": "apiStatus", "path": "/api/market/factors/FAC9999", "params": {}, "expected": 404}
+      ]
+    },
+    {
+      "caseId": "S4-LK-05",
+      "title": "事件—因子—序列三桥链路完整且影响边均有证据",
+      "kind": "service",
+      "checks": [
+        {"group": "bridge", "type": "tableCount", "table": "FactorDriveLink", "expected": 5},
+        {"group": "bridge", "type": "tableCount", "table": "EventFactorLink", "expected": 4},
+        {"group": "bridge", "type": "tableCount", "table": "ImpactLink", "expected": 4},
+        {"group": "bridge", "type": "impactEvidenceComplete", "expected": true},
+        {"group": "bridge", "type": "impactNoSeriesTarget", "expected": true},
+        {"group": "bridge", "type": "driveMetricComplete", "expected": true}
+      ]
+    },
+    {
+      "caseId": "S4-LK-06",
+      "title": "G4 八门正例与冻结计数",
+      "kind": "gate",
+      "checks": [
+        {"group": "gate", "type": "gatePositive", "expectedGates": ["G4-1", "G4-2", "G4-3", "G4-4", "G4-5", "G4-6", "G4-7", "G4-8"]}
+      ],
+      "expectedCounts": {
+        "series": 8,
+        "commodityForms": 8,
+        "places": 3,
+        "evidence": 10,
+        "impactLinks": 4,
+        "factorDrives": 5,
+        "eventFactors": 4,
+        "assertions": 6
+      }
+    },
+    {
+      "caseId": "S4-LK-07",
+      "title": "G4 负例：每类破坏都被对应门拦截并给出门编号与对象",
+      "kind": "gate-negative",
+      "checks": [
+        {"group": "gate", "type": "gateNegative", "gate": "G4-1", "mutations": [{"sql": "UPDATE \"IndicatorSeries\" SET \"commodityFormId\"='OBJ-PUB-CM-9999' WHERE \"seriesId\"='OBJ-PUB-IN-0005'", "params": {}}], "expectContains": ["G4-1", "OBJ-PUB-IN-0005"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-3", "mutations": [{"sql": "DELETE FROM \"Evidence\" WHERE \"targetType\"='ImpactLink' AND \"targetId\"='LNK-IM-0001'", "params": {}}], "expectContains": ["G4-3", "LNK-IM-0001"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-4", "mutations": [{"sql": "UPDATE \"FactorDriveLink\" SET \"elasticity\"=NULL, \"lagDays\"=NULL WHERE \"factorId\"='FAC0001' AND \"seriesId\"='OBJ-PUB-IN-0005'", "params": {}}], "expectContains": ["G4-4", "FAC0001"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-5", "mutations": [{"sql": "DELETE FROM \"Evidence\" WHERE \"targetType\"='Assertion' AND \"targetId\"='AST-0006'", "params": {}}], "expectContains": ["G4-5", "AST-0006"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-6", "mutations": [{"sql": "UPDATE \"Event\" SET \"effectiveFrom\"='2024-12-31', \"effectiveTo\"='2024-01-01' WHERE \"eventId\"='OBJ-PUB-EV-1002'", "params": {}}], "expectContains": ["G4-6", "OBJ-PUB-EV-1002"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-7", "mutations": [{"sql": "UPDATE \"Evidence\" SET \"quoteHash\"='tampered' WHERE \"evidenceId\"='OBJ-PUB-ED-0001'", "params": {}}], "expectContains": ["G4-7", "OBJ-PUB-ED-0001"]},
+        {"group": "gate", "type": "gateNegative", "gate": "G4-8", "mutations": [{"sql": "DELETE FROM \"PriceDataPoint\" WHERE \"seriesId\"='OBJ-PUB-IN-0001' AND \"periodId\"='2024-06'", "params": {}}], "expectContains": ["G4-8", "OBJ-PUB-IN-0001"]}
+      ]
+    },
+    {
+      "caseId": "S4-LK-08",
+      "title": "联动页面深链标记与市场路由无写方法",
+      "kind": "static",
+      "checks": [
+        {"group": "deepLink", "type": "htmlContains", "path": "/market.html", "expected": ["asof-range", "form-chips", "drive-panel", "impact-panel", "badge-effective"]},
+        {"group": "deepLink", "type": "htmlContains", "path": "/index.html", "expected": ["entityType", "market.html?commodity="]},
+        {"group": "noWrite", "type": "openapiGetOnly", "prefix": "/api/market/", "expected": true}
+      ]
+    }
+  ]
+}

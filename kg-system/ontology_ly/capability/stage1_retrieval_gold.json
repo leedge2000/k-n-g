@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 1",
+  "datasetTier": "seed-smoke",
+  "source": {
+    "seedFile": "seed/business.json",
+    "documentIds": ["SOU0001", "SOU0002", "SOU0003", "SOU0004"],
+    "segmentCount": 8,
+    "annotationRule": "相关段落只依据种子原文人工核对；实体身份只依据 seed/business.json 与 terms/concept_alignment.json，不根据检索结果反填。"
+  },
+  "queries": [
+    {
+      "queryId": "S1-Q001",
+      "query": "2025年早籼稻最低收购价是多少？",
+      "relevantSegmentIds": ["SOU0001-S001"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["精确词", "政策", "数值"]
+    },
+    {
+      "queryId": "S1-Q002",
+      "query": "最低收购价政策执行情况要加强什么工作？",
+      "relevantSegmentIds": ["SOU0001-S002"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["段落定位", "执行要求"]
+    },
+    {
+      "queryId": "S1-Q003",
+      "query": "2024年全国粮食播种面积和粮食产量是多少？",
+      "relevantSegmentIds": ["SOU0002-S001"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["多指标", "单段落"]
+    },
+    {
+      "queryId": "S1-Q004",
+      "query": "2024年稻谷、小麦、玉米和大豆产量分别是多少？",
+      "relevantSegmentIds": ["SOU0002-S002"],
+      "expectedEntityIds": ["CMD0001", "CMD0002", "CMD0003", "CMD0004"],
+      "expectedOntologyIds": [
+        "OBJ-PUB-CM-RICE-PADDY",
+        "OBJ-PUB-CM-WHEAT",
+        "OBJ-PUB-CM-CORN",
+        "OBJ-PUB-CM-SOYBEAN"
+      ],
+      "tags": ["跨实体", "多数值"]
+    },
+    {
+      "queryId": "S1-Q005",
+      "query": "2024年重庆粮食播种面积和总产量是多少？",
+      "relevantSegmentIds": ["SOU0003-S001"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["地区区分"]
+    },
+    {
+      "queryId": "S1-Q006",
+      "query": "2024年重庆玉米产量是多少？",
+      "relevantSegmentIds": ["SOU0003-S002"],
+      "expectedEntityIds": ["CMD0003"],
+      "expectedOntologyIds": ["OBJ-PUB-CM-CORN"],
+      "tags": ["地区区分", "品种"]
+    },
+    {
+      "queryId": "S1-Q007",
+      "query": "What is world rice production for 2026/27 Sep?",
+      "relevantSegmentIds": ["SOU0004-S001"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["英文", "全球情报"]
+    },
+    {
+      "queryId": "S1-Q008",
+      "query": "China rice production for 2026/27 Sep, milled basis",
+      "relevantSegmentIds": ["SOU0004-S002"],
+      "expectedEntityIds": [],
+      "expectedOntologyIds": [],
+      "tags": ["英文", "口径"]
+    },
+    {
+      "queryId": "S1-Q009",
+      "query": "苞米产量是多少？",
+      "relevantSegmentIds": ["SOU0002-S002"],
+      "expectedEntityIds": ["CMD0003"],
+      "expectedOntologyIds": ["OBJ-PUB-CM-CORN"],
+      "tags": ["别名", "苞米→玉米"]
+    },
+    {
+      "queryId": "S1-Q010",
+      "query": "全国与重庆2024年稻谷产量分别是多少？",
+      "relevantSegmentIds": ["SOU0002-S002", "SOU0003-S002"],
+      "expectedEntityIds": ["CMD0001"],
+      "expectedOntologyIds": ["OBJ-PUB-CM-RICE-PADDY"],
+      "tags": ["跨文档", "多相关段落"]
+    }
+  ]
+}

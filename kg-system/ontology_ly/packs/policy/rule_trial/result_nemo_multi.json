@@ -1,0 +1,485 @@
+{
+  "engine": "Nemo 0.10.1",
+  "statements": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "prevailsOver": [
+    [
+      "S2",
+      "S1"
+    ],
+    [
+      "S3",
+      "S2"
+    ]
+  ],
+  "cases": [
+    {
+      "id": "TC1",
+      "scenarioName": "基线：河南 7 月 1.15 三等 无地方收储 无省级细则",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 四前提成立且无例外；S2 未发布省级细则；S3 无应急响应",
+      "verdicts": {
+        "S1": {
+          "outcome": "APPLICABLE",
+          "reason": "条件全部成立且无例外触发",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": "S1"
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC2",
+      "scenarioName": "基线：到库价 1.25 高于最低收购价 1.19",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.25,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 的 C1-3 不成立；S2 未发布且价格亦高于 1.20",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C1-3",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-3、C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC3",
+      "scenarioName": "基线：广东不在 6 省执行区",
+      "region": "GUANGDONG",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 与 S2 的区域条件均不成立",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C1-1",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-1、C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC4",
+      "scenarioName": "基线：10 月超出执行期",
+      "region": "HENAN",
+      "date": "2025-10-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "三条条款的时间窗条件均不成立",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C1-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-2、C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-1、C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC5",
+      "scenarioName": "基线：到库价缺失",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": null,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "UNABLE",
+        "S2": "UNABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 与 S2 均缺 price；S3 条件不涉及 price，仅因无应急响应而不适用",
+      "verdicts": {
+        "S1": {
+          "outcome": "UNABLE",
+          "reason": "缺事实：到库价",
+          "missing": [
+            "到库价"
+          ],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "UNABLE",
+          "reason": "缺事实：到库价",
+          "missing": [
+            "到库价"
+          ],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC6",
+      "scenarioName": "基线：该省已启动地方收储",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": true,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 被例外 E1 排除（条款内例外，非条款间优先级）",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "被例外排除：E1",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC7",
+      "scenarioName": "基线：等级 4 等低于三等标准",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 4,
+      "local_reserve_active": false,
+      "province_rule_published": false,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "NOT_APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1 与 S2 的质量条件均不成立",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C1-4",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C2-4、C2-5",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC8",
+      "scenarioName": "优先级：S1 与 S2 同时成立，S2 优先",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": true,
+      "emergency_level": null,
+      "expect": {
+        "S1": "OVERRIDDEN",
+        "S2": "APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "prevails(S2,S1)：S1 被 S2 覆盖，最终生效为 S2",
+      "verdicts": {
+        "S1": {
+          "outcome": "OVERRIDDEN",
+          "reason": "被更高优先级条款 S2 覆盖，最终生效 S2",
+          "missing": [],
+          "overriddenBy": "S2",
+          "effective": "S2"
+        },
+        "S2": {
+          "outcome": "APPLICABLE",
+          "reason": "条件全部成立且无例外触发",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": "S2"
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC9",
+      "scenarioName": "优先级：三条同时成立，S3 经传递优先",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.15,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": true,
+      "emergency_level": 2,
+      "expect": {
+        "S1": "OVERRIDDEN",
+        "S2": "OVERRIDDEN",
+        "S3": "APPLICABLE"
+      },
+      "expectReason": "prevails(S3,S2) 与 prevails(S2,S1) 经传递闭包得 S3>S1，最终生效为 S3",
+      "verdicts": {
+        "S1": {
+          "outcome": "OVERRIDDEN",
+          "reason": "被更高优先级条款 S2 覆盖，最终生效 S3",
+          "missing": [],
+          "overriddenBy": "S2",
+          "effective": "S3"
+        },
+        "S2": {
+          "outcome": "OVERRIDDEN",
+          "reason": "被更高优先级条款 S3 覆盖，最终生效 S3",
+          "missing": [],
+          "overriddenBy": "S3",
+          "effective": "S3"
+        },
+        "S3": {
+          "outcome": "APPLICABLE",
+          "reason": "条件全部成立且无例外触发",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": "S3"
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC10",
+      "scenarioName": "优先级：缺事实不可被覆盖",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": null,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": true,
+      "emergency_level": null,
+      "expect": {
+        "S1": "UNABLE",
+        "S2": "UNABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "S1/S2 缺 price 均为 UNABLE；S2 自身 UNABLE，无权覆盖 S1",
+      "verdicts": {
+        "S1": {
+          "outcome": "UNABLE",
+          "reason": "缺事实：到库价",
+          "missing": [
+            "到库价"
+          ],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "UNABLE",
+          "reason": "缺事实：到库价",
+          "missing": [
+            "到库价"
+          ],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    },
+    {
+      "id": "TC11",
+      "scenarioName": "优先级：价格落在 S1 与 S2 门槛之间",
+      "region": "HENAN",
+      "date": "2025-07-15",
+      "price": 1.195,
+      "grade": 3,
+      "local_reserve_active": false,
+      "province_rule_published": true,
+      "emergency_level": null,
+      "expect": {
+        "S1": "NOT_APPLICABLE",
+        "S2": "APPLICABLE",
+        "S3": "NOT_APPLICABLE"
+      },
+      "expectReason": "1.195 ≥ 1.19 故 S1 不成立；1.195 < 1.20 故 S2 单独适用",
+      "verdicts": {
+        "S1": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C1-3",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        },
+        "S2": {
+          "outcome": "APPLICABLE",
+          "reason": "条件全部成立且无例外触发",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": "S2"
+        },
+        "S3": {
+          "outcome": "NOT_APPLICABLE",
+          "reason": "前提不满足：C3-2",
+          "missing": [],
+          "overriddenBy": null,
+          "effective": null
+        }
+      },
+      "consistent": true
+    }
+  ],
+  "elapsedMs": 1.4,
+  "bulkMs": 2.5,
+  "cycleProbe": [
+    "S1",
+    "S2"
+  ]
+}

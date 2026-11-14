@@ -1,0 +1,229 @@
+{
+  "SourceDoc": [
+    {
+      "docId": "SOU0001",
+      "title": "关于公布2025年稻谷最低收购价格的通知",
+      "docType": "政策法规",
+      "issuer": "国家发展改革委、财政部、农业农村部、国家粮食和物资储备局",
+      "publishDate": "2025-02-28",
+      "fileFormat": "HTML",
+      "language": "zh-CN",
+      "sourceUrl": "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20487",
+      "knowledgeCategoryId": "KTC0166",
+      "summary": "公布2025年早籼稻、中晚籼稻和粳稻最低收购价格。",
+      "status": "有效"
+    },
+    {
+      "docId": "SOU0002",
+      "title": "中华人民共和国2024年国民经济和社会发展统计公报",
+      "docType": "统计公报",
+      "issuer": "国家统计局",
+      "publishDate": "2025-02-28",
+      "fileFormat": "HTML",
+      "language": "zh-CN",
+      "sourceUrl": "https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html",
+      "knowledgeCategoryId": "KTC0011",
+      "summary": "2024年全国粮食播种面积及主要粮食品种产量官方统计。",
+      "status": "有效"
+    },
+    {
+      "docId": "SOU0003",
+      "title": "2024年重庆市国民经济和社会发展统计公报",
+      "docType": "统计公报",
+      "issuer": "重庆市统计局、国家统计局重庆调查总队",
+      "publishDate": "2025-03-26",
+      "fileFormat": "HTML",
+      "language": "zh-CN",
+      "sourceUrl": "https://www.cq.gov.cn/zwgk/zfxxgkml/sjfb_120853/tjgb/202505/t20250523_14650426.html",
+      "knowledgeCategoryId": "KTC0084",
+      "summary": "2024年重庆市粮食播种面积和主要粮食品种产量官方统计。",
+      "status": "有效"
+    },
+    {
+      "docId": "SOU0004",
+      "title": "World Rice Production, Consumption, and Stocks",
+      "docType": "全球农业情报",
+      "issuer": "USDA Foreign Agricultural Service",
+      "publishDate": "2026-09-01",
+      "docVersion": "2026年9月",
+      "fileFormat": "HTML",
+      "language": "en",
+      "sourceUrl": "https://apps.fas.usda.gov/psdonline/reporthandler.ashx?reportId=681&templateId=7&format=html&fileName=World%20Rice%20Production,%20Consumption,%20and%20Stocks",
+      "knowledgeCategoryId": "KTC0248",
+      "summary": "USDA全球大米产量、消费和库存报告，数值采用milled basis。",
+      "status": "有效"
+    }
+  ],
+  "SourceDoc_Segment": [
+    {
+      "docId": "SOU0001",
+      "segmentId": "SOU0001-S001",
+      "segmentNo": 1,
+      "pageNo": 1,
+      "chapterPath": "通知正文",
+      "segmentText": "2025年国家继续在稻谷主产区实行最低收购价政策。综合考虑粮食生产成本、市场供求、国内外市场价格和产业发展等因素，经国务院批准，2025年生产的早籼稻、中晚籼稻和粳稻最低收购价分别为每50公斤128元、129元和131元。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0001",
+      "segmentId": "SOU0001-S002",
+      "segmentNo": 2,
+      "pageNo": 1,
+      "chapterPath": "通知正文/执行要求",
+      "segmentText": "各地要加强对最低收购价政策执行情况的监督检查，切实保护种粮农民利益。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0002",
+      "segmentId": "SOU0002-S001",
+      "segmentNo": 1,
+      "pageNo": 1,
+      "chapterPath": "一、综合/农业",
+      "segmentText": "全年粮食播种面积11932万公顷，比上年增加45万公顷。全年粮食产量70650万吨，比上年增加1109万吨，增产1.6%。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0002",
+      "segmentId": "SOU0002-S002",
+      "segmentNo": 2,
+      "pageNo": 1,
+      "chapterPath": "一、综合/农业",
+      "segmentText": "其中，稻谷产量20753万吨，增产0.5%；小麦产量14010万吨，增产2.6%；玉米产量29492万吨，增产2.1%；大豆产量2065万吨，减产0.9%。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0003",
+      "segmentId": "SOU0003-S001",
+      "segmentNo": 1,
+      "pageNo": 1,
+      "chapterPath": "一、综合/农业",
+      "segmentText": "全年粮食播种面积3047.87万亩，粮食总产量1100.73万吨。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0003",
+      "segmentId": "SOU0003-S002",
+      "segmentNo": 2,
+      "pageNo": 1,
+      "chapterPath": "一、综合/农业",
+      "segmentText": "其中，稻谷产量492.07万吨，玉米产量261.00万吨，小麦产量6.12万吨。",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0004",
+      "segmentId": "SOU0004-S001",
+      "segmentNo": 1,
+      "pageNo": 1,
+      "chapterPath": "World Rice Production/2026/27 Sep",
+      "segmentText": "World rice production for 2026/27 Sep is 533,852 thousand metric tons, milled basis.",
+      "segmentType": "正文"
+    },
+    {
+      "docId": "SOU0004",
+      "segmentId": "SOU0004-S002",
+      "segmentNo": 2,
+      "pageNo": 1,
+      "chapterPath": "World Rice Production/China/2026/27 Sep",
+      "segmentText": "China rice production for 2026/27 Sep is 147,000 thousand metric tons, milled basis.",
+      "segmentType": "正文"
+    }
+  ],
+  "Policy": [
+    {
+      "policyId": "POL0001",
+      "policyTitle": "关于公布2025年稻谷最低收购价格的通知",
+      "docNumber": "发改价格〔2025〕308号",
+      "policyLevel": "部门规范性文件",
+      "issuer": "国家发展改革委等四部门",
+      "effectiveDate": "2025-01-01",
+      "policyStatus": "现行有效",
+      "regionId": "REG0001",
+      "sourceDocId": "SOU0001",
+      "segmentId": "SOU0001-S001",
+      "knowledgeCategoryId": "KTC0166",
+      "industryStage": "收储",
+      "factorDimensions": "价格,收益",
+      "reviewStatus": "已发布",
+      "summary": "2025年早籼稻、中晚籼稻、粳稻最低收购价分别为每50公斤128元、129元和131元。"
+    }
+  ],
+  "Policy_Clause": [
+    {"policyId": "POL0001", "clauseId": "POL0001-C001", "clauseNo": 1, "clauseTitle": "早籼稻最低收购价", "clauseText": "2025年生产的早籼稻最低收购价为每50公斤128元。", "measureType": "最低收购价", "targetObject": "早籼稻", "clauseEffectiveDate": "2025-01-01"},
+    {"policyId": "POL0001", "clauseId": "POL0001-C002", "clauseNo": 2, "clauseTitle": "中晚籼稻最低收购价", "clauseText": "2025年生产的中晚籼稻最低收购价为每50公斤129元。", "measureType": "最低收购价", "targetObject": "中晚籼稻", "clauseEffectiveDate": "2025-01-01"},
+    {"policyId": "POL0001", "clauseId": "POL0001-C003", "clauseNo": 3, "clauseTitle": "粳稻最低收购价", "clauseText": "2025年生产的粳稻最低收购价为每50公斤131元。", "measureType": "最低收购价", "targetObject": "粳稻", "clauseEffectiveDate": "2025-01-01"}
+  ],
+  "Indicator": [
+    {"indicatorId": "IND0001", "indicatorCode": "GRAIN-SOWN-AREA", "indicatorName": "粮食播种面积", "indicatorCategory": "生产规模", "unit": "万公顷", "frequency": "年度", "caliber": "全国粮食作物播种面积", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0010", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0002", "indicatorCode": "RICE-OUTPUT", "indicatorName": "稻谷产量", "indicatorCategory": "生产规模", "unit": "万吨", "frequency": "年度", "caliber": "稻谷年度总产量", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0012", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0003", "indicatorCode": "GRAIN-OUTPUT", "indicatorName": "粮食产量", "indicatorCategory": "生产规模", "unit": "万吨", "frequency": "年度", "caliber": "粮食年度总产量", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0011", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0004", "indicatorCode": "WHEAT-OUTPUT", "indicatorName": "小麦产量", "indicatorCategory": "生产规模", "unit": "万吨", "frequency": "年度", "caliber": "小麦年度总产量", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0013", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0005", "indicatorCode": "CORN-OUTPUT", "indicatorName": "玉米产量", "indicatorCategory": "生产规模", "unit": "万吨", "frequency": "年度", "caliber": "玉米年度总产量", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0014", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0006", "indicatorCode": "SOYBEAN-OUTPUT", "indicatorName": "大豆产量", "indicatorCategory": "生产规模", "unit": "万吨", "frequency": "年度", "caliber": "大豆年度总产量", "sourceOrg": "国家统计局", "knowledgeCategoryId": "KTC0015", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0007", "indicatorCode": "GRAIN-SOWN-AREA-MU", "indicatorName": "粮食播种面积（万亩口径）", "indicatorCategory": "生产规模", "unit": "万亩", "frequency": "年度", "caliber": "地方公报粮食播种面积万亩口径", "sourceOrg": "地方统计部门", "knowledgeCategoryId": "KTC0087", "industryStage": "生产", "status": "有效"},
+    {"indicatorId": "IND0008", "indicatorCode": "RICE-OUTPUT-MILLED-KT", "indicatorName": "大米产量（千吨，milled basis）", "indicatorCategory": "全球供给", "unit": "千吨", "frequency": "市场年度", "caliber": "USDA大米产量，milled basis", "sourceOrg": "USDA FAS", "knowledgeCategoryId": "KTC0248", "industryStage": "生产", "status": "有效"}
+  ],
+  "IvdData": [
+    {"valueId": "IVD0001", "indicatorId": "IND0001", "regionId": "REG0001", "commodityId": "CMD0005", "periodType": "年度", "period": "2024", "value": 11932, "unit": "万公顷", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S001", "knowledgeCategoryId": "KTC0010", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0002", "indicatorId": "IND0002", "regionId": "REG0001", "commodityId": "CMD0001", "periodType": "年度", "period": "2024", "value": 20753, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0012", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0003", "indicatorId": "IND0004", "regionId": "REG0001", "commodityId": "CMD0002", "periodType": "年度", "period": "2024", "value": 14010, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0013", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0004", "indicatorId": "IND0005", "regionId": "REG0001", "commodityId": "CMD0003", "periodType": "年度", "period": "2024", "value": 29492, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0014", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0005", "indicatorId": "IND0006", "regionId": "REG0001", "commodityId": "CMD0004", "periodType": "年度", "period": "2024", "value": 2065, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0015", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0006", "indicatorId": "IND0003", "regionId": "REG0001", "commodityId": "CMD0005", "periodType": "年度", "period": "2024", "value": 70650, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S001", "knowledgeCategoryId": "KTC0011", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0007", "indicatorId": "IND0007", "regionId": "REG0002", "commodityId": "CMD0005", "periodType": "年度", "period": "2024", "value": 3047.87, "unit": "万亩", "qualityFlag": "官方核验", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S001", "knowledgeCategoryId": "KTC0087", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0008", "indicatorId": "IND0002", "regionId": "REG0002", "commodityId": "CMD0001", "periodType": "年度", "period": "2024", "value": 492.07, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S002", "knowledgeCategoryId": "KTC0088", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0009", "indicatorId": "IND0005", "regionId": "REG0002", "commodityId": "CMD0003", "periodType": "年度", "period": "2024", "value": 261.0, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S002", "knowledgeCategoryId": "KTC0089", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0010", "indicatorId": "IND0004", "regionId": "REG0002", "commodityId": "CMD0002", "periodType": "年度", "period": "2024", "value": 6.12, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S002", "knowledgeCategoryId": "KTC0087", "industryStage": "生产", "status": "已发布"},
+    {"valueId": "IVD0011", "indicatorId": "IND0003", "regionId": "REG0002", "commodityId": "CMD0005", "periodType": "年度", "period": "2024", "value": 1100.73, "unit": "万吨", "qualityFlag": "官方核验", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S001", "knowledgeCategoryId": "KTC0087", "industryStage": "生产", "status": "已发布"}
+  ],
+  "YrbYearbook": [
+    {"recordId": "YRB0001", "yearbookName": "2024年重庆市国民经济和社会发展统计公报", "edition": "2024", "statYear": 2024, "tableName": "主要农产品产量", "indicatorId": "IND0002", "regionId": "REG0002", "commodityId": "CMD0001", "value": 492.07, "unit": "万吨", "caliberNote": "重庆市统计公报口径", "sourceDocId": "SOU0003", "segmentId": "SOU0003-S002", "knowledgeCategoryId": "KTC0236", "industryStage": "生产", "status": "已发布"},
+    {"recordId": "YRB0002", "yearbookName": "中华人民共和国2024年国民经济和社会发展统计公报", "edition": "2024", "statYear": 2024, "tableName": "主要农产品产量", "indicatorId": "IND0002", "regionId": "REG0001", "commodityId": "CMD0001", "value": 20753, "unit": "万吨", "caliberNote": "国家统计公报口径", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0012", "industryStage": "生产", "status": "已发布"},
+    {"recordId": "YRB0003", "yearbookName": "中华人民共和国2024年国民经济和社会发展统计公报", "edition": "2024", "statYear": 2024, "tableName": "主要农产品产量", "indicatorId": "IND0004", "regionId": "REG0001", "commodityId": "CMD0002", "value": 14010, "unit": "万吨", "caliberNote": "国家统计公报口径", "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "knowledgeCategoryId": "KTC0013", "industryStage": "生产", "status": "已发布"}
+  ],
+  "Intel": [
+    {"intelId": "INT0001", "intelTitle": "USDA预计2026/27年度全球大米产量533852千吨", "intelType": "产量展望", "regionId": "REG0003", "commodityId": "CMD0001", "publishOrg": "USDA Foreign Agricultural Service", "publishDate": "2026-09-01", "keyPoints": "2026/27 Sep全球大米产量533852千吨，采用milled basis；中国为147000千吨。", "credibility": "高", "sourceDocId": "SOU0004", "segmentId": "SOU0004-S001", "knowledgeCategoryId": "KTC0248", "industryStage": "生产", "factorDimensions": "供给", "status": "已发布"},
+    {"intelId": "INT0002", "intelTitle": "USDA预计2026/27年度中国大米产量147000千吨", "intelType": "产量展望", "regionId": "REG0001", "commodityId": "CMD0001", "publishOrg": "USDA Foreign Agricultural Service", "publishDate": "2026-09-01", "keyPoints": "中国2026/27 Sep大米产量147000千吨，采用milled basis。", "credibility": "高", "sourceDocId": "SOU0004", "segmentId": "SOU0004-S002", "knowledgeCategoryId": "KTC0248", "industryStage": "生产", "factorDimensions": "供给", "status": "已发布"}
+  ],
+  "CmdCommodity": [
+    {"commodityId": "CMD0001", "commodityCode": "RICE-PADDY", "commodityName": "稻谷", "commodityCategory": "谷物", "scientificName": "Oryza sativa L.", "parentCommodityId": "CMD0005", "conceptId": "CON0001", "description": "水稻收获后的籽粒，是大米加工的主要原料。", "status": "有效"},
+    {"commodityId": "CMD0002", "commodityCode": "WHEAT", "commodityName": "小麦", "commodityCategory": "谷物", "scientificName": "Triticum aestivum L.", "parentCommodityId": "CMD0005", "conceptId": "CON0002", "description": "重要口粮作物。", "status": "有效"},
+    {"commodityId": "CMD0003", "commodityCode": "CORN", "commodityName": "玉米", "commodityCategory": "谷物", "scientificName": "Zea mays L.", "parentCommodityId": "CMD0005", "conceptId": "CON0003", "description": "用于口粮、饲料和工业加工的粮食作物。", "status": "有效"},
+    {"commodityId": "CMD0004", "commodityCode": "SOYBEAN", "commodityName": "大豆", "commodityCategory": "豆类及油料", "scientificName": "Glycine max (L.) Merr.", "conceptId": "CON0004", "description": "重要的植物蛋白和油脂原料。", "status": "有效"},
+    {"commodityId": "CMD0005", "commodityCode": "GRAIN", "commodityName": "粮食", "commodityCategory": "粮食总类", "conceptId": "CON0005", "description": "谷物、豆类和薯类等粮食作物的统计总类。", "status": "有效"},
+    {"commodityId": "CMD0008", "commodityCode": "RAPESEED-OIL", "commodityName": "菜籽油", "commodityCategory": "食用植物油", "scientificName": "Brassica napus L.", "description": "以油菜籽为原料制取的食用植物油。", "status": "有效"}
+  ],
+  "Product": [
+    {"productId": "PRD0001", "productCode": "RICE-MILLED", "productName": "大米", "commodityId": "CMD0001", "productCategory": "成品粮", "description": "稻谷经清理、砻谷、碾米等工艺制成的成品粮。", "status": "有效"},
+    {"productId": "PRD0002", "productCode": "WHEAT-FLOUR", "productName": "小麦粉", "commodityId": "CMD0002", "productCategory": "成品粮", "description": "小麦经研磨筛理制成的粉状成品粮。", "status": "有效"},
+    {"productId": "PRD0003", "productCode": "SOYBEAN-OIL", "productName": "豆油", "commodityId": "CMD0004", "productCategory": "食用植物油", "description": "以大豆为原料制取的食用植物油。", "status": "有效"}
+  ],
+  "Region": [
+    {"regionId": "REG0001", "regionCode": "CN", "regionName": "中国", "regionLevel": "国家", "adminCode": "156", "faoRegion": "Asia", "isChongqing": 0, "status": "有效"},
+    {"regionId": "REG0002", "regionCode": "CN-CQ", "regionName": "重庆市", "regionLevel": "省级", "parentRegionId": "REG0001", "adminCode": "500000", "faoRegion": "Asia", "isChongqing": 1, "status": "有效"},
+    {"regionId": "REG0003", "regionCode": "WORLD", "regionName": "全球", "regionLevel": "全球", "faoRegion": "World", "isChongqing": 0, "status": "有效"}
+  ],
+  "Concept": [
+    {"conceptId": "CON0001", "conceptCode": "AGROVOC-C-7576", "conceptName": "稻谷", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_7576", "parentConceptId": "CON0005", "definition": "水稻及其收获籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0002", "conceptCode": "AGROVOC-C-8379", "conceptName": "小麦", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_8379", "parentConceptId": "CON0005", "definition": "小麦作物及籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0003", "conceptCode": "AGROVOC-C-12332", "conceptName": "玉米", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_12332", "parentConceptId": "CON0005", "definition": "玉米作物及籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0004", "conceptCode": "AGROVOC-C-3393", "conceptName": "大豆", "conceptType": "油料品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_3393", "definition": "大豆作物及籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0005", "conceptCode": "GRAIN-CONCEPT", "conceptName": "粮食", "conceptType": "粮食总类", "sourceOntology": "粮油产业本体", "definition": "粮食作物及其产品的上位概念。", "status": "有效"}
+  ],
+  "Concept_Synonym": [
+    {"conceptId": "CON0001", "synonymId": "SYN0001", "synonymName": "水稻", "language": "zh-CN", "synonymType": "中文同义词"},
+    {"conceptId": "CON0001", "synonymId": "SYN0002", "synonymName": "paddy rice", "language": "en", "synonymType": "英文同义词"},
+    {"conceptId": "CON0003", "synonymId": "SYN0003", "synonymName": "maize", "language": "en", "synonymType": "英文同义词"}
+  ],
+  "Relation": [
+    {"relationId": "REL0001", "subjectEntityType": "品种", "subjectEntityId": "CMD0001", "predicate": "产于", "objectEntityType": "地区", "objectEntityId": "REG0001", "confidence": 0.99, "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "extractedBy": "人工核验", "validFrom": "2024-01-01", "status": "已发布"},
+    {"relationId": "REL0002", "subjectEntityType": "品种", "subjectEntityId": "CMD0001", "predicate": "产于", "objectEntityType": "地区", "objectEntityId": "REG0002", "confidence": 0.99, "sourceDocId": "SOU0003", "segmentId": "SOU0003-S002", "extractedBy": "人工核验", "validFrom": "2024-01-01", "status": "已发布"},
+    {"relationId": "REL0003", "subjectEntityType": "产品", "subjectEntityId": "PRD0001", "predicate": "原料来自", "objectEntityType": "品种", "objectEntityId": "CMD0001", "confidence": 0.98, "sourceDocId": "SOU0002", "segmentId": "SOU0002-S002", "extractedBy": "人工核验", "status": "已发布"},
+    {"relationId": "REL0004", "subjectEntityType": "政策法规", "subjectEntityId": "POL0001", "predicate": "调控品种", "objectEntityType": "品种", "objectEntityId": "CMD0001", "confidence": 1.0, "sourceDocId": "SOU0001", "segmentId": "SOU0001-S001", "extractedBy": "人工核验", "validFrom": "2025-01-01", "status": "已发布"}
+  ],
+  "CrsSource": [
+    {"crawlSourceId": "CRS0001", "sourceName": "国家统计局", "sourceUrl": "https://www.stats.gov.cn/sj/zxfb/", "sourceType": "政府网站", "contentCategory": "农业经济", "crawlMode": "列表增量", "cronExpr": "0 2 * * *", "charset": "UTF-8", "minIntervalMinutes": 720, "maxRetry": 3, "knowledgeCategoryId": "KTC0011", "enabledFlag": "暂停"},
+    {"crawlSourceId": "CRS0002", "sourceName": "USDA Foreign Agricultural Service", "sourceUrl": "https://fas.usda.gov/data/production/commodity/0422110", "sourceType": "国际机构", "contentCategory": "全球农业情报", "crawlMode": "列表增量", "cronExpr": "0 3 * * 1", "charset": "UTF-8", "minIntervalMinutes": 1440, "maxRetry": 3, "knowledgeCategoryId": "KTC0248", "enabledFlag": "暂停"},
+    {"crawlSourceId": "CRS0003", "sourceName": "FAO", "sourceUrl": "https://www.fao.org/worldfoodsituation/csdb/en/", "sourceType": "国际机构", "contentCategory": "全球农业情报", "crawlMode": "列表增量", "cronExpr": "0 4 * * 1", "charset": "UTF-8", "minIntervalMinutes": 1440, "maxRetry": 3, "knowledgeCategoryId": "KTC0248", "enabledFlag": "暂停"},
+    {"crawlSourceId": "CRS0004", "sourceName": "中国粮油信息网", "sourceUrl": "https://www.chinagrain.cn/", "sourceType": "行业网站", "contentCategory": "农业经济", "crawlMode": "列表增量", "cronExpr": "0 5 * * *", "charset": "UTF-8", "minIntervalMinutes": 720, "maxRetry": 3, "knowledgeCategoryId": "KTC0034", "enabledFlag": "暂停"}
+  ]
+}

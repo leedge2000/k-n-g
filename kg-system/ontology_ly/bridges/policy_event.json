@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "bridge": "policy_event",
+  "label": "政策事件桥",
+  "owner": "POLICY_PACK",
+  "purpose": "让政策包把『文件条款』落到内核的 Event 与影响边上，同时禁止政策包越权写市场侧强度与序列。",
+  "defaultPolicy": "白名单之外一律拒绝（G2-7 / AP_BRIDGE_ILLEGAL_WRITE）",
+  "allowedWrites": [
+    {
+      "targetType": "Event",
+      "operation": "CREATE",
+      "allowedFields": [
+        "name", "alias", "code", "description", "domainCode", "validFrom", "validTo",
+        "recordedAt", "status", "version", "evidenceIds", "confidence", "extractedBy", "authority",
+        "eventTypeId", "eventTime", "announceTime", "effectiveFrom", "effectiveTo",
+        "eventScale", "scopeId", "actorOrgIds", "severity", "parentEventId"
+      ],
+      "requiredFields": ["eventTypeId", "eventTime", "eventScale", "scopeId", "evidenceIds"],
+      "conditions": [
+        "domainCode 必须为 S4 或 PUB",
+        "eventScale=NATIONAL 时 scopeId 必须为开放语义或覆盖全国",
+        "政策类事件必须填 announceTime；effectiveFrom 可晚于 announceTime"
+      ]
+    },
+    {
+      "targetType": "EventType",
+      "operation": "PROPOSE",
+      "allowedFields": ["name", "alias", "description", "eventCategory", "isPolicyTool", "toolVerb", "defaultImpactDirection", "status"],
+      "conditions": ["status 只能为 DRAFT", "isPolicyTool=true 时 toolVerb 必填", "转 ACTIVE 必须由内核评审，政策包无权限"]
+    },
+    {
+      "targetType": "Factor",
+      "operation": "PROPOSE",
+      "allowedFields": ["name", "alias", "description", "factorCode", "factorCategory", "factorSubCategory", "defaultDirection", "mechanism", "proposedBy", "status"],
+      "conditions": ["status 只能为 DRAFT", "proposedBy 必须为 POLICY_PACK", "转 ACTIVE 必须由内核评审"]
+    }
+  ],
+  "allowedEdges": [
+    {
+      "name": "IMPACTS",
+      "from": ["Event"],
+      "to": ["Commodity", "Factor"],
+      "requiredAttributes": ["impactDirection"],
+      "optionalAttributes": ["lagDays", "mechanism"],
+      "requiredEvidence": 1
+    },
+    {
+      "name": "ACTS_ON_FACTOR",
+      "from": ["Event"],
+      "to": ["Factor"],
+      "requiredAttributes": [],
+      "requiredEvidence": 1
+    },
+    {
+      "name": "SUPERSEDES",
+      "from": ["Event"],
+      "to": ["Event"],
+      "requiredAttributes": ["supersededAt"],
+      "requiredEvidence": 1,
+      "conditions": ["不得成环（G1-4）", "被取代方 status 置 RETIRED"]
+    },
+    {
+      "name": "AMENDS",
+      "from": ["Event"],
+      "to": ["Event"],
+      "requiredAttributes": ["effectiveFrom"],
+      "requiredEvidence": 1
+    },
+    {
+      "name": "EXTENDS",
+      "from": ["Event"],
+      "to": ["Event"],
+      "requiredAttributes": ["newEffectiveTo"],
+      "requiredEvidence": 1
+    },
+    {
+      "name": "EVENT_OF_TYPE",
+      "from": ["Event"],
+      "to": ["EventType"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    },
+    {
+      "name": "EVENT_INVOLVES_ACTOR",
+      "from": ["Event"],
+      "to": ["Organization"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    },
+    {
+      "name": "SCOPED_BY",
+      "from": ["Event"],
+      "to": ["Scope"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    },
+    {
+      "name": "EVIDENCED_BY",
+      "from": ["Event", "ImpactLink"],
+      "to": ["Evidence"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    }
+  ],
+  "forbidden": [
+    {
+      "code": "AP_POLICY_MAGNITUDE",
+      "rule": "政策包不得写 ImpactLink.impactMagnitude 或 IMPACTS.impactMagnitude",
+      "reason": "强度只能由市场包用价格/数量数据反验后回填；政策包自评强度属无证据断言",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_POLICY_WRITES_MARKET",
+      "rule": "政策包不得创建或修改 Indicator / IndicatorSeries / DataPoint / PriceTransmissionLink",
+      "reason": "跨包写入越界",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_POLICY_DRIVES",
+      "rule": "政策包不得写 DRIVES(Factor→IndicatorSeries)",
+      "reason": "因子到序列的量化关系只能由市场包给出并带 elasticity 或 lagDays",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_POLICY_QUANTIFIES",
+      "rule": "政策包不得在 Event 描述或属性中写『预计拉动价格 X 元/吨』类量化结论",
+      "reason": "量化结论必须走 ImpactLink + 市场包反验，或走 Assertion 并标断言方",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_ACTIVATION_ASSUMED",
+      "rule": "不得因触发条件满足就把 officiallyActivated 置 TRUE",
+      "reason": "『条件满足』≠『官方已启动』；TRUE 必须有官方公告文档作为证据",
+      "severity": "ERROR"
+    }
+  ],
+  "required": [
+    "每条 Event 至少 1 条 Evidence，且 Evidence.quote 必须能在 DocumentSegment 中定位（G2-4）",
+    "政策事件的 scopeId 必须是 POLICY_SCOPE 类型且 normalizedKey 唯一",
+    "IMPACTS 边必须带 impactDirection；UNCERTAIN 必须写 mechanism",
+    "四种退场（SUPERSEDES / AMENDS / EXTENDS / 自然到期）必须四选一可解释，有效期重叠无解释即拒绝（G2-2）"
+  ],
+  "gateRules": ["G2-1", "G2-2", "G2-4", "G2-5", "G2-7", "G2-8"]
+}

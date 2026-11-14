@@ -1,0 +1,417 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "frozen": true,
+  "sourceBaseline": "STAGE0-执行分解.md §3.11 / §5 / §9.1",
+  "note": "本文件含两部分：① 4 个关系实体化类型（带参数/需版本/需独立证据，满足 R5）；② 34 条语义边。语义边允许 FROM/TO 为多类型（多态），Kùzu 落地时按具体类型展开为物理 Rel 表，见 schema/kuzu_ddl.md。关系实体内部的 ref 字段（如 inputFormIds）不重复登记为语义边。",
+  "counts": {
+    "relationEntityTypes": 4,
+    "semanticEdges": 34,
+    "baselineEstimate": 34
+  },
+  "relationEntities": [
+    {
+      "typeName": "TransformationProcess",
+      "labelZh": "加工转化",
+      "idPrefix": "LNK-TR",
+      "domainCode": "PUB",
+      "kind": "RELATION_ENTITY",
+      "satisfiesR5": ["参数≥2且有业务含义", "需版本链", "需独立证据"],
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["yieldRates 的键必须是 outputFormIds 的子集", "yieldRates 合计可 < 1（损耗），不得 > 1"],
+      "fields": [
+        { "name": "inputFormIds", "label": "输入形态", "type": "ref[]", "ref": "CommodityForm", "required": true, "note": "如『进口大豆』" },
+        { "name": "outputFormIds", "label": "输出形态", "type": "ref[]", "ref": "CommodityForm", "required": true, "note": "如『豆油 + 豆粕』" },
+        { "name": "processType", "label": "工艺类型", "type": "enum", "enumRef": "ProcessType", "required": true, "note": "" },
+        { "name": "yieldRates", "label": "出率", "type": "json", "required": true, "note": "{outputFormId: 出率}" },
+        { "name": "capacity", "label": "产能", "type": "float", "required": false, "note": "" },
+        { "name": "capacityUnitId", "label": "产能单位", "type": "ref", "ref": "UnitOfMeasure", "required": false, "note": "" },
+        { "name": "regionId", "label": "适用地区", "type": "ref", "ref": "Region", "required": false, "note": "区域性工艺差异" }
+      ]
+    },
+    {
+      "typeName": "SubstitutionRelation",
+      "labelZh": "替代关系",
+      "idPrefix": "LNK-SB",
+      "domainCode": "PUB",
+      "kind": "RELATION_ENTITY",
+      "satisfiesR5": ["参数≥2且有业务含义", "需有效期", "需独立证据"],
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["fromFormId ≠ toFormId", "substitutionRatio > 0", "scopeId 必填（替代随地区/时段变化）"],
+      "fields": [
+        { "name": "fromFormId", "label": "被替代形态", "type": "ref", "ref": "CommodityForm", "required": true, "note": "" },
+        { "name": "toFormId", "label": "替代形态", "type": "ref", "ref": "CommodityForm", "required": true, "note": "" },
+        { "name": "direction", "label": "方向", "type": "enum", "enumRef": "SubstitutionDirection", "required": true, "note": "" },
+        { "name": "substitutionRatio", "label": "替代比", "type": "float", "required": true, "note": "营养当量或工艺当量" },
+        { "name": "triggerCondition", "label": "触发条件", "type": "string", "required": false, "note": "如价差 > 300 元/吨" },
+        { "name": "scopeId", "label": "作用范围", "type": "ref", "ref": "Scope", "required": true, "note": "" }
+      ]
+    },
+    {
+      "typeName": "PriceTransmissionLink",
+      "labelZh": "价格传导",
+      "idPrefix": "LNK-PT",
+      "domainCode": "PUB",
+      "kind": "RELATION_ENTITY",
+      "satisfiesR5": ["参数≥2且有业务含义", "需版本链", "需独立证据"],
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": ["fromSeriesId ≠ toSeriesId", "samplePeriodId 必填（不同政策周期传导机制不同）"],
+      "fields": [
+        { "name": "fromSeriesId", "label": "上游序列", "type": "ref", "ref": "IndicatorSeries", "required": true, "note": "" },
+        { "name": "toSeriesId", "label": "下游序列", "type": "ref", "ref": "IndicatorSeries", "required": true, "note": "" },
+        { "name": "transmissionType", "label": "传导类型", "type": "enum", "enumRef": "TransmissionType", "required": true, "note": "" },
+        { "name": "elasticity", "label": "传导系数", "type": "float", "required": false, "note": "" },
+        { "name": "lagDays", "label": "滞后期（天）", "type": "int", "required": false, "note": "" },
+        { "name": "regimeNote", "label": "机制说明", "type": "string", "required": false, "note": "必须写明样本期与政策环境" },
+        { "name": "samplePeriodId", "label": "估计样本期", "type": "ref", "ref": "TimePeriod", "required": true, "note": "" }
+      ]
+    },
+    {
+      "typeName": "ImpactLink",
+      "labelZh": "政策影响",
+      "idPrefix": "LNK-IM",
+      "domainCode": "PUB",
+      "kind": "RELATION_ENTITY",
+      "satisfiesR5": ["参数≥2且有业务含义", "需版本链", "需独立证据"],
+      "sqliteAlignment": { "table": null, "note": "新增表" },
+      "constraints": [
+        "政策包不得写 impactMagnitude（AP_POLICY_MAGNITUDE）",
+        "每条 ImpactLink 至少 1 条 Evidence（桥一）",
+        "targetType 与 targetId 必须实际存在，否则 REF_UNRESOLVED"
+      ],
+      "fields": [
+        { "name": "sourceType", "label": "来源类型", "type": "enum", "enumRef": "ImpactSourceType", "required": true, "note": "" },
+        { "name": "sourceId", "label": "来源对象", "type": "string", "required": true, "note": "Event / Policy(Document)" },
+        { "name": "targetType", "label": "影响对象类型", "type": "enum", "enumRef": "ImpactTargetType", "required": true, "note": "" },
+        { "name": "targetId", "label": "影响对象", "type": "string", "required": true, "note": "" },
+        { "name": "impactDirection", "label": "影响方向", "type": "enum", "enumRef": "ImpactDirection", "required": true, "note": "" },
+        { "name": "impactMagnitude", "label": "影响强度", "type": "enum", "enumRef": "ImpactMagnitude", "required": false, "note": "只允许市场包反验后回填" },
+        { "name": "lagDays", "label": "滞后期（天）", "type": "int", "required": false, "note": "" },
+        { "name": "mechanism", "label": "作用机理", "type": "string", "required": false, "note": "" },
+        { "name": "assertedByType", "label": "判断方类型", "type": "enum", "enumRef": "AssertedByType", "required": false, "note": "" },
+        { "name": "assertedById", "label": "判断方", "type": "string", "required": false, "note": "" }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "name": "HAS_SUBCATEGORY",
+      "labelZh": "下位类目",
+      "from": ["CommodityCategory"],
+      "to": ["CommodityCategory"],
+      "attributes": [],
+      "bridge": null,
+      "note": "树形边，最多 4 层；与 parentCategoryId 互为镜像"
+    },
+    {
+      "name": "BELONGS_TO_CATEGORY",
+      "labelZh": "属于类目",
+      "from": ["Commodity"],
+      "to": ["CommodityCategory"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "HAS_FORM",
+      "labelZh": "有形态",
+      "from": ["Commodity"],
+      "to": ["CommodityForm"],
+      "attributes": [],
+      "bridge": null,
+      "note": "与 CommodityForm.commodityId 互为镜像"
+    },
+    {
+      "name": "FORM_DERIVED_FROM",
+      "labelZh": "形态来源",
+      "from": ["CommodityForm"],
+      "to": ["CommodityForm"],
+      "attributes": [],
+      "bridge": null,
+      "note": "加工派生方向：成品 → 原料"
+    },
+    {
+      "name": "REGION_PARENT",
+      "labelZh": "上级地区",
+      "from": ["Region"],
+      "to": ["Region"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "PLACE_LOCATED_IN",
+      "labelZh": "所处地区",
+      "from": ["MarketPlace", "LogisticsNode"],
+      "to": ["Region"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态：Kùzu 展开为 2 张 Rel 表"
+    },
+    {
+      "name": "MARKET_OPERATED_BY",
+      "labelZh": "市场运营方",
+      "from": ["MarketPlace"],
+      "to": ["Organization"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "ORG_PARENT",
+      "labelZh": "上级机构",
+      "from": ["Organization"],
+      "to": ["Organization"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "ORG_IN_REGION",
+      "labelZh": "机构所属地区",
+      "from": ["Organization", "Enterprise"],
+      "to": ["Region"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态：Kùzu 展开为 2 张 Rel 表"
+    },
+    {
+      "name": "PERSON_AFFILIATED_WITH",
+      "labelZh": "人物所属机构",
+      "from": ["Person"],
+      "to": ["Organization"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "CALENDAR_APPLIES_TO",
+      "labelZh": "年度口径适用对象",
+      "from": ["CalendarScheme"],
+      "to": ["CommodityCategory", "Region"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态"
+    },
+    {
+      "name": "PERIOD_USES_CALENDAR",
+      "labelZh": "期间使用口径",
+      "from": ["TimePeriod"],
+      "to": ["CalendarScheme"],
+      "attributes": [],
+      "bridge": null,
+      "note": "非自然年必填（G0 结构约束）"
+    },
+    {
+      "name": "HAS_SERIES",
+      "labelZh": "指标有序列",
+      "from": ["Indicator"],
+      "to": ["IndicatorSeries"],
+      "attributes": [],
+      "bridge": null,
+      "note": "口径的承载者是序列，不是指标"
+    },
+    {
+      "name": "UNIT_OF",
+      "labelZh": "使用单位",
+      "from": ["Indicator", "DataPoint"],
+      "to": ["UnitOfMeasure"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态"
+    },
+    {
+      "name": "SERIES_FOR_FORM",
+      "labelZh": "序列对应形态",
+      "from": ["IndicatorSeries"],
+      "to": ["CommodityForm"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "SERIES_FROM_SOURCE",
+      "labelZh": "序列统计来源",
+      "from": ["IndicatorSeries"],
+      "to": ["StatisticalSource"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "HAS_POINT",
+      "labelZh": "序列含数据点",
+      "from": ["IndicatorSeries"],
+      "to": ["DataPoint"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "POINT_FOR_PERIOD",
+      "labelZh": "数据点所属期间",
+      "from": ["DataPoint"],
+      "to": ["TimePeriod"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "SCOPED_BY",
+      "labelZh": "范围约束",
+      "from": ["IndicatorSeries", "Event", "Assertion", "Factor"],
+      "to": ["Scope"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态：4 类对象共用同一语义；Kùzu 展开为 4 张 Rel 表"
+    },
+    {
+      "name": "EVENT_OF_TYPE",
+      "labelZh": "事件类型",
+      "from": ["Event"],
+      "to": ["EventType"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "EVENT_INVOLVES_ACTOR",
+      "labelZh": "事件参与主体",
+      "from": ["Event"],
+      "to": ["Organization"],
+      "attributes": [],
+      "bridge": null,
+      "note": "与 Event.actorOrgIds 互为镜像"
+    },
+    {
+      "name": "SUPERSEDES",
+      "labelZh": "取代",
+      "from": ["Event"],
+      "to": ["Event"],
+      "attributes": ["supersededAt", "evidenceIds"],
+      "bridge": null,
+      "note": "四种退场之一；不得成环（G1-4）；反向 SUPERSEDED_BY 在查询层派生，不落库"
+    },
+    {
+      "name": "AMENDS",
+      "labelZh": "修订",
+      "from": ["Event"],
+      "to": ["Event"],
+      "attributes": ["effectiveFrom", "evidenceIds"],
+      "bridge": null,
+      "note": "有效期重叠必须由 AMENDS 或 SUPERSEDES 解释（G2-2）"
+    },
+    {
+      "name": "EXTENDS",
+      "labelZh": "延期",
+      "from": ["Event"],
+      "to": ["Event"],
+      "attributes": ["newEffectiveTo", "evidenceIds"],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "DOC_ISSUED_BY",
+      "labelZh": "文档发布机构",
+      "from": ["Document"],
+      "to": ["Organization"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "HAS_SEGMENT",
+      "labelZh": "文档分段",
+      "from": ["Document"],
+      "to": ["DocumentSegment"],
+      "attributes": [],
+      "bridge": null,
+      "note": ""
+    },
+    {
+      "name": "EVIDENCE_FROM",
+      "labelZh": "证据来源",
+      "from": ["Evidence"],
+      "to": ["Document", "DocumentSegment"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态；精确到段时同时连 DocumentSegment"
+    },
+    {
+      "name": "EVIDENCED_BY",
+      "labelZh": "被证据支持",
+      "from": [
+        "CommodityCategory", "Commodity", "CommodityForm", "Region", "MarketPlace", "LogisticsNode",
+        "Organization", "Enterprise", "Person", "TimePeriod", "CalendarScheme", "UnitOfMeasure",
+        "Indicator", "IndicatorSeries", "DataPoint", "StatisticalSource", "Event", "EventType",
+        "Document", "DocumentSegment", "Dimension", "Scope", "Factor", "Assertion",
+        "TransformationProcess", "SubstitutionRelation", "PriceTransmissionLink", "ImpactLink"
+      ],
+      "to": ["Evidence"],
+      "attributes": [],
+      "bridge": null,
+      "note": "多态反向边。物理上不建 28 张 Rel 表，改由 Evidence(targetType,targetId) 建复合索引 + 通用 evidenceIds 列实现；G1-3 校验双向可查"
+    },
+    {
+      "name": "ASSERTED_BY",
+      "labelZh": "断言方",
+      "from": ["Assertion"],
+      "to": ["Organization", "Person"],
+      "attributes": [],
+      "bridge": "assertion",
+      "note": "多态"
+    },
+    {
+      "name": "SUPPORTED_BY",
+      "labelZh": "断言证据",
+      "from": ["Assertion"],
+      "to": ["Evidence"],
+      "attributes": ["strength"],
+      "bridge": "assertion",
+      "writableBy": ["POLICY_PACK", "MARKET_PACK", "KERNEL"],
+      "note": "断言桥必填三件套之一"
+    },
+    {
+      "name": "IMPACTS",
+      "labelZh": "政策影响",
+      "from": ["Event"],
+      "to": ["Commodity", "Factor"],
+      "attributes": ["impactDirection", "lagDays", "mechanism"],
+      "bridge": "policy_event",
+      "writableBy": ["POLICY_PACK"],
+      "forbiddenAttributes": ["impactMagnitude"],
+      "note": "政策包只写方向与滞后，不写强度（AP_POLICY_MAGNITUDE）"
+    },
+    {
+      "name": "ACTS_ON_FACTOR",
+      "labelZh": "政策作用于因子",
+      "from": ["Event"],
+      "to": ["Factor"],
+      "attributes": [],
+      "bridge": "factor",
+      "writableBy": ["POLICY_PACK"],
+      "note": "市场包禁止写此边"
+    },
+    {
+      "name": "DRIVES",
+      "labelZh": "因子驱动序列",
+      "from": ["Factor"],
+      "to": ["IndicatorSeries"],
+      "attributes": ["elasticity", "lagDays"],
+      "bridge": "factor",
+      "writableBy": ["MARKET_PACK"],
+      "requiresAnyAttribute": ["elasticity", "lagDays"],
+      "note": "政策包禁止写此边；elasticity 与 lagDays 至少一项，否则门 2 拒绝"
+    },
+    {
+      "name": "MEASURED_BY",
+      "labelZh": "因子度量指标",
+      "from": ["Factor"],
+      "to": ["Indicator"],
+      "attributes": [],
+      "bridge": "factor",
+      "writableBy": ["MARKET_PACK"],
+      "note": "因子 ≠ 指标，但可被指标度量"
+    }
+  ]
+}

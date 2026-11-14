@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 5",
+  "datasetTier": "technical-smoke",
+  "description": "阶段 5 运营固定情形：期望值来自冻结指标口径、合成种子与阶段 5 口径清单，仅用于技术冒烟，不代表真实运营质量或生产性能。",
+  "source": {
+    "files": [
+      {
+        "path": "ontology_ly/packs/ops/stage5_运营口径清单.md",
+        "sha256": "7bfda16c35da7a31f8450de3c6c981e2566f0fc4cf2eb161e75993572d17579e"
+      },
+      {
+        "path": "seed/mapping.json",
+        "sha256": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5"
+      },
+      {
+        "path": "seed/business.json",
+        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "S5-OPS-01",
+      "title": "八个质量指标的方向、阈值与状态判定一致",
+      "kind": "service",
+      "checks": [
+        {
+          "group": "metric",
+          "type": "metricDefinitions",
+          "expected": {
+            "SRC_COVERAGE": {"direction": "GTE", "threshold": 0.95},
+            "ORPHAN_RATE": {"direction": "LTE", "threshold": 0.02},
+            "DUP_PENDING": {"direction": "LTE", "threshold": 10},
+            "CONFLICT_PENDING": {"direction": "LTE", "threshold": 0},
+            "STALE_SOURCE": {"direction": "LTE", "threshold": 0},
+            "CRAWL_FAIL_RATE": {"direction": "LTE", "threshold": 0.2},
+            "REVIEW_BACKLOG": {"direction": "LTE", "threshold": 50},
+            "RULE_COVERAGE": {"direction": "GTE", "threshold": 0.5}
+          }
+        },
+        {"group": "metric", "type": "metricStatusConsistent", "expected": true}
+      ]
+    },
+    {
+      "caseId": "S5-OPS-02",
+      "title": "冲突告警 OPEN→ACK→CLOSED 与重复操作拦截",
+      "kind": "service",
+      "setup": [
+        {
+          "table": "QisRecord",
+          "values": {
+            "issueId": "QIS-S5-A", "issueType": "冲突", "primaryEntityType": "指标数据",
+            "primaryEntityId": "IVD0001", "duplicateEntityId": "IVD0002", "similarity": 1.0,
+            "conflictField": "value", "conflictValueA": "1", "conflictValueB": "2",
+            "handleStatus": "待处理"
+          }
+        }
+      ],
+      "checks": [
+        {"group": "alert", "type": "inspectRaisesAlert", "alertCode": "ALT-CONFLICT", "expected": {"status": "OPEN", "severity": "P2"}},
+        {"group": "alert", "type": "alertTransition", "alertCode": "ALT-CONFLICT", "action": "ack", "expected": "ACK"},
+        {"group": "alert", "type": "alertDuplicateTransition", "alertCode": "ALT-CONFLICT", "action": "ack", "expected": 409},
+        {"group": "alert", "type": "alertTransition", "alertCode": "ALT-CONFLICT", "action": "close", "expected": "CLOSED"},
+        {"group": "alert", "type": "alertDuplicateTransition", "alertCode": "ALT-CONFLICT", "action": "close", "expected": 409},
+        {
+          "group": "alert", "type": "autoCloseRecovery", "alertCode": "ALT-CONFLICT", "expected": true,
+          "setup": [
+            {
+              "table": "QisRecord",
+              "values": {
+                "issueId": "QIS-S5-B", "issueType": "冲突", "primaryEntityType": "指标数据",
+                "primaryEntityId": "IVD0003", "duplicateEntityId": "IVD0004", "similarity": 1.0,
+                "conflictField": "value", "conflictValueA": "3", "conflictValueB": "4",
+                "handleStatus": "待处理"
+              }
+            }
+          ],
+          "cleanup": [
+            {"table": "QisRecord", "where": {"issueId": "QIS-S5-B"}},
+            {"table": "QisRecord", "where": {"issueId": "QIS-S5-A"}}
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "S5-OPS-03",
+      "title": "同一告警编码只保留一条 OPEN",
+      "kind": "service",
+      "setup": [
+        {
+          "table": "QisRecord",
+          "values": {
+            "issueId": "QIS-S5-C", "issueType": "冲突", "primaryEntityType": "指标数据",
+            "primaryEntityId": "IVD0005", "duplicateEntityId": "IVD0006", "similarity": 1.0,
+            "conflictField": "value", "conflictValueA": "5", "conflictValueB": "6",
+            "handleStatus": "待处理"
+          }
+        }
+      ],
+      "checks": [
+        {"group": "alert", "type": "inspectTwice", "expected": true},
+        {"group": "alert", "type": "openAlertUniqueness", "expected": true},
+        {"group": "alert", "type": "alertSeverity", "alertCode": "ALT-CONFLICT", "expected": "P2"}
+      ]
+    },
+    {
+      "caseId": "S5-OPS-04",
+      "title": "超期采集源、待审核积压与变更游标",
+      "kind": "service",
+      "setup": [
+        {
+          "table": "CrsSource",
+          "values": {
+            "crawlSourceId": "CRS-S5-STALE", "sourceName": "阶段5超期源",
+            "sourceUrl": "https://example.com/stale", "sourceType": "网页",
+            "contentCategory": "政策", "crawlMode": "定时", "minIntervalMinutes": 60,
+            "maxRetry": 2, "enabledFlag": "启用",
+            "lastRunAt": "2024-01-01T00:00:00+00:00"
+          },
+          "fill": {"knowledgeCategoryId": {"table": "KtcCategory", "column": "categoryId"}}
+        }
+      ],
+      "checks": [
+        {"group": "ingest", "type": "ingestSourceStale", "crawlSourceId": "CRS-S5-STALE", "expected": true},
+        {"group": "ingest", "type": "ingestBacklogConsistent", "expected": true},
+        {"group": "ingest", "type": "ingestCursorPresent", "expected": true}
+      ]
+    },
+    {
+      "caseId": "S5-OPS-05",
+      "title": "连续失败达到重试上限后拒绝重跑",
+      "kind": "service",
+      "setup": [
+        {
+          "table": "CrsSource",
+          "values": {
+            "crawlSourceId": "CRS-S5-FAIL", "sourceName": "阶段5失败源",
+            "sourceUrl": "https://example.com/fail", "sourceType": "网页",
+            "contentCategory": "政策", "crawlMode": "定时", "minIntervalMinutes": 60,
+            "maxRetry": 2, "enabledFlag": "启用"
+          },
+          "fill": {"knowledgeCategoryId": {"table": "KtcCategory", "column": "categoryId"}}
+        },
+        {
+          "table": "CrsSource_CrawlRun",
+          "values": {
+            "runId": "RUN-S5-FAIL-1", "crawlSourceId": "CRS-S5-FAIL",
+            "startedAt": "2024-01-01T00:00:00+00:00", "runStatus": "失败",
+            "newDocCount": 0, "duplicateCount": 0
+          }
+        },
+        {
+          "table": "CrsSource_CrawlRun",
+          "values": {
+            "runId": "RUN-S5-FAIL-2", "crawlSourceId": "CRS-S5-FAIL",
+            "startedAt": "2024-01-02T00:00:00+00:00", "runStatus": "失败",
+            "newDocCount": 0, "duplicateCount": 0
+          }
+        }
+      ],
+      "checks": [
+        {"group": "ingest", "type": "retryBlocked", "crawlSourceId": "CRS-S5-FAIL", "expected": 409}
+      ]
+    },
+    {
+      "caseId": "S5-OPS-06",
+      "title": "演进状态机、非法迁移与职责分离",
+      "kind": "service",
+      "checks": [
+        {
+          "group": "evolution", "type": "evolutionFlow",
+          "targetKind": "ONTOLOGY_META", "changeType": "UPDATE",
+          "targetIdFrom": {"table": "OntologyObjectType", "column": "objectTypeId"},
+          "draftPayload": {"displayName": "阶段5状态机验证"},
+          "expectedStatuses": ["DRAFT", "PENDING_REVIEW", "APPROVED", "PUBLISHED", "ROLLED_BACK"]
+        },
+        {
+          "group": "evolution", "type": "illegalTransition",
+          "targetKind": "ONTOLOGY_META", "changeType": "UPDATE",
+          "targetIdFrom": {"table": "OntologyObjectType", "column": "objectTypeId"},
+          "draftPayload": {"displayName": "非法跳转验证"}, "expected": 409
+        },
+        {
+          "group": "evolution", "type": "separationOfDuties",
+          "targetKind": "ONTOLOGY_META", "changeType": "UPDATE",
+          "targetIdFrom": {"table": "OntologyObjectType", "column": "objectTypeId"},
+          "draftPayload": {"displayName": "职责分离验证"}, "expected": 409
+        }
+      ]
+    },
+    {
+      "caseId": "S5-OPS-07",
+      "title": "范围、规则、元数据三类目标发布与回滚还原",
+      "kind": "service",
+      "setup": [
+        {
+          "table": "CompiledRule",
+          "values": {
+            "ruleId": "CR-S5-1", "statementId": "NS-S5-1", "ruleExpression": "1=1",
+            "compilerVersion": "v1", "ontologyVersion": "v1",
+            "confirmationStatus": "DRAFT", "testcaseIds": "[]",
+            "backTranslationMatch": 0
+          }
+        }
+      ],
+      "checks": [
+        {"group": "rollback", "type": "scopeEvolutionRoundTrip", "expected": true},
+        {"group": "rollback", "type": "ruleEvolutionWhitelist", "ruleId": "CR-S5-1", "expected": true},
+        {
+          "group": "rollback", "type": "metaEvolutionSurvivesSync",
+          "targetIdFrom": {"table": "OntologyObjectType", "column": "objectTypeId"},
+          "expected": true
+        }
+      ]
+    },
+    {
+      "caseId": "S5-OPS-08",
+      "title": "G5 负例、运营权限与知识表零写入",
+      "kind": "mixed",
+      "checks": [
+        {
+          "group": "gate", "type": "gateNegative", "gate": "G5-3",
+          "mutations": [
+            {"sql": "INSERT INTO \"OpsAlert\" (\"alertId\",\"alertCode\",\"severity\",\"title\",\"status\",\"raisedAt\") VALUES ('ALT-S5-DUP-1','ALT-TEST','P3','重复告警','OPEN','2024-01-01T00:00:00+00:00')", "params": {}},
+            {"sql": "INSERT INTO \"OpsAlert\" (\"alertId\",\"alertCode\",\"severity\",\"title\",\"status\",\"raisedAt\") VALUES ('ALT-S5-DUP-2','ALT-TEST','P3','重复告警','OPEN','2024-01-01T00:00:00+00:00')", "params": {}}
+          ],
+          "expectContains": ["G5-3"]
+        },
+        {
+          "group": "gate", "type": "gateNegative", "gate": "G5-6",
+          "mutations": [
+            {"sql": "INSERT INTO \"OpsEvolutionRelease\" (\"releaseId\",\"versionNo\",\"changeIds\",\"snapshot\",\"status\",\"publishedAt\") VALUES ('RVW-S5-GAP',5,'[]','{}','ACTIVE','2024-01-01T00:00:00+00:00')", "params": {}}
+          ],
+          "expectContains": ["G5-6"]
+        },
+        {"group": "permission", "type": "apiStatus", "method": "GET", "path": "/api/ops/ingest", "role": "ROLE-04", "expected": 403},
+        {"group": "permission", "type": "apiStatus", "method": "POST", "path": "/api/ops/inspect", "role": "ROLE-04", "expected": 403},
+        {"group": "permission", "type": "apiStatus", "method": "GET", "path": "/api/ops/overview", "role": "ROLE-04", "expected": 200}
+      ]
+    }
+  ]
+}

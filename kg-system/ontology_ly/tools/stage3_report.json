@@ -1,0 +1,1185 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 3",
+  "datasetTier": "technical-smoke",
+  "generatedAt": "2026-11-14T06:52:29+00:00",
+  "businessQualityGate": "NOT_ASSESSED",
+  "productionPerformanceGate": "NOT_ASSESSED",
+  "boundary": "技术冒烟只验证 as-of 回放契约与前视边界；期望值全部来自合成种子，不是真实行情回溯，也不是业务金标或生产性能验收。",
+  "environment": {
+    "python": "3.12.10",
+    "os": "Windows-11-10.0.26100-SP0",
+    "sqlite": "3.49.1"
+  },
+  "configuration": {
+    "graphBackend": "relational",
+    "autoSeed": false,
+    "api": "/api/market/*",
+    "readOnly": true,
+    "warmRounds": 1,
+    "snapshotPerCase": true
+  },
+  "inputs": {
+    "database": {
+      "path": "data/grain_oil.db",
+      "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+    },
+    "cases": {
+      "path": "ontology_ly/capability/stage3_backtest_smoke.json",
+      "sha256": "deb3a8fa7e306c123f9cc1be3c54036bccddf3f42dfe2bb45e5b6f3b6d5e2524"
+    }
+  },
+  "sourceValidation": {
+    "passed": true,
+    "files": [
+      {
+        "path": "ontology_ly/packs/market/stage3_市场包口径清单.md",
+        "expectedSha256": "4542e8bd619c1bad8a762466faea32589d1b010e16729d2771ada2491c268fab",
+        "actualSha256": "4542e8bd619c1bad8a762466faea32589d1b010e16729d2771ada2491c268fab",
+        "matched": true
+      },
+      {
+        "path": "ontology_ly/packs/market/stage4_联动与扩面口径清单.md",
+        "expectedSha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+        "actualSha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+        "matched": true
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "S3-BT-01",
+      "title": "首期发布日之前：无点位、无事件、无断言",
+      "asOf": "2024-02-01",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "eventCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "assertionCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "latestPeriod",
+          "expected": null,
+          "actual": null
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": null,
+          "actual": null
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [],
+          "actual": []
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [],
+          "actual": []
+        }
+      ],
+      "impactChecks": [],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "0ca90a296bef2cf420df3a1e8dcef0f001b1a2513aa55bab641018bfc41872eb",
+      "warmResponseSha256": "0ca90a296bef2cf420df3a1e8dcef0f001b1a2513aa55bab641018bfc41872eb",
+      "coldElapsedMs": 29.325,
+      "warmElapsedMs": 25.493,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S3-BT-02",
+      "title": "托市启动前后：两个点位，EV-1001 生效并触发影响",
+      "asOf": "2024-03-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 16,
+          "actual": 16
+        },
+        {
+          "field": "eventCount",
+          "expected": 2,
+          "actual": 2
+        },
+        {
+          "field": "assertionCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "latestPeriod",
+          "expected": "2024-02",
+          "actual": "2024-02"
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 2,
+          "actual": 2
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": "2024-02",
+          "actual": "2024-02"
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005"
+          ]
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001"
+          ]
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.state",
+          "expected": "ANNOUNCED",
+          "actual": "ANNOUNCED"
+        },
+        {
+          "field": "series.OBJ-PUB-EV-1001.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        }
+      ],
+      "impactChecks": [
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "d26466e7e6e608ebffd8cfa47820ccc48f54047e06613e05f340149a653f74f3",
+      "warmResponseSha256": "d26466e7e6e608ebffd8cfa47820ccc48f54047e06613e05f340149a653f74f3",
+      "coldElapsedMs": 33.171,
+      "warmElapsedMs": 27.448,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S3-BT-03",
+      "title": "小麦预案生效：五个点位，EV-1004 生效并触发影响",
+      "asOf": "2024-06-20",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 40,
+          "actual": 40
+        },
+        {
+          "field": "eventCount",
+          "expected": 4,
+          "actual": 4
+        },
+        {
+          "field": "assertionCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "latestPeriod",
+          "expected": "2024-05",
+          "actual": "2024-05"
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 5,
+          "actual": 5
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": "2024-05",
+          "actual": "2024-05"
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002"
+          ]
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001"
+          ]
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.state",
+          "expected": "ANNOUNCED",
+          "actual": "ANNOUNCED"
+        },
+        {
+          "field": "series.OBJ-PUB-EV-1001.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        }
+      ],
+      "impactChecks": [
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "9b6d31e328f99db9673aca872eb24db7f6857fc95ee513434c6bb6a9eb02f9d7",
+      "warmResponseSha256": "9b6d31e328f99db9673aca872eb24db7f6857fc95ee513434c6bb6a9eb02f9d7",
+      "coldElapsedMs": 31.714,
+      "warmElapsedMs": 25.219,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S3-BT-04",
+      "title": "干旱预警期间：七个点位，EV-1001 到期，EV-1003 生效",
+      "asOf": "2024-08-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 56,
+          "actual": 56
+        },
+        {
+          "field": "eventCount",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "assertionCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "latestPeriod",
+          "expected": "2024-07",
+          "actual": "2024-07"
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 7,
+          "actual": 7
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": "2024-07",
+          "actual": "2024-07"
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ]
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001"
+          ]
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "series.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        }
+      ],
+      "impactChecks": [
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "fd2e12c40d6737ff8727d9a49cd4a822e3040ee09c6841b07abfa777c1ae8cc7",
+      "warmResponseSha256": "fd2e12c40d6737ff8727d9a49cd4a822e3040ee09c6841b07abfa777c1ae8cc7",
+      "coldElapsedMs": 87.472,
+      "warmElapsedMs": 24.666,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S3-BT-05",
+      "title": "轮换收储期间：九个点位，EV-1003/1004 到期，EV-1006 生效",
+      "asOf": "2024-10-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 72,
+          "actual": 72
+        },
+        {
+          "field": "eventCount",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "assertionCount",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "latestPeriod",
+          "expected": "2024-09",
+          "actual": "2024-09"
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 9,
+          "actual": 9
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": "2024-09",
+          "actual": "2024-09"
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ]
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001"
+          ]
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "series.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        }
+      ],
+      "impactChecks": [
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.triggeredImpactCount",
+          "expected": 1,
+          "actual": 1
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 6,
+          "actual": 6
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "8a93bdfa9f3109618421e1ba17944fa8d98d39457be582575633121be5e63acc",
+      "warmResponseSha256": "8a93bdfa9f3109618421e1ba17944fa8d98d39457be582575633121be5e63acc",
+      "coldElapsedMs": 30.046,
+      "warmElapsedMs": 24.721,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S3-BT-06",
+      "title": "全年收官：十二个点位，断言六组",
+      "asOf": "2025-01-15",
+      "seriesId": "OBJ-PUB-IN-0001",
+      "snapshotBeforeInitialization": {
+        "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7"
+      },
+      "overviewChecks": [
+        {
+          "field": "seriesCount",
+          "expected": 8,
+          "actual": 8
+        },
+        {
+          "field": "pointCount",
+          "expected": 96,
+          "actual": 96
+        },
+        {
+          "field": "eventCount",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "assertionCount",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "latestPeriod",
+          "expected": "2024-12",
+          "actual": "2024-12"
+        },
+        {
+          "field": "series.pointCount",
+          "expected": 12,
+          "actual": 12
+        },
+        {
+          "field": "series.lastPeriodId",
+          "expected": "2024-12",
+          "actual": "2024-12"
+        },
+        {
+          "field": "series.unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t"
+        },
+        {
+          "field": "series.priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM"
+        }
+      ],
+      "eventStateChecks": [
+        {
+          "field": "timeline.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001",
+            "OBJ-PUB-EV-1005",
+            "OBJ-PUB-EV-1004",
+            "OBJ-PUB-EV-1002",
+            "OBJ-PUB-EV-1006",
+            "OBJ-PUB-EV-1003"
+          ]
+        },
+        {
+          "field": "series.eventIds",
+          "expected": [
+            "OBJ-PUB-EV-1001"
+          ],
+          "actual": [
+            "OBJ-PUB-EV-1001"
+          ]
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.state",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        },
+        {
+          "field": "series.OBJ-PUB-EV-1001.state",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED"
+        }
+      ],
+      "impactChecks": [
+        {
+          "field": "timeline.OBJ-PUB-EV-1001.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1005.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1004.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1002.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1006.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        },
+        {
+          "field": "timeline.OBJ-PUB-EV-1003.triggeredImpactCount",
+          "expected": 0,
+          "actual": 0
+        }
+      ],
+      "assertionChecks": [
+        {
+          "field": "assertions.total",
+          "expected": 6,
+          "actual": 6
+        }
+      ],
+      "transmissionChecks": [
+        {
+          "field": "transmissions.nodes",
+          "expected": 6,
+          "actual": 6
+        },
+        {
+          "field": "transmissions.edges",
+          "expected": 4,
+          "actual": 4
+        }
+      ],
+      "failures": [],
+      "lookaheadLeaks": 0,
+      "lookaheadDetail": [],
+      "deterministic": true,
+      "coldResponseSha256": "a7c49f782325d66ff7d0d3373f008c3990702c0f476d9b58345a385cd29564d6",
+      "warmResponseSha256": "a7c49f782325d66ff7d0d3373f008c3990702c0f476d9b58345a385cd29564d6",
+      "coldElapsedMs": 31.368,
+      "warmElapsedMs": 24.677,
+      "requestMethods": [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET"
+      ],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "metrics": {
+    "caseCount": 6,
+    "casePassRate": 1.0,
+    "lookaheadLeaks": 0,
+    "eventStateAgreement": 1.0,
+    "impactAgreement": 1.0,
+    "overviewAgreement": 1.0,
+    "assertionGroupAgreement": 1.0,
+    "transmissionIntegrity": 1.0
+  },
+  "readOnlyAccess": {
+    "passed": true,
+    "requestCount": 60,
+    "nonGetMethods": []
+  },
+  "deterministicOutput": true,
+  "evaluationIsolation": {
+    "passed": true,
+    "files": {
+      "data/grain_oil.db": {
+        "before": {
+          "exists": true,
+          "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+          "sizeBytes": 1843200
+        },
+        "after": {
+          "exists": true,
+          "sha256": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+          "sizeBytes": 1843200
+        },
+        "unchanged": true
+      },
+      "ontology_ly/capability/stage3_backtest_smoke.json": {
+        "before": {
+          "exists": true,
+          "sha256": "deb3a8fa7e306c123f9cc1be3c54036bccddf3f42dfe2bb45e5b6f3b6d5e2524",
+          "sizeBytes": 7455
+        },
+        "after": {
+          "exists": true,
+          "sha256": "deb3a8fa7e306c123f9cc1be3c54036bccddf3f42dfe2bb45e5b6f3b6d5e2524",
+          "sizeBytes": 7455
+        },
+        "unchanged": true
+      },
+      "ontology_ly/packs/market/stage3_市场包口径清单.md": {
+        "before": {
+          "exists": true,
+          "sha256": "4542e8bd619c1bad8a762466faea32589d1b010e16729d2771ada2491c268fab",
+          "sizeBytes": 21704
+        },
+        "after": {
+          "exists": true,
+          "sha256": "4542e8bd619c1bad8a762466faea32589d1b010e16729d2771ada2491c268fab",
+          "sizeBytes": 21704
+        },
+        "unchanged": true
+      },
+      "ontology_ly/packs/market/stage4_联动与扩面口径清单.md": {
+        "before": {
+          "exists": true,
+          "sha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+          "sizeBytes": 18092
+        },
+        "after": {
+          "exists": true,
+          "sha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+          "sizeBytes": 18092
+        },
+        "unchanged": true
+      }
+    }
+  },
+  "hardGates": {
+    "deterministicOutput": {
+      "passed": true
+    },
+    "formalDataUnchanged": {
+      "passed": true
+    },
+    "readOnlyAccess": {
+      "passed": true
+    },
+    "sourceHashesValid": {
+      "passed": true
+    },
+    "noLookahead": {
+      "passed": true,
+      "actual": 0
+    },
+    "casePassRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "eventStateAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "impactAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "overviewAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "assertionGroupAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "transmissionIntegrity": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "overall": {
+      "passed": true
+    }
+  },
+  "allHardGatesPassed": true,
+  "passed": true
+}

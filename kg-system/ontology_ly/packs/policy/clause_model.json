@@ -1,0 +1,277 @@
+{
+  "schemaVersion": "0.2.0",
+  "stage": "STAGE0",
+  "frozen": true,
+  "belongsToPack": "POLICY_PACK",
+  "domainCode": "S4",
+  "note": "政策包条款子模型。这 9 个类型不属于内核，不得写入 kernel/object_types.json。内核 29 类型保持冻结；本文件是政策包对内声明，市场包与检索层不依赖本文件。",
+  "whyNotKernel": [
+    "只服务条款推理，市场包与检索层不需要知道 Condition 是什么。",
+    "放进内核会让内核从 29 涨到 38，违反「包不越权」的反向约束。",
+    "条款模型随法规体系变化，变更频率远高于内核，混在一起会让内核版本号失去意义。"
+  ],
+  "commonFields": "继承 kernel/object_types.json 的 17 个公共字段，下表只列差异字段",
+  "typeCount": 9,
+  "types": [
+    {
+      "typeName": "PolicyClause",
+      "idPrefix": "OBJ-CL",
+      "displayName": "政策条款",
+      "description": "政策文件中的最小可引用单元（章/节/条/款/项）。文本不改写，保留全文偏移。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "documentId", "type": "ref Document", "required": true, "desc": "所属政策文件" },
+        { "name": "clausePath", "type": "string", "required": true, "desc": "章/节/条/款/项路径，如 第三章>第十二条>第二款" },
+        { "name": "clauseNo", "type": "string", "required": false, "desc": "原编号，如 第十二条" },
+        { "name": "clauseLevel", "type": "enum ClauseLevel", "required": true, "desc": "CHAPTER/SECTION/ARTICLE/PARAGRAPH/ITEM" },
+        { "name": "parentClauseId", "type": "ref PolicyClause", "required": false, "desc": "树形父节点，根为 null" },
+        { "name": "clauseType", "type": "enum ClauseType", "required": true, "desc": "NORMATIVE/DEFINITIONAL/PROCEDURAL/OBJECTIVE/TRANSITIONAL" },
+        { "name": "text", "type": "string", "required": true, "desc": "条款原文，逐字保留" },
+        { "name": "charStart", "type": "int", "required": true, "desc": "在 Document 全文中的起始偏移" },
+        { "name": "charEnd", "type": "int", "required": true, "desc": "结束偏移，charEnd > charStart" },
+        { "name": "effectiveFrom", "type": "date", "required": false, "desc": "条款级生效日，可细于文件级" },
+        { "name": "effectiveTo", "type": "date", "required": false, "desc": "条款级失效日" }
+      ],
+      "invariants": ["charEnd > charStart", "text 必须等于 Document 全文的 [charStart, charEnd) 切片"]
+    },
+    {
+      "typeName": "NormativeStatement",
+      "idPrefix": "OBJ-NS",
+      "displayName": "规范陈述",
+      "description": "条款里的一句话规则。一个条款可拆出多条陈述；判定以陈述为单位，不以条款为单位。",
+      "scopeRequired": true,
+      "fields": [
+        { "name": "clauseId", "type": "ref PolicyClause", "required": true, "desc": "来源条款" },
+        { "name": "statementType", "type": "enum StatementType", "required": true, "desc": "OBLIGATION/PROHIBITION/PERMISSION/AUTHORIZATION/DEFINITION/TARGET" },
+        { "name": "actorScopeId", "type": "ref Scope", "required": true, "desc": "谁适用，由 ACTOR 维度成员表达" },
+        { "name": "actionVerb", "type": "string", "required": true, "desc": "做什么，如「按最低收购价收购」" },
+        { "name": "objectFormIds", "type": "ref CommodityForm[]", "required": false, "desc": "针对的品种形态" },
+        { "name": "conditionId", "type": "ref ClauseCondition", "required": false, "desc": "条件树根；无条件则 null" },
+        { "name": "exceptionIds", "type": "ref ClauseException[]", "required": false, "desc": "例外集合" },
+        { "name": "consequenceId", "type": "ref ClauseConsequence", "required": false, "desc": "后果" },
+        { "name": "parameterIds", "type": "ref RuleParameter[]", "required": false, "desc": "参数" },
+        { "name": "vaguenessFlag", "type": "bool", "required": true, "desc": "是否含「适当」「必要时」「有关部门」等无判定标准的用语" },
+        { "name": "vaguenessNote", "type": "string", "required": false, "desc": "具体标出哪几个词" },
+        { "name": "confirmationStatus", "type": "enum ConfirmationStatus", "required": true, "desc": "DRAFT/REVIEWED/CONFIRMED" },
+        { "name": "confirmedBy", "type": "string", "required": false, "desc": "确认人" },
+        { "name": "confirmedAt", "type": "datetime", "required": false, "desc": "确认时间" }
+      ],
+      "invariants": [
+        "confirmationStatus=CONFIRMED 必须有 confirmedBy 与 confirmedAt",
+        "vaguenessFlag=true 时 vaguenessNote 必须非空",
+        "statementType=DEFINITION 时 conditionId 与 consequenceId 必须为 null"
+      ]
+    },
+    {
+      "typeName": "ClauseCondition",
+      "idPrefix": "OBJ-CD",
+      "displayName": "前提条件",
+      "description": "条件树节点，AND/OR/NOT 组合，叶子节点为可求值的比较。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "所属陈述" },
+        { "name": "parentConditionId", "type": "ref ClauseCondition", "required": false, "desc": "父节点，根为 null" },
+        { "name": "operator", "type": "enum ConditionOperator", "required": true, "desc": "AND/OR/NOT/LEAF" },
+        { "name": "leftOperand", "type": "string", "required": false, "desc": "叶子必填。内核属性路径（Enterprise.enterpriseType）或已注册 indicatorCode" },
+        { "name": "comparator", "type": "enum Comparator", "required": false, "desc": "> >= = < <= IN BETWEEN EXISTS" },
+        { "name": "rightValue", "type": "string", "required": false, "desc": "字面值；BETWEEN 时为下界" },
+        { "name": "rightValueUpper", "type": "string", "required": false, "desc": "BETWEEN 上界" },
+        { "name": "rightUnitId", "type": "ref UnitOfMeasure", "required": false, "desc": "数值比较必填" },
+        { "name": "rightIndicatorId", "type": "ref Indicator", "required": false, "desc": "右侧为另一指标时使用" },
+        { "name": "factSource", "type": "enum FactSource", "required": true, "desc": "USER_INPUT/GRAPH_PROPERTY/TIME_SERIES" },
+        { "name": "regionalScopeId", "type": "ref Scope", "required": false, "desc": "条件的地域限定" }
+      ],
+      "invariants": [
+        "operator=LEAF 时 leftOperand 与 comparator 必填，且 parentConditionId 非空",
+        "operator!=LEAF 时 leftOperand/comparator/rightValue 必须为 null",
+        "comparator 为数值比较时 rightUnitId 必填",
+        "同一 statementId 下条件树必须无环且恰好一个根"
+      ]
+    },
+    {
+      "typeName": "ClauseException",
+      "idPrefix": "OBJ-CE",
+      "displayName": "例外",
+      "description": "「除……外」类例外。例外是独立可判定条件，不得写成否定条件揉进主条件。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "所属陈述" },
+        { "name": "conditionId", "type": "ref ClauseCondition", "required": true, "desc": "例外成立的条件树根" },
+        { "name": "exceptionType", "type": "enum ExceptionType", "required": true, "desc": "SCOPE_EXCLUSION/PRIORITY_OVERRIDE/TEMPORAL/PROCEDURAL" },
+        { "name": "note", "type": "string", "required": false, "desc": "说明" }
+      ],
+      "invariants": ["conditionId 指向的条件树根不得与主条件树共根"]
+    },
+    {
+      "typeName": "ClauseConsequence",
+      "idPrefix": "OBJ-CQ",
+      "displayName": "后果",
+      "description": "条件成立后的后果。政策侧只描述后果类型与启动的政策工具，不量化影响幅度。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "所属陈述" },
+        { "name": "consequenceType", "type": "enum ConsequenceType", "required": true, "desc": "MEASURE/SUBSIDY/PENALTY/TRIGGER_TOOL/PROCEDURE" },
+        { "name": "triggerEventTypeId", "type": "ref EventType", "required": false, "desc": "TRIGGER_TOOL 时必填" },
+        { "name": "magnitude", "type": "float", "required": false, "desc": "条款原文给出的数值参数；无则留空，不得推算" },
+        { "name": "magnitudeUnitId", "type": "ref UnitOfMeasure", "required": false, "desc": "magnitude 非空时必填" },
+        { "name": "description", "type": "string", "required": false, "desc": "原文描述" }
+      ],
+      "invariants": [
+        "consequenceType=TRIGGER_TOOL 时 triggerEventTypeId 必填",
+        "magnitude 非空时 magnitudeUnitId 必填",
+        "禁止由本类型推断市场价格影响幅度（AP_POLICY_MAGNITUDE）"
+      ]
+    },
+    {
+      "typeName": "RuleParameter",
+      "idPrefix": "OBJ-RP",
+      "displayName": "规则参数",
+      "description": "条款中的数值参数，如最低收购价、补贴比例、配额。可分段生效。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "所属陈述" },
+        { "name": "paramName", "type": "string", "required": true, "desc": "价格/比例/配额/期限/数量" },
+        { "name": "paramValue", "type": "float", "required": true, "desc": "参数值" },
+        { "name": "unitId", "type": "ref UnitOfMeasure", "required": true, "desc": "单位" },
+        { "name": "effectiveFrom", "type": "date", "required": true, "desc": "参数生效日，年度定价时必填" },
+        { "name": "effectiveTo", "type": "date", "required": false, "desc": "参数失效日" },
+        { "name": "regionScopeId", "type": "ref Scope", "required": false, "desc": "分省定价时必填" }
+      ],
+      "invariants": [
+        "同一 statementId + paramName 的有效期不得重叠",
+        "paramValue 必须来自原文，插值或推算值不得入库"
+      ]
+    },
+    {
+      "typeName": "ClauseRelation",
+      "idPrefix": "OBJ-CR",
+      "displayName": "条款间关系",
+      "description": "引用、例外于、优先于、授权、修订、取代、废止。优先级冲突的裁决依据来自这里。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "fromClauseId", "type": "ref PolicyClause", "required": true, "desc": "源条款" },
+        { "name": "toClauseId", "type": "ref PolicyClause", "required": false, "desc": "目标条款；resolved=false 时为 null" },
+        { "name": "relationType", "type": "enum ClauseRelationType", "required": true, "desc": "CITES/EXCEPTED_BY/PREVAILS_OVER/AUTHORIZES/AMENDS/SUPERSEDES/REPEALS" },
+        { "name": "priorityBasis", "type": "enum PriorityBasis", "required": false, "desc": "PREVAILS_OVER 时必填：UPPER_LAW/NEWER/SPECIAL" },
+        { "name": "resolved", "type": "bool", "required": true, "desc": "目标是否已收录" },
+        { "name": "externalRef", "type": "string", "required": false, "desc": "未收录时的外部文号或名称" }
+      ],
+      "invariants": [
+        "relationType=PREVAILS_OVER 时 priorityBasis 必填",
+        "resolved=false 时 externalRef 必填且 toClauseId 为 null",
+        "resolved=true 时 toClauseId 必填",
+        "fromClauseId != toClauseId"
+      ]
+    },
+    {
+      "typeName": "CompiledRule",
+      "idPrefix": "OBJ-RL",
+      "displayName": "已编译规则",
+      "description": "原文层与规则层的桥。仅一级政策编译；必须回译一致、有测试用例、经人工确认才能参与判定。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "对应陈述" },
+        { "name": "ruleExpression", "type": "string", "required": true, "desc": "Datalog 文本" },
+        { "name": "compilerVersion", "type": "string", "required": true, "desc": "编译器版本" },
+        { "name": "ontologyVersion", "type": "string", "required": true, "desc": "编译时本体版本" },
+        { "name": "backTranslation", "type": "string", "required": true, "desc": "规则回译的自然语言" },
+        { "name": "backTranslationMatch", "type": "bool", "required": true, "desc": "回译与原文语义是否一致（人工判定）" },
+        { "name": "testcaseIds", "type": "string[]", "required": true, "desc": "至少 1 条" },
+        { "name": "confirmationStatus", "type": "enum CompiledRuleStatus", "required": true, "desc": "DRAFT/BACKTRANSLATED/TESTED/CONFIRMED" },
+        { "name": "dependsOnClauseIds", "type": "ref PolicyClause[]", "required": false, "desc": "政策修订时用于标「待复核」" }
+      ],
+      "invariants": [
+        "confirmationStatus=CONFIRMED 要求 backTranslationMatch=true 且 testcaseIds 非空",
+        "backTranslationMatch=false 不得进入 TESTED 及以上状态",
+        "依赖条款新增 SUPERSEDES 或 AMENDS 边时，本规则自动降级为 DRAFT 并标待复核"
+      ]
+    },
+    {
+      "typeName": "RuleTestCase",
+      "idPrefix": "OBJ-TC",
+      "displayName": "规则测试情形",
+      "description": "人工构造的判定用例，用于验证规则三态输出。由政策法规专家编写。",
+      "scopeRequired": false,
+      "fields": [
+        { "name": "statementId", "type": "ref NormativeStatement", "required": true, "desc": "被测陈述" },
+        { "name": "scenarioName", "type": "string", "required": true, "desc": "情形名称" },
+        { "name": "facts", "type": "json", "required": true, "desc": "{属性路径或指标码: 值}" },
+        { "name": "expectedOutcome", "type": "enum JudgeOutcome", "required": true, "desc": "APPLICABLE/NOT_APPLICABLE/UNABLE" },
+        { "name": "expectedReason", "type": "string", "required": false, "desc": "UNABLE 时说明缺什么" },
+        { "name": "authoredBy", "type": "string", "required": true, "desc": "编写人（政策法规专家）" }
+      ],
+      "invariants": ["expectedOutcome=UNABLE 时 expectedReason 必填"]
+    }
+  ],
+  "relations": [
+    { "name": "HAS_CLAUSE", "fromTypes": ["Document"], "toTypes": ["PolicyClause"], "cardinality": "1:N", "note": "文件到条款" },
+    { "name": "HAS_STATEMENT", "fromTypes": ["PolicyClause"], "toTypes": ["NormativeStatement"], "cardinality": "1:N", "note": "条款到陈述" },
+    { "name": "HAS_CONDITION", "fromTypes": ["NormativeStatement", "ClauseCondition"], "toTypes": ["ClauseCondition"], "cardinality": "1:N", "note": "陈述到条件树根、条件到子条件，同一谓词" },
+    { "name": "HAS_EXCEPTION", "fromTypes": ["NormativeStatement"], "toTypes": ["ClauseException"], "cardinality": "1:N", "note": "" },
+    { "name": "HAS_CONSEQUENCE", "fromTypes": ["NormativeStatement"], "toTypes": ["ClauseConsequence"], "cardinality": "1:1", "note": "" },
+    { "name": "CLAUSE_RELATES", "fromTypes": ["PolicyClause"], "toTypes": ["PolicyClause"], "cardinality": "N:N", "note": "边属性 relationType/priorityBasis/resolved" },
+    { "name": "ACTIVATES", "fromTypes": ["CompiledRule"], "toTypes": ["EventType"], "cardinality": "N:N", "note": "规则命中后启动的政策工具；边属性 activationStatus 默认 UNKNOWN" }
+  ],
+  "ruleRepresentation": {
+    "primary": "Soufflé",
+    "fallback": "pyDatalog",
+    "notChosen": {
+      "ASP": "只在规则自身需要多解或缺省推理时才考虑；学习曲线陡。",
+      "LegalRuleML_Catala": "XML 生态重、工具链弱、中文法条适配几乎为零。",
+      "SHACL": "本质是约束校验而非推理；拿它做适用性判定会写成大量手工开关。"
+    },
+    "limitations": [
+      {
+        "limit": "不能做数值聚合与算术推导",
+        "mitigation": "由 FN-PUB-POLICY-THRESHOLD 等函数先算成布尔事实再注入，规则只消费布尔事实"
+      },
+      {
+        "limit": "不能表达优先级",
+        "mitigation": "用 prevails(ruleA, ruleB) 谓词加分层否定编码；依据来自 ClauseRelation.priorityBasis"
+      },
+      {
+        "limit": "递归可能不终止",
+        "mitigation": "强制分层（stratification），编译期检查环路，禁止否定出现在递归环内"
+      }
+    ],
+    "factNamespace": {
+      "booleanFactPrefix": "holds_",
+      "example": "holds_price_below_threshold(\"WHITE_WHEAT\", \"2025-06-01\", \"最低收购价\")",
+      "ruleInjectionOnly": true
+    }
+  },
+  "judgeAlgorithm": {
+    "input": "{ statementId, facts, asOf }",
+    "outputEnum": "APPLICABLE / NOT_APPLICABLE / UNABLE",
+    "asOfDefault": null,
+    "steps": [
+      { "step": 1, "action": "取 asOf 时点有效 且 confirmationStatus=CONFIRMED 的 statement；否则 UNABLE(规则未确认)" },
+      { "step": 2, "action": "vaguenessFlag=true 则 UNABLE(含模糊用语，返回 vaguenessNote)" },
+      { "step": 3, "action": "求 conditionId 条件树：收集叶子所需事实；任一缺失 → UNABLE(缺事实，列出缺失项)；求值为 FALSE → NOT_APPLICABLE(前提不满足，指出哪个叶子)" },
+      { "step": 4, "action": "前提为 TRUE 后检查 exceptionIds：任一例外为 TRUE → NOT_APPLICABLE(被例外排除)；例外缺事实 → UNABLE(例外无法判定)" },
+      { "step": 5, "action": "检查优先级冲突：存在 prevails 关系且更高优先级规则给出相反结论时按 priorityBasis 裁决；无法裁决 → UNABLE(规则冲突)" },
+      { "step": 6, "action": "返回 APPLICABLE(consequence, 推理链)" }
+    ],
+    "proofChainRequirement": {
+      "eachStepShape": "{ step, ruleId, policyId, clauseId, citation, clausePath, clauseNo, factRef, quote }",
+      "quoteMustLocate": "quote 必须能在 Policy_Clause.clauseText 原文定位（逐字子串校验）",
+      "noChainNoAnswer": "无证明链的 APPLICABLE 一律降级为 UNABLE"
+    },
+    "citationRule": {
+      "shape": "P{n}",
+      "assignment": "按 /api/policies/effective 返回顺序对 items 依次编号；citationIndex 反向映射 citation → policyId",
+      "scope": "请求内唯一，不持久化；同一 policy 在同一请求的 effective / judge / RAG 响应里 citation 必须一致"
+    },
+    "policyLinkRule": {
+      "shape": "citation → policyId → clauseId",
+      "quoteOrigin": "quote 必须是 Policy_Clause.clauseText 的逐字子串；判定器需在判定前显式校验"
+    },
+    "orderingRationale": "先确认规则可用、再判模糊、再判前提、再判例外、最后裁冲突。顺序颠倒会出现「用例外否掉一条本来不适用的规则」这类错误。"
+  },
+  "activationStatus": {
+    "field": "officiallyActivated",
+    "values": ["TRUE", "FALSE", "UNKNOWN"],
+    "default": "UNKNOWN",
+    "rule": "文本存在不等于已启动；只有显式证据（公告、执行细则、启动通知）才能置 TRUE。UNKNOWN 状态下判定结果必须附「生效状态未确认」提示。"
+  }
+}

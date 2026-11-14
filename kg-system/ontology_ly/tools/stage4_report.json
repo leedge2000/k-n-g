@@ -1,0 +1,780 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Stage 4",
+  "datasetTier": "technical-smoke",
+  "businessQualityGate": "NOT_ASSESSED",
+  "productionPerformanceGate": "NOT_ASSESSED",
+  "generatedAt": "2026-11-14T06:52:38.685498+00:00",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26100-SP0"
+  },
+  "source": {
+    "files": [
+      {
+        "path": "ontology_ly/packs/market/stage4_联动与扩面口径清单.md",
+        "sha256": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745"
+      },
+      {
+        "path": "seed/mapping.json",
+        "sha256": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5"
+      },
+      {
+        "path": "seed/business.json",
+        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+      }
+    ]
+  },
+  "sourceValidation": {
+    "passed": true,
+    "files": [
+      {
+        "path": "ontology_ly/packs/market/stage4_联动与扩面口径清单.md",
+        "expected": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+        "actual": "2f73f11c0190980a06235b067c44979cfb77eebdadac4ffed8080467b2fb8745",
+        "matched": true
+      },
+      {
+        "path": "seed/mapping.json",
+        "expected": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5",
+        "actual": "07b1ba3007f352afefbfb9fef5cb302973e107f016782e1d1244bbc8a3bb9bf5",
+        "matched": true
+      },
+      {
+        "path": "seed/business.json",
+        "expected": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac",
+        "actual": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac",
+        "matched": true
+      }
+    ]
+  },
+  "formalDatabase": {
+    "path": "C:\\粮油知识图谱\\kg-system\\data\\grain_oil.db",
+    "before": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+    "after": "3071249a7ed661d03f2df67e1ab9cc9e840cfc73ebb583906a92c7db53a1eec7",
+    "unchanged": true
+  },
+  "evaluationIsolation": {
+    "passed": true,
+    "strategy": "每个情形冷/热两次独立副本库；正式库只读"
+  },
+  "noWriteConstraints": {
+    "passed": true,
+    "prefix": "/api/market/",
+    "allowedMethods": [
+      "GET"
+    ]
+  },
+  "metrics": {
+    "caseCount": 8,
+    "casePassRate": 1.0,
+    "eventStateAgreement": 1.0,
+    "impactAgreement": 1.0,
+    "scopeAgreement": 1.0,
+    "routeShapeAgreement": 1.0,
+    "bridgeIntegrity": 1.0,
+    "gateNegativeDetectionRate": 1.0,
+    "deepLinkAgreement": 1.0,
+    "noWriteRoutes": 1.0
+  },
+  "cases": [
+    {
+      "caseId": "S4-LK-01",
+      "title": "事件四态边界：未公告、已公告、生效中、已到期",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1001",
+          "expected": "PENDING",
+          "actual": "PENDING",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1001",
+          "expected": "ANNOUNCED",
+          "actual": "ANNOUNCED",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1001",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1001",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1001",
+          "expected": "EXPIRED",
+          "actual": "EXPIRED",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1004",
+          "expected": "ANNOUNCED",
+          "actual": "ANNOUNCED",
+          "matched": true
+        },
+        {
+          "group": "eventState",
+          "field": "eventState:OBJ-PUB-EV-1004",
+          "expected": "EFFECTIVE",
+          "actual": "EFFECTIVE",
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-02",
+      "title": "影响触发滞后边界与政策边恒触发",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "impact",
+          "field": "impactTriggered:LNK-IM-0001",
+          "expected": false,
+          "actual": false,
+          "matched": true
+        },
+        {
+          "group": "impact",
+          "field": "impactTriggered:LNK-IM-0001",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "impact",
+          "field": "impactTriggered:LNK-IM-0003",
+          "expected": false,
+          "actual": false,
+          "matched": true
+        },
+        {
+          "group": "impact",
+          "field": "impactTriggered:LNK-IM-0003",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "impact",
+          "field": "impactTriggered:LNK-IM-0004",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-03",
+      "title": "八条序列的形态、渠道、价格基础与单位回填",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0001",
+          "actual": "OBJ-PUB-CM-0001",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "priceBasis",
+          "expected": "EX_FARM",
+          "actual": "EX_FARM",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0001",
+          "expected": "OBJ-PUB-MK-0001",
+          "actual": "OBJ-PUB-MK-0001",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0003",
+          "actual": "OBJ-PUB-CM-0003",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0002",
+          "expected": "OBJ-PUB-MK-0002",
+          "actual": "OBJ-PUB-MK-0002",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "CMD0006",
+          "actual": "CMD0006",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "unitCode",
+          "expected": "CNY/kg",
+          "actual": "CNY/kg",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0003",
+          "expected": "OBJ-PUB-MK-0002",
+          "actual": "OBJ-PUB-MK-0002",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "CMD0007",
+          "actual": "CMD0007",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "priceBasis",
+          "expected": "RETAIL",
+          "actual": "RETAIL",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0004",
+          "expected": "OBJ-PUB-MK-0003",
+          "actual": "OBJ-PUB-MK-0003",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0002",
+          "actual": "OBJ-PUB-CM-0002",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0005",
+          "expected": "OBJ-PUB-MK-0002",
+          "actual": "OBJ-PUB-MK-0002",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0004",
+          "actual": "OBJ-PUB-CM-0004",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0006",
+          "expected": "OBJ-PUB-MK-0002",
+          "actual": "OBJ-PUB-MK-0002",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0007",
+          "actual": "OBJ-PUB-CM-0007",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "priceBasis",
+          "expected": "WHOLESALE",
+          "actual": "WHOLESALE",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0007",
+          "expected": "OBJ-PUB-MK-0003",
+          "actual": "OBJ-PUB-MK-0003",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "commodityFormId",
+          "expected": "OBJ-PUB-CM-0008",
+          "actual": "OBJ-PUB-CM-0008",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "unitCode",
+          "expected": "CNY/t",
+          "actual": "CNY/t",
+          "matched": true
+        },
+        {
+          "group": "scope",
+          "field": "seriesChannel:OBJ-PUB-IN-0008",
+          "expected": "OBJ-PUB-MK-0003",
+          "actual": "OBJ-PUB-MK-0003",
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-04",
+      "title": "只读联动路由的字段、计数与错误码",
+      "kind": "api",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "route",
+          "field": "/api/market/overview:asOf",
+          "expected": "2024-06-30",
+          "actual": "2024-06-30",
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/overview:scopeDimensions",
+          "expected": 5,
+          "actual": 5,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/overview:counts.commodityForms",
+          "expected": 8,
+          "actual": 8,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/overview:counts.places",
+          "expected": 3,
+          "actual": 3,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/overview:counts.impacts",
+          "expected": 4,
+          "actual": 4,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/series/OBJ-PUB-IN-0001:commodityForm.formId",
+          "expected": "OBJ-PUB-CM-0001",
+          "actual": "OBJ-PUB-CM-0001",
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/series/OBJ-PUB-IN-0001:marketPlace.placeId",
+          "expected": "OBJ-PUB-MK-0001",
+          "actual": "OBJ-PUB-MK-0001",
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/series/OBJ-PUB-IN-0001:impacts",
+          "expected": 1,
+          "actual": 1,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/timeline:triggeredImpactCount",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/commodity-forms:items",
+          "expected": 2,
+          "actual": 2,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/places:items",
+          "expected": 2,
+          "actual": 2,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/impacts:items",
+          "expected": 4,
+          "actual": 4,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/evidence:items",
+          "expected": 1,
+          "actual": 1,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/factors/FAC0001:drives[0].seriesId",
+          "expected": "OBJ-PUB-IN-0005",
+          "actual": "OBJ-PUB-IN-0005",
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/evidence:apiStatus",
+          "expected": 400,
+          "actual": 400,
+          "matched": true
+        },
+        {
+          "group": "route",
+          "field": "/api/market/factors/FAC9999:apiStatus",
+          "expected": 404,
+          "actual": 404,
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-05",
+      "title": "事件—因子—序列三桥链路完整且影响边均有证据",
+      "kind": "service",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "bridge",
+          "field": "tableCount:FactorDriveLink",
+          "expected": 5,
+          "actual": 5,
+          "matched": true
+        },
+        {
+          "group": "bridge",
+          "field": "tableCount:EventFactorLink",
+          "expected": 4,
+          "actual": 4,
+          "matched": true
+        },
+        {
+          "group": "bridge",
+          "field": "tableCount:ImpactLink",
+          "expected": 4,
+          "actual": 4,
+          "matched": true
+        },
+        {
+          "group": "bridge",
+          "field": "impactEvidenceComplete:None",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "bridge",
+          "field": "impactNoSeriesTarget:None",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        },
+        {
+          "group": "bridge",
+          "field": "driveMetricComplete:None",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-06",
+      "title": "G4 八门正例与冻结计数",
+      "kind": "gate",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "gate",
+          "field": "gatePositive:counts+gates",
+          "expected": {
+            "gates": [
+              "G4-1",
+              "G4-2",
+              "G4-3",
+              "G4-4",
+              "G4-5",
+              "G4-6",
+              "G4-7",
+              "G4-8"
+            ],
+            "counts": {
+              "series": 8,
+              "commodityForms": 8,
+              "places": 3,
+              "evidence": 10,
+              "impactLinks": 4,
+              "factorDrives": 5,
+              "eventFactors": 4,
+              "assertions": 6
+            }
+          },
+          "actual": {
+            "gates": {
+              "G4-1": true,
+              "G4-2": true,
+              "G4-3": true,
+              "G4-4": true,
+              "G4-5": true,
+              "G4-6": true,
+              "G4-7": true,
+              "G4-8": true
+            },
+            "counts": {
+              "series": 8,
+              "commodityForms": 8,
+              "places": 3,
+              "evidence": 10,
+              "impactLinks": 4,
+              "factorDrives": 5,
+              "eventFactors": 4,
+              "assertions": 6
+            }
+          },
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-07",
+      "title": "G4 负例：每类破坏都被对应门拦截并给出门编号与对象",
+      "kind": "gate-negative",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-1",
+          "expected": [
+            "G4-1",
+            "OBJ-PUB-IN-0005"
+          ],
+          "actual": "G4-1 失败：指标序列缺少有效的形态引用；OBJ-PUB-IN-0005；修复：补齐 IndicatorSeries.commodityFormId 并指向 CommodityForm",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-3",
+          "expected": [
+            "G4-3",
+            "LNK-IM-0001"
+          ],
+          "actual": "G4-3 失败：影响边缺少证据；LNK-IM-0001；修复：补充 targetType=ImpactLink 的 Evidence",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-4",
+          "expected": [
+            "G4-4",
+            "FAC0001"
+          ],
+          "actual": "G4-4 失败：因子驱动边弹性与滞后同时为空；FAC0001->OBJ-PUB-IN-0005；修复：至少填写 elasticity 或 lagDays",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-5",
+          "expected": [
+            "G4-5",
+            "AST-0006"
+          ],
+          "actual": "G4-5 失败：有效断言缺少证据；AST-0006；修复：补充 targetType=Assertion 的 Evidence",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-6",
+          "expected": [
+            "G4-6",
+            "OBJ-PUB-EV-1002"
+          ],
+          "actual": "G4-6 失败：生效区间起止倒置；OBJ-PUB-EV-1002；修复：修正 effectiveFrom/effectiveTo",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-7",
+          "expected": [
+            "G4-7",
+            "OBJ-PUB-ED-0001"
+          ],
+          "actual": "G4-7 失败：quoteHash 与 quote 不匹配；OBJ-PUB-ED-0001；修复：按 sha1(quote) 重算",
+          "matched": true
+        },
+        {
+          "group": "gate",
+          "field": "gateNegative:G4-8",
+          "expected": [
+            "G4-8",
+            "OBJ-PUB-IN-0001"
+          ],
+          "actual": "G4-8 失败：月度数据缺口 2024-06；OBJ-PUB-IN-0001；修复：补齐期间内全部月度数据点",
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "caseId": "S4-LK-08",
+      "title": "联动页面深链标记与市场路由无写方法",
+      "kind": "static",
+      "deterministic": true,
+      "checks": [
+        {
+          "group": "deepLink",
+          "field": "htmlContains:/market.html",
+          "expected": [
+            "asof-range",
+            "form-chips",
+            "drive-panel",
+            "impact-panel",
+            "badge-effective"
+          ],
+          "actual": [],
+          "matched": true
+        },
+        {
+          "group": "deepLink",
+          "field": "htmlContains:/index.html",
+          "expected": [
+            "entityType",
+            "market.html?commodity="
+          ],
+          "actual": [],
+          "matched": true
+        },
+        {
+          "group": "noWrite",
+          "field": "openapiGetOnly:/api/market/",
+          "expected": true,
+          "actual": true,
+          "matched": true
+        }
+      ],
+      "failures": [],
+      "gateFailures": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "hardGates": {
+    "deterministicOutput": {
+      "passed": true
+    },
+    "formalDataUnchanged": {
+      "passed": true
+    },
+    "sourceHashesValid": {
+      "passed": true
+    },
+    "isolatedDataset": {
+      "passed": true
+    },
+    "noWriteRoutes": {
+      "passed": true
+    },
+    "casePassRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "eventStateAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "impactAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "scopeAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "routeShapeAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "bridgeIntegrity": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "gateNegativeDetectionRate": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "deepLinkAgreement": {
+      "passed": true,
+      "expected": 1.0,
+      "actual": 1.0
+    },
+    "overall": {
+      "passed": true
+    }
+  },
+  "summary": "阶段 4 技术冒烟：8 个固定情形，通过 8 个；业务质量与生产性能未评估。"
+}

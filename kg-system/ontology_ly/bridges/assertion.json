@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "bridge": "assertion",
+  "label": "断言桥",
+  "owner": "SHARED",
+  "purpose": "让机构观点、预测、归因以断言形态进入图谱，与事实严格隔离；多空并存，永不合并。",
+  "defaultPolicy": "白名单之外一律拒绝（G2-7 / AP_BRIDGE_ILLEGAL_WRITE）",
+  "isolationRule": {
+    "principle": "断言不是事实。Assertion 不得写入任何内核对象的属性，也不得参与『对象是否成立』的校验。",
+    "retrieval": "检索与问答可以并列展示事实与断言，但必须标注『断言方 + 发表日 + 所指期间』。"
+  },
+  "allowedWrites": [
+    {
+      "targetType": "Assertion",
+      "operation": "CREATE",
+      "allowedFields": [
+        "name", "alias", "description", "domainCode", "validFrom", "validTo",
+        "recordedAt", "status", "version", "evidenceIds", "confidence", "extractedBy", "authority",
+        "assertionType", "subjectType", "subjectId", "predicate", "objectValue", "objectUnitId",
+        "rangeLow", "rangeHigh", "targetPeriodId", "scopeId", "assertedByType", "assertedById",
+        "assertedAt", "horizon", "rationale", "stanceStrength"
+      ],
+      "requiredFields": ["assertionType", "subjectType", "subjectId", "predicate", "targetPeriodId", "scopeId", "assertedByType", "assertedById", "assertedAt", "horizon"],
+      "conditions": [
+        "objectValue 存在时 objectUnitId 必填",
+        "rangeLow <= rangeHigh（两者同填时）",
+        "subjectType ∈ {Commodity, CommodityForm, IndicatorSeries, Factor, Event}",
+        "不得填写 probability 或 confidence 作为『发生概率』；confidence 只表示抽取质量"
+      ]
+    },
+    {
+      "targetType": "Organization",
+      "operation": "PROPOSE",
+      "allowedFields": ["name", "alias", "code", "description", "orgType", "parentOrgId", "regionId", "functionScope", "status"],
+      "conditions": ["status 只能为 DRAFT；转 ACTIVE 必须由内核评审", "仅当断言方在库中不存在时允许提案"]
+    },
+    {
+      "targetType": "Person",
+      "operation": "PROPOSE",
+      "allowedFields": ["name", "alias", "description", "personRole", "affiliationOrgId", "title", "status"],
+      "conditions": ["status 只能为 DRAFT；转 ACTIVE 必须由内核评审"]
+    }
+  ],
+  "allowedEdges": [
+    {
+      "name": "ASSERTED_BY",
+      "from": ["Assertion"],
+      "to": ["Organization", "Person"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0,
+      "conditions": ["assertedById 必须与边目标一致"]
+    },
+    {
+      "name": "SUPPORTED_BY",
+      "from": ["Assertion"],
+      "to": ["Evidence"],
+      "requiredAttributes": ["strength"],
+      "minCount": 1,
+      "conditions": ["strength 0—1；引用转引（CITED）时 strength 上限 0.6"]
+    },
+    {
+      "name": "SCOPED_BY",
+      "from": ["Assertion"],
+      "to": ["Scope"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    },
+    {
+      "name": "EVIDENCED_BY",
+      "from": ["Assertion"],
+      "to": ["Evidence"],
+      "requiredAttributes": [],
+      "requiredEvidence": 0
+    }
+  ],
+  "deduplication": {
+    "rule": "不合并多空；只对『同机构 + 同期间 + 同落点 + 同谓词 + 命题相似度 ≥ 0.85』的重复转述去重",
+    "key": ["assertedById", "targetPeriodId", "subjectId", "predicate"],
+    "similarityThreshold": 0.85,
+    "similarityMethod": "rationale 与 objectValue/range 的规范化文本相似度；方法须记录在抽取任务日志",
+    "onDuplicate": "保留最早 assertedAt 的一条，后到者写 alias 与重复计数，不新建对象",
+    "neverMerge": ["BULLISH 与 BEARISH", "WILL_RISE 与 WILL_FALL", "不同机构之间"]
+  },
+  "forbidden": [
+    {
+      "code": "AP_ASSERTION_AS_FACT",
+      "rule": "不得把 Assertion 的 predicate/objectValue 写入 Commodity / IndicatorSeries / Event 的属性",
+      "reason": "断言与事实混写会污染推理与统计",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_ASSERTION_MERGED",
+      "rule": "不得把方向相反或机构不同的断言合并为一条",
+      "reason": "多空并存是设计前提，合并等于伪造共识",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_PROBABILITY_INVENTED",
+      "rule": "不得把『较强/偏强/大概率』折算成概率或置信度分数",
+      "reason": "原话强度只能进 stanceStrength，概率化属编造",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_ASSERTION_NO_SCOPE",
+      "rule": "缺少 scopeId 或缺少 SUPPORTED_BY 的 Assertion 不得入库",
+      "reason": "无范围无法比较，无证据无法追溯",
+      "severity": "ERROR"
+    }
+  ],
+  "required": [
+    "Assertion.scopeId + assertedById + 至少 1 条 SUPPORTED_BY 边，缺一即拒",
+    "SUPPORTED_BY.strength 必须显式给出",
+    "subjectType 与 subjectId 必须能在图中解析到实际对象（REF_UNRESOLVED 则拒）"
+  ],
+  "gateRules": ["G2-4", "G2-5", "G2-7", "G3-3"]
+}

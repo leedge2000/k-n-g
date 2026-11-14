@@ -1,0 +1,5172 @@
+{
+  "model_type": "MAPPING",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "粮油产业多维知识图谱对象到 SQLite 表的映射：15 个聚合根主表与 4 个子实体从表；内部主键与业务编码双轨，表名和列名沿用 M1 标识",
+  "mappings": [
+    {
+      "id": "M-MAP-SOURCE-001",
+      "objectRef": "AGG-SOURCE-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "来源文档",
+      "tableMappings": [
+        {
+          "tableName": "SourceDoc",
+          "tableRole": "MASTER",
+          "primaryKey": "docId",
+          "columnMappings": [
+            {
+              "attributeRef": "SourceDoc.docId",
+              "column": "docId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "SourceDoc.title",
+              "column": "title",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.docType",
+              "column": "docType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：SourceDoc.docType"
+            },
+            {
+              "attributeRef": "SourceDoc.issuer",
+              "column": "issuer",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.publishDate",
+              "column": "publishDate",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.docVersion",
+              "column": "docVersion",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.fileFormat",
+              "column": "fileFormat",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：SourceDoc.fileFormat"
+            },
+            {
+              "attributeRef": "SourceDoc.storageUri",
+              "column": "storageUri",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.checksum",
+              "column": "checksum",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.language",
+              "column": "language",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：SourceDoc.language"
+            },
+            {
+              "attributeRef": "SourceDoc.pageCount",
+              "column": "pageCount",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.sourceUrl",
+              "column": "sourceUrl",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.crawlSourceId",
+              "column": "crawlSourceId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CrsSource",
+              "fkTargetColumn": "crawlSourceId",
+              "mappingNote": "AggregateRootRef → CrsSource.crawlSourceId"
+            },
+            {
+              "attributeRef": "SourceDoc.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "SourceDoc.summary",
+              "column": "summary",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：SourceDoc.status"
+            }
+          ]
+        },
+        {
+          "tableName": "SourceDoc_Segment",
+          "tableRole": "DETAIL",
+          "primaryKey": "segmentId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_SourceDoc_Segment_SourceDoc",
+              "localColumn": "docId",
+              "targetTable": "SourceDoc",
+              "targetColumn": "docId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "SourceDoc.Segment[].docId",
+              "column": "docId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "父聚合引用：SourceDoc.docId"
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].segmentNo",
+              "column": "segmentNo",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].pageNo",
+              "column": "pageNo",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].chapterPath",
+              "column": "chapterPath",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].charStart",
+              "column": "charStart",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].charEnd",
+              "column": "charEnd",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].segmentText",
+              "column": "segmentText",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].segmentType",
+              "column": "segmentType",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Segment.segmentType"
+            },
+            {
+              "attributeRef": "SourceDoc.Segment[].vectorId",
+              "column": "vectorId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-POLICY-001",
+      "objectRef": "AGG-POLICY-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "政策法规",
+      "tableMappings": [
+        {
+          "tableName": "Policy",
+          "tableRole": "MASTER",
+          "primaryKey": "policyId",
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.policyId",
+              "column": "policyId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.policyTitle",
+              "column": "policyTitle",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.docNumber",
+              "column": "docNumber",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.policyLevel",
+              "column": "policyLevel",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Policy.policyLevel"
+            },
+            {
+              "attributeRef": "Policy.issuer",
+              "column": "issuer",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.effectiveDate",
+              "column": "effectiveDate",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.expireDate",
+              "column": "expireDate",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.policyStatus",
+              "column": "policyStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Policy.policyStatus"
+            },
+            {
+              "attributeRef": "Policy.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "Policy.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "AggregateRootRef → SourceDoc.docId"
+            },
+            {
+              "attributeRef": "Policy.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "Policy.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Policy.industryStage"
+            },
+            {
+              "attributeRef": "Policy.factorDimensions",
+              "column": "factorDimensions",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.reviewStatus",
+              "column": "reviewStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Policy.reviewStatus"
+            },
+            {
+              "attributeRef": "Policy.summary",
+              "column": "summary",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.version",
+              "column": "version",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "政策版本号；同一政策族自 1 递增，为空表示未纳入版本链"
+            },
+            {
+              "attributeRef": "Policy.supersedesPolicyId",
+              "column": "supersedesPolicyId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本版本取代的上一个版本 policyId，构成版本链"
+            },
+            {
+              "attributeRef": "Policy.scopeId",
+              "column": "scopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "政策适用范围，指向 OntologyScope.scopeId（该表由 app/scope.py 自建，故不建外键）；为空表示不限范围"
+            }
+          ]
+        },
+        {
+          "tableName": "Policy_Clause",
+          "tableRole": "DETAIL",
+          "primaryKey": "clauseId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Policy_Clause_Policy",
+              "localColumn": "policyId",
+              "targetTable": "Policy",
+              "targetColumn": "policyId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Clause[].policyId",
+              "column": "policyId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Policy",
+              "fkTargetColumn": "policyId",
+              "mappingNote": "父聚合引用：Policy.policyId"
+            },
+            {
+              "attributeRef": "Policy.Clause[].clauseId",
+              "column": "clauseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Clause[].clauseNo",
+              "column": "clauseNo",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Clause[].clauseTitle",
+              "column": "clauseTitle",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Clause[].clauseText",
+              "column": "clauseText",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Clause[].measureType",
+              "column": "measureType",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Clause.measureType"
+            },
+            {
+              "attributeRef": "Policy.Clause[].targetObject",
+              "column": "targetObject",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Clause[].clauseEffectiveDate",
+              "column": "clauseEffectiveDate",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "NormativeStatement",
+          "tableRole": "MASTER",
+          "primaryKey": "statementId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_NormativeStatement_PolicyClause",
+              "localColumn": "clauseId",
+              "targetTable": "Policy_Clause",
+              "targetColumn": "clauseId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].clauseId",
+              "column": "clauseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Policy_Clause",
+              "fkTargetColumn": "clauseId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].clauseNo",
+              "column": "clauseNo",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].text",
+              "column": "text",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].charStart",
+              "column": "charStart",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].charEnd",
+              "column": "charEnd",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].statementType",
+              "column": "statementType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].actorScopeId",
+              "column": "actorScopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].actionVerb",
+              "column": "actionVerb",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].objectFormIds",
+              "column": "objectFormIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 数组；本阶段 null (R7-1-3)"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].conditionId",
+              "column": "conditionId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].exceptionIds",
+              "column": "exceptionIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 数组"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].consequenceId",
+              "column": "consequenceId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].parameterIds",
+              "column": "parameterIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 数组"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].vaguenessFlag",
+              "column": "vaguenessFlag",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "0=False, 1=True"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].vaguenessNote",
+              "column": "vaguenessNote",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].confirmationStatus",
+              "column": "confirmationStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本阶段一律 DRAFT (R4-1-1)"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].confirmedBy",
+              "column": "confirmedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Statement[].confirmedAt",
+              "column": "confirmedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "ClauseCondition",
+          "tableRole": "MASTER",
+          "primaryKey": "conditionId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Condition_Statement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].conditionId",
+              "column": "conditionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].parentConditionId",
+              "column": "parentConditionId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].operator",
+              "column": "operator",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].leftOperand",
+              "column": "leftOperand",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].comparator",
+              "column": "comparator",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].rightValue",
+              "column": "rightValue",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].rightValueUpper",
+              "column": "rightValueUpper",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].rightUnitId",
+              "column": "rightUnitId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].rightIndicatorId",
+              "column": "rightIndicatorId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].factSource",
+              "column": "factSource",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本阶段一律 USER_INPUT (R5-1-3)"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Condition[].regionalScopeId",
+              "column": "regionalScopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本阶段 null (R7-1-4)"
+            }
+          ]
+        },
+        {
+          "tableName": "ClauseException",
+          "tableRole": "DETAIL",
+          "primaryKey": "exceptionId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Exception_Statement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            },
+            {
+              "fkName": "FK_Exception_Condition",
+              "localColumn": "conditionId",
+              "targetTable": "ClauseCondition",
+              "targetColumn": "conditionId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.Exception[].exceptionId",
+              "column": "exceptionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Exception[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Exception[].conditionId",
+              "column": "conditionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "ClauseCondition",
+              "fkTargetColumn": "conditionId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Exception[].exceptionType",
+              "column": "exceptionType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Exception[].note",
+              "column": "note",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "ClauseConsequence",
+          "tableRole": "DETAIL",
+          "primaryKey": "consequenceId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Consequence_Statement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].consequenceId",
+              "column": "consequenceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].consequenceType",
+              "column": "consequenceType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].triggerEventTypeId",
+              "column": "triggerEventTypeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].magnitude",
+              "column": "magnitude",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].magnitudeUnitId",
+              "column": "magnitudeUnitId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Consequence[].description",
+              "column": "description",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "RuleParameter",
+          "tableRole": "DETAIL",
+          "primaryKey": "parameterId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Parameter_Statement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].parameterId",
+              "column": "parameterId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].paramName",
+              "column": "paramName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].paramValue",
+              "column": "paramValue",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].unitId",
+              "column": "unitId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].effectiveFrom",
+              "column": "effectiveFrom",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].effectiveTo",
+              "column": "effectiveTo",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.Parameter[].regionalScopeId",
+              "column": "regionalScopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "ClauseRelation",
+          "tableRole": "DETAIL",
+          "primaryKey": "relationId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_CR_FromClause",
+              "localColumn": "fromClauseId",
+              "targetTable": "Policy_Clause",
+              "targetColumn": "clauseId"
+            },
+            {
+              "fkName": "FK_CR_ToClause",
+              "localColumn": "toClauseId",
+              "targetTable": "Policy_Clause",
+              "targetColumn": "clauseId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].relationId",
+              "column": "relationId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].fromClauseId",
+              "column": "fromClauseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Policy_Clause",
+              "fkTargetColumn": "clauseId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].toClauseId",
+              "column": "toClauseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Policy_Clause",
+              "fkTargetColumn": "clauseId"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].relationType",
+              "column": "relationType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].priorityBasis",
+              "column": "priorityBasis",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].resolved",
+              "column": "resolved",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "0=False, 1=True"
+            },
+            {
+              "attributeRef": "Policy.Pack2b.ClauseRelation[].externalRef",
+              "column": "externalRef",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        },
+        {
+          "tableName": "CompiledRule",
+          "tableRole": "MASTER",
+          "primaryKey": "ruleId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_CompiledRule_NormativeStatement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].ruleId",
+              "column": "ruleId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].ruleExpression",
+              "column": "ruleExpression",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].compilerVersion",
+              "column": "compilerVersion",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].ontologyVersion",
+              "column": "ontologyVersion",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].backTranslation",
+              "column": "backTranslation",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].backTranslationMatch",
+              "column": "backTranslationMatch",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "0=False, 1=True"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].testcaseIds",
+              "column": "testcaseIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 数组字符串"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].confirmationStatus",
+              "column": "confirmationStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "DRAFT/BACKTRANSLATED/TESTED/CONFIRMED"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.CompiledRule[].dependsOnClauseIds",
+              "column": "dependsOnClauseIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 数组字符串；政策修订时标待复核"
+            }
+          ]
+        },
+        {
+          "tableName": "RuleTestCase",
+          "tableRole": "DETAIL",
+          "primaryKey": "testcaseId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_TestCase_Statement",
+              "localColumn": "statementId",
+              "targetTable": "NormativeStatement",
+              "targetColumn": "statementId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].testcaseId",
+              "column": "testcaseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].statementId",
+              "column": "statementId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "NormativeStatement",
+              "fkTargetColumn": "statementId"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].scenarioName",
+              "column": "scenarioName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].facts",
+              "column": "facts",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 对象字符串"
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].expectedOutcome",
+              "column": "expectedOutcome",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].expectedReason",
+              "column": "expectedReason",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Policy.Pack2c.RuleTestCase[].authoredBy",
+              "column": "authoredBy",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-INDICATOR-001",
+      "objectRef": "AGG-INDICATOR-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "指标定义",
+      "tableMappings": [
+        {
+          "tableName": "Indicator",
+          "tableRole": "MASTER",
+          "primaryKey": "indicatorId",
+          "columnMappings": [
+            {
+              "attributeRef": "Indicator.indicatorId",
+              "column": "indicatorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Indicator.indicatorCode",
+              "column": "indicatorCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Indicator.indicatorName",
+              "column": "indicatorName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Indicator.indicatorCategory",
+              "column": "indicatorCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Indicator.indicatorCategory"
+            },
+            {
+              "attributeRef": "Indicator.unit",
+              "column": "unit",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Indicator.frequency",
+              "column": "frequency",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Indicator.frequency"
+            },
+            {
+              "attributeRef": "Indicator.caliber",
+              "column": "caliber",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Indicator.sourceOrg",
+              "column": "sourceOrg",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Indicator.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "Indicator.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Indicator.industryStage"
+            },
+            {
+              "attributeRef": "Indicator.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Indicator.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-INDVAL-001",
+      "objectRef": "AGG-INDVAL-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "指标数据",
+      "tableMappings": [
+        {
+          "tableName": "IvdData",
+          "tableRole": "MASTER",
+          "primaryKey": "valueId",
+          "columnMappings": [
+            {
+              "attributeRef": "IvdData.valueId",
+              "column": "valueId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "IvdData.indicatorId",
+              "column": "indicatorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Indicator",
+              "fkTargetColumn": "indicatorId",
+              "mappingNote": "AggregateRootRef → Indicator.indicatorId"
+            },
+            {
+              "attributeRef": "IvdData.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "IvdData.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId",
+              "mappingNote": "AggregateRootRef → CmdCommodity.commodityId"
+            },
+            {
+              "attributeRef": "IvdData.periodType",
+              "column": "periodType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：IvdData.periodType"
+            },
+            {
+              "attributeRef": "IvdData.period",
+              "column": "period",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IvdData.value",
+              "column": "value",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IvdData.unit",
+              "column": "unit",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IvdData.qualityFlag",
+              "column": "qualityFlag",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：IvdData.qualityFlag"
+            },
+            {
+              "attributeRef": "IvdData.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "AggregateRootRef → SourceDoc.docId"
+            },
+            {
+              "attributeRef": "IvdData.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IvdData.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "IvdData.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：IvdData.industryStage"
+            },
+            {
+              "attributeRef": "IvdData.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：IvdData.status"
+            },
+            {
+              "attributeRef": "IvdData.remark",
+              "column": "remark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-YEARBOOK-001",
+      "objectRef": "AGG-YEARBOOK-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "年鉴记录",
+      "tableMappings": [
+        {
+          "tableName": "YrbYearbook",
+          "tableRole": "MASTER",
+          "primaryKey": "recordId",
+          "columnMappings": [
+            {
+              "attributeRef": "YrbYearbook.recordId",
+              "column": "recordId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "YrbYearbook.yearbookName",
+              "column": "yearbookName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.edition",
+              "column": "edition",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.statYear",
+              "column": "statYear",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.tableName",
+              "column": "tableName",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.indicatorId",
+              "column": "indicatorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Indicator",
+              "fkTargetColumn": "indicatorId",
+              "mappingNote": "AggregateRootRef → Indicator.indicatorId"
+            },
+            {
+              "attributeRef": "YrbYearbook.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "YrbYearbook.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId",
+              "mappingNote": "AggregateRootRef → CmdCommodity.commodityId"
+            },
+            {
+              "attributeRef": "YrbYearbook.value",
+              "column": "value",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.unit",
+              "column": "unit",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.caliberNote",
+              "column": "caliberNote",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "AggregateRootRef → SourceDoc.docId"
+            },
+            {
+              "attributeRef": "YrbYearbook.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "YrbYearbook.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "YrbYearbook.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Yearbook.industryStage"
+            },
+            {
+              "attributeRef": "YrbYearbook.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Yearbook.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-INTEL-001",
+      "objectRef": "AGG-INTEL-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "农业情报",
+      "tableMappings": [
+        {
+          "tableName": "Intel",
+          "tableRole": "MASTER",
+          "primaryKey": "intelId",
+          "columnMappings": [
+            {
+              "attributeRef": "Intel.intelId",
+              "column": "intelId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Intel.intelTitle",
+              "column": "intelTitle",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.intelType",
+              "column": "intelType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Intel.intelType"
+            },
+            {
+              "attributeRef": "Intel.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "Intel.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId",
+              "mappingNote": "AggregateRootRef → CmdCommodity.commodityId"
+            },
+            {
+              "attributeRef": "Intel.publishOrg",
+              "column": "publishOrg",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.publishDate",
+              "column": "publishDate",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.keyPoints",
+              "column": "keyPoints",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.credibility",
+              "column": "credibility",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Intel.credibility"
+            },
+            {
+              "attributeRef": "Intel.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "AggregateRootRef → SourceDoc.docId"
+            },
+            {
+              "attributeRef": "Intel.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "Intel.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Intel.industryStage"
+            },
+            {
+              "attributeRef": "Intel.factorDimensions",
+              "column": "factorDimensions",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Intel.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Intel.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-COMMODITY-001",
+      "objectRef": "AGG-COMMODITY-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "品种",
+      "tableMappings": [
+        {
+          "tableName": "CmdCommodity",
+          "tableRole": "MASTER",
+          "primaryKey": "commodityId",
+          "columnMappings": [
+            {
+              "attributeRef": "CmdCommodity.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "CmdCommodity.commodityCode",
+              "column": "commodityCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CmdCommodity.commodityName",
+              "column": "commodityName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CmdCommodity.commodityCategory",
+              "column": "commodityCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Commodity.commodityCategory"
+            },
+            {
+              "attributeRef": "CmdCommodity.scientificName",
+              "column": "scientificName",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CmdCommodity.parentCommodityId",
+              "column": "parentCommodityId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId",
+              "mappingNote": "AggregateRootRef → CmdCommodity.commodityId"
+            },
+            {
+              "attributeRef": "CmdCommodity.conceptId",
+              "column": "conceptId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Concept",
+              "fkTargetColumn": "conceptId",
+              "mappingNote": "AggregateRootRef → Concept.conceptId"
+            },
+            {
+              "attributeRef": "CmdCommodity.description",
+              "column": "description",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CmdCommodity.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Commodity.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-PRODUCT-001",
+      "objectRef": "AGG-PRODUCT-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "产品",
+      "tableMappings": [
+        {
+          "tableName": "Product",
+          "tableRole": "MASTER",
+          "primaryKey": "productId",
+          "columnMappings": [
+            {
+              "attributeRef": "Product.productId",
+              "column": "productId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Product.productCode",
+              "column": "productCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Product.productName",
+              "column": "productName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Product.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId",
+              "mappingNote": "AggregateRootRef → CmdCommodity.commodityId"
+            },
+            {
+              "attributeRef": "Product.productCategory",
+              "column": "productCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Product.productCategory"
+            },
+            {
+              "attributeRef": "Product.grade",
+              "column": "grade",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Product.grade"
+            },
+            {
+              "attributeRef": "Product.standardCode",
+              "column": "standardCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Product.enterpriseId",
+              "column": "enterpriseId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Enterprise",
+              "fkTargetColumn": "enterpriseId",
+              "mappingNote": "AggregateRootRef → Enterprise.enterpriseId"
+            },
+            {
+              "attributeRef": "Product.description",
+              "column": "description",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Product.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Product.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-REGION-001",
+      "objectRef": "AGG-REGION-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "地区",
+      "tableMappings": [
+        {
+          "tableName": "Region",
+          "tableRole": "MASTER",
+          "primaryKey": "regionId",
+          "columnMappings": [
+            {
+              "attributeRef": "Region.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Region.regionCode",
+              "column": "regionCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Region.regionName",
+              "column": "regionName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Region.regionLevel",
+              "column": "regionLevel",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Region.regionLevel"
+            },
+            {
+              "attributeRef": "Region.parentRegionId",
+              "column": "parentRegionId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "Region.adminCode",
+              "column": "adminCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Region.faoRegion",
+              "column": "faoRegion",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Region.isChongqing",
+              "column": "isChongqing",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Region.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Region.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-ENTERPRISE-001",
+      "objectRef": "AGG-ENTERPRISE-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "企业",
+      "tableMappings": [
+        {
+          "tableName": "Enterprise",
+          "tableRole": "MASTER",
+          "primaryKey": "enterpriseId",
+          "columnMappings": [
+            {
+              "attributeRef": "Enterprise.enterpriseId",
+              "column": "enterpriseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Enterprise.enterpriseCode",
+              "column": "enterpriseCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Enterprise.enterpriseName",
+              "column": "enterpriseName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Enterprise.creditCode",
+              "column": "creditCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Enterprise.enterpriseType",
+              "column": "enterpriseType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Enterprise.enterpriseType"
+            },
+            {
+              "attributeRef": "Enterprise.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId",
+              "mappingNote": "AggregateRootRef → Region.regionId"
+            },
+            {
+              "attributeRef": "Enterprise.scale",
+              "column": "scale",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Enterprise.scale"
+            },
+            {
+              "attributeRef": "Enterprise.legalPerson",
+              "column": "legalPerson",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Enterprise.address",
+              "column": "address",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Enterprise.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Enterprise.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-CONCEPT-001",
+      "objectRef": "AGG-CONCEPT-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "本体概念",
+      "tableMappings": [
+        {
+          "tableName": "Concept",
+          "tableRole": "MASTER",
+          "primaryKey": "conceptId",
+          "columnMappings": [
+            {
+              "attributeRef": "Concept.conceptId",
+              "column": "conceptId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Concept.conceptCode",
+              "column": "conceptCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Concept.conceptName",
+              "column": "conceptName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Concept.conceptType",
+              "column": "conceptType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Concept.conceptType"
+            },
+            {
+              "attributeRef": "Concept.sourceOntology",
+              "column": "sourceOntology",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Concept.sourceOntology"
+            },
+            {
+              "attributeRef": "Concept.externalUri",
+              "column": "externalUri",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Concept.parentConceptId",
+              "column": "parentConceptId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Concept",
+              "fkTargetColumn": "conceptId",
+              "mappingNote": "AggregateRootRef → Concept.conceptId"
+            },
+            {
+              "attributeRef": "Concept.definition",
+              "column": "definition",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Concept.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Concept.status"
+            }
+          ]
+        },
+        {
+          "tableName": "Concept_Synonym",
+          "tableRole": "DETAIL",
+          "primaryKey": "synonymId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_Concept_Synonym_Concept",
+              "localColumn": "conceptId",
+              "targetTable": "Concept",
+              "targetColumn": "conceptId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "Concept.Synonym[].conceptId",
+              "column": "conceptId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Concept",
+              "fkTargetColumn": "conceptId",
+              "mappingNote": "父聚合引用：Concept.conceptId"
+            },
+            {
+              "attributeRef": "Concept.Synonym[].synonymId",
+              "column": "synonymId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Concept.Synonym[].synonymName",
+              "column": "synonymName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Concept.Synonym[].language",
+              "column": "language",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Synonym.language"
+            },
+            {
+              "attributeRef": "Concept.Synonym[].synonymType",
+              "column": "synonymType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Synonym.synonymType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-RELATION-001",
+      "objectRef": "AGG-RELATION-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "知识关系",
+      "tableMappings": [
+        {
+          "tableName": "Relation",
+          "tableRole": "MASTER",
+          "primaryKey": "relationId",
+          "columnMappings": [
+            {
+              "attributeRef": "Relation.relationId",
+              "column": "relationId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Relation.subjectEntityType",
+              "column": "subjectEntityType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Relation.subjectEntityType"
+            },
+            {
+              "attributeRef": "Relation.subjectEntityId",
+              "column": "subjectEntityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.predicate",
+              "column": "predicate",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Relation.predicate"
+            },
+            {
+              "attributeRef": "Relation.objectEntityType",
+              "column": "objectEntityType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Relation.objectEntityType"
+            },
+            {
+              "attributeRef": "Relation.objectEntityId",
+              "column": "objectEntityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.confidence",
+              "column": "confidence",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "AggregateRootRef → SourceDoc.docId"
+            },
+            {
+              "attributeRef": "Relation.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.extractedBy",
+              "column": "extractedBy",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Relation.extractedBy"
+            },
+            {
+              "attributeRef": "Relation.validFrom",
+              "column": "validFrom",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.validTo",
+              "column": "validTo",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Relation.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：Relation.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-QUALITY-001",
+      "objectRef": "AGG-QUALITY-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "质量治理记录",
+      "tableMappings": [
+        {
+          "tableName": "QisRecord",
+          "tableRole": "MASTER",
+          "primaryKey": "issueId",
+          "columnMappings": [
+            {
+              "attributeRef": "QisRecord.issueId",
+              "column": "issueId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "QisRecord.issueType",
+              "column": "issueType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：QisRecord.issueType"
+            },
+            {
+              "attributeRef": "QisRecord.primaryEntityType",
+              "column": "primaryEntityType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：QisRecord.primaryEntityType"
+            },
+            {
+              "attributeRef": "QisRecord.primaryEntityId",
+              "column": "primaryEntityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.duplicateEntityId",
+              "column": "duplicateEntityId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.similarity",
+              "column": "similarity",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.conflictField",
+              "column": "conflictField",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.conflictValueA",
+              "column": "conflictValueA",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.conflictValueB",
+              "column": "conflictValueB",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.handleStatus",
+              "column": "handleStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：QisRecord.handleStatus"
+            },
+            {
+              "attributeRef": "QisRecord.handleRemark",
+              "column": "handleRemark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.handler",
+              "column": "handler",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "QisRecord.handledAt",
+              "column": "handledAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-CRAWL-001",
+      "objectRef": "AGG-CRAWL-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "采集源",
+      "tableMappings": [
+        {
+          "tableName": "CrsSource",
+          "tableRole": "MASTER",
+          "primaryKey": "crawlSourceId",
+          "columnMappings": [
+            {
+              "attributeRef": "CrsSource.crawlSourceId",
+              "column": "crawlSourceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "CrsSource.sourceName",
+              "column": "sourceName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.sourceUrl",
+              "column": "sourceUrl",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.sourceType",
+              "column": "sourceType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrsSource.sourceType"
+            },
+            {
+              "attributeRef": "CrsSource.contentCategory",
+              "column": "contentCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrsSource.contentCategory"
+            },
+            {
+              "attributeRef": "CrsSource.crawlMode",
+              "column": "crawlMode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrsSource.crawlMode"
+            },
+            {
+              "attributeRef": "CrsSource.cronExpr",
+              "column": "cronExpr",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.charset",
+              "column": "charset",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrsSource.charset"
+            },
+            {
+              "attributeRef": "CrsSource.requestHeaders",
+              "column": "requestHeaders",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.minIntervalMinutes",
+              "column": "minIntervalMinutes",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.maxRetry",
+              "column": "maxRetry",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.knowledgeCategoryId",
+              "column": "knowledgeCategoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "CrsSource.enabledFlag",
+              "column": "enabledFlag",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrsSource.enabledFlag"
+            },
+            {
+              "attributeRef": "CrsSource.lastRunAt",
+              "column": "lastRunAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.extractorType",
+              "column": "extractorType",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "域抽取器类型：policy_gov/market_index_moa/yearbook_stats/intel_agri/relation_derive；为空则仅存 SourceDoc"
+            }
+          ]
+        },
+        {
+          "tableName": "CrsSource_CrawlRun",
+          "tableRole": "DETAIL",
+          "primaryKey": "runId",
+          "foreignKeys": [
+            {
+              "fkName": "FK_CrsSource_CrawlRun_CrsSource",
+              "localColumn": "crawlSourceId",
+              "targetTable": "CrsSource",
+              "targetColumn": "crawlSourceId"
+            }
+          ],
+          "columnMappings": [
+            {
+              "attributeRef": "CrsSource.CrawlRun[].crawlSourceId",
+              "column": "crawlSourceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CrsSource",
+              "fkTargetColumn": "crawlSourceId",
+              "mappingNote": "父聚合引用：CrsSource.crawlSourceId"
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].runId",
+              "column": "runId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].startedAt",
+              "column": "startedAt",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].finishedAt",
+              "column": "finishedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].runStatus",
+              "column": "runStatus",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：CrawlRun.runStatus"
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].httpStatus",
+              "column": "httpStatus",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].fetchedCount",
+              "column": "fetchedCount",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].savedCount",
+              "column": "savedCount",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].newDocCount",
+              "column": "newDocCount",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].duplicateCount",
+              "column": "duplicateCount",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].durationMs",
+              "column": "durationMs",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CrsSource.CrawlRun[].errorMessage",
+              "column": "errorMessage",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-TAXONOMY-001",
+      "objectRef": "AGG-TAXONOMY-001",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "知识分类",
+      "tableMappings": [
+        {
+          "tableName": "KtcCategory",
+          "tableRole": "MASTER",
+          "primaryKey": "categoryId",
+          "columnMappings": [
+            {
+              "attributeRef": "KtcCategory.categoryId",
+              "column": "categoryId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "KtcCategory.categoryCode",
+              "column": "categoryCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.categoryName",
+              "column": "categoryName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.parentCategoryId",
+              "column": "parentCategoryId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "KtcCategory",
+              "fkTargetColumn": "categoryId",
+              "mappingNote": "AggregateRootRef → KtcCategory.categoryId"
+            },
+            {
+              "attributeRef": "KtcCategory.level",
+              "column": "level",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.categoryPath",
+              "column": "categoryPath",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.rootCategory",
+              "column": "rootCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：KtcCategory.rootCategory"
+            },
+            {
+              "attributeRef": "KtcCategory.industryStage",
+              "column": "industryStage",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：KtcCategory.industryStage"
+            },
+            {
+              "attributeRef": "KtcCategory.factorDimensions",
+              "column": "factorDimensions",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.definition",
+              "column": "definition",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.keywords",
+              "column": "keywords",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.sortNo",
+              "column": "sortNo",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "KtcCategory.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dictionaryRef：KtcCategory.status"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-001",
+      "objectRef": "OBJ-PUB-SS",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "统计源",
+      "tableMappings": [
+        {
+          "tableName": "StatisticalSource",
+          "tableRole": "MASTER",
+          "primaryKey": "sourceId",
+          "columnMappings": [
+            {
+              "attributeRef": "StatisticalSource.sourceId",
+              "column": "sourceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "StatisticalSource.sourceName",
+              "column": "sourceName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列：展示名称"
+            },
+            {
+              "attributeRef": "StatisticalSource.sourceType",
+              "column": "sourceType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 StatisticalSourceType"
+            },
+            {
+              "attributeRef": "StatisticalSource.orgId",
+              "column": "orgId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "StatisticalSource.releasePattern",
+              "column": "releasePattern",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "StatisticalSource.reliabilityScore",
+              "column": "reliabilityScore",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "StatisticalSource.revisionPolicy",
+              "column": "revisionPolicy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 RevisionPolicy"
+            },
+            {
+              "attributeRef": "StatisticalSource.officialUrl",
+              "column": "officialUrl",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            },
+            {
+              "attributeRef": "StatisticalSource.remark",
+              "column": "remark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-002",
+      "objectRef": "OBJ-PUB-TP",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "时间期间",
+      "tableMappings": [
+        {
+          "tableName": "TimePeriod",
+          "tableRole": "MASTER",
+          "primaryKey": "periodId",
+          "columnMappings": [
+            {
+              "attributeRef": "TimePeriod.periodId",
+              "column": "periodId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "TimePeriod.periodType",
+              "column": "periodType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 PeriodType"
+            },
+            {
+              "attributeRef": "TimePeriod.startDate",
+              "column": "startDate",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "TimePeriod.endDate",
+              "column": "endDate",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "TimePeriod.calendarSchemeId",
+              "column": "calendarSchemeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "TimePeriod.label",
+              "column": "label",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-003",
+      "objectRef": "OBJ-PUB-UN",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "计量单位",
+      "tableMappings": [
+        {
+          "tableName": "UnitOfMeasure",
+          "tableRole": "MASTER",
+          "primaryKey": "unitId",
+          "columnMappings": [
+            {
+              "attributeRef": "UnitOfMeasure.unitId",
+              "column": "unitId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "UnitOfMeasure.unitCode",
+              "column": "unitCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "UnitOfMeasure.dimension",
+              "column": "dimension",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 UnitDimension"
+            },
+            {
+              "attributeRef": "UnitOfMeasure.baseUnitCode",
+              "column": "baseUnitCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "UnitOfMeasure.factor",
+              "column": "factor",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "UnitOfMeasure.precision",
+              "column": "precision",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "UnitOfMeasure.currencyCode",
+              "column": "currencyCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "dimension=PRICE 时必填"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-004",
+      "objectRef": "OBJ-PUB-IN",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "指标序列",
+      "tableMappings": [
+        {
+          "tableName": "IndicatorSeries",
+          "tableRole": "MASTER",
+          "primaryKey": "seriesId",
+          "columnMappings": [
+            {
+              "attributeRef": "IndicatorSeries.seriesId",
+              "column": "seriesId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "IndicatorSeries.indicatorId",
+              "column": "indicatorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Indicator",
+              "fkTargetColumn": "indicatorId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.commodityFormId",
+              "column": "commodityFormId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IndicatorSeries.scopeId",
+              "column": "scopeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "OntologyScope",
+              "fkTargetColumn": "scopeId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.frequency",
+              "column": "frequency",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 PeriodType"
+            },
+            {
+              "attributeRef": "IndicatorSeries.statisticalSourceId",
+              "column": "statisticalSourceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "StatisticalSource",
+              "fkTargetColumn": "sourceId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.externalSeriesCode",
+              "column": "externalSeriesCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IndicatorSeries.priceBasis",
+              "column": "priceBasis",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 PriceBasis"
+            },
+            {
+              "attributeRef": "IndicatorSeries.taxBasis",
+              "column": "taxBasis",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 TaxBasis；与 Scope 的 TAX_BASIS 成员相等"
+            },
+            {
+              "attributeRef": "IndicatorSeries.currencyCode",
+              "column": "currencyCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IndicatorSeries.unitId",
+              "column": "unitId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "UnitOfMeasure",
+              "fkTargetColumn": "unitId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.startPeriodId",
+              "column": "startPeriodId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.endPeriodId",
+              "column": "endPeriodId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "IndicatorSeries.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "IndicatorSeries.remark",
+              "column": "remark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-005",
+      "objectRef": "OBJ-PUB-DP",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "价格数据点",
+      "tableMappings": [
+        {
+          "tableName": "PriceDataPoint",
+          "tableRole": "MASTER",
+          "primaryKey": "pointId",
+          "columnMappings": [
+            {
+              "attributeRef": "DataPoint.pointId",
+              "column": "pointId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "DataPoint.seriesId",
+              "column": "seriesId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "IndicatorSeries",
+              "fkTargetColumn": "seriesId"
+            },
+            {
+              "attributeRef": "DataPoint.periodId",
+              "column": "periodId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "DataPoint.value",
+              "column": "value",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "DataPoint.unitId",
+              "column": "unitId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "UnitOfMeasure",
+              "fkTargetColumn": "unitId"
+            },
+            {
+              "attributeRef": "DataPoint.publishedAt",
+              "column": "publishedAt",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "DataPoint.revisionNo",
+              "column": "revisionNo",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "DataPoint.qualityFlag",
+              "column": "qualityFlag",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 QualityFlag"
+            },
+            {
+              "attributeRef": "DataPoint.sourceRef",
+              "column": "sourceRef",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "DataPoint.remark",
+              "column": "remark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-006",
+      "objectRef": "OBJ-PUB-EVT",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "事件类型",
+      "tableMappings": [
+        {
+          "tableName": "EventType",
+          "tableRole": "MASTER",
+          "primaryKey": "eventTypeId",
+          "columnMappings": [
+            {
+              "attributeRef": "EventType.eventTypeId",
+              "column": "eventTypeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "EventType.typeName",
+              "column": "typeName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列：展示名称"
+            },
+            {
+              "attributeRef": "EventType.eventCategory",
+              "column": "eventCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 EventCategory"
+            },
+            {
+              "attributeRef": "EventType.isPolicyTool",
+              "column": "isPolicyTool",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "EventType.toolVerb",
+              "column": "toolVerb",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "EventType.defaultImpactDirection",
+              "column": "defaultImpactDirection",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ImpactDirection"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-007",
+      "objectRef": "OBJ-PUB-EV",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "事件",
+      "tableMappings": [
+        {
+          "tableName": "Event",
+          "tableRole": "MASTER",
+          "primaryKey": "eventId",
+          "columnMappings": [
+            {
+              "attributeRef": "Event.eventId",
+              "column": "eventId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Event.eventTypeId",
+              "column": "eventTypeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "EventType",
+              "fkTargetColumn": "eventTypeId"
+            },
+            {
+              "attributeRef": "Event.eventTitle",
+              "column": "eventTitle",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            },
+            {
+              "attributeRef": "Event.eventTime",
+              "column": "eventTime",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.announceTime",
+              "column": "announceTime",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.effectiveFrom",
+              "column": "effectiveFrom",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.effectiveTo",
+              "column": "effectiveTo",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.eventScale",
+              "column": "eventScale",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 EventScale"
+            },
+            {
+              "attributeRef": "Event.scopeId",
+              "column": "scopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "OntologyScope",
+              "fkTargetColumn": "scopeId"
+            },
+            {
+              "attributeRef": "Event.actorOrgIds",
+              "column": "actorOrgIds",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.severity",
+              "column": "severity",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 Severity"
+            },
+            {
+              "attributeRef": "Event.parentEventId",
+              "column": "parentEventId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Event.sourceDocId",
+              "column": "sourceDocId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId",
+              "mappingNote": "扩展列"
+            },
+            {
+              "attributeRef": "Event.remark",
+              "column": "remark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-008",
+      "objectRef": "FAC",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "因子",
+      "tableMappings": [
+        {
+          "tableName": "Factor",
+          "tableRole": "MASTER",
+          "primaryKey": "factorId",
+          "columnMappings": [
+            {
+              "attributeRef": "Factor.factorId",
+              "column": "factorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Factor.factorCode",
+              "column": "factorCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Factor.factorName",
+              "column": "factorName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            },
+            {
+              "attributeRef": "Factor.factorCategory",
+              "column": "factorCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 FactorCategory"
+            },
+            {
+              "attributeRef": "Factor.factorSubCategory",
+              "column": "factorSubCategory",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Factor.defaultDirection",
+              "column": "defaultDirection",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 FactorDirection"
+            },
+            {
+              "attributeRef": "Factor.measuredByIndicatorId",
+              "column": "measuredByIndicatorId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Indicator",
+              "fkTargetColumn": "indicatorId"
+            },
+            {
+              "attributeRef": "Factor.scopeId",
+              "column": "scopeId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "OntologyScope",
+              "fkTargetColumn": "scopeId"
+            },
+            {
+              "attributeRef": "Factor.mechanism",
+              "column": "mechanism",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Factor.proposedBy",
+              "column": "proposedBy",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 FactorProposer"
+            },
+            {
+              "attributeRef": "Factor.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-009",
+      "objectRef": "AST",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "断言",
+      "tableMappings": [
+        {
+          "tableName": "Assertion",
+          "tableRole": "MASTER",
+          "primaryKey": "assertionId",
+          "columnMappings": [
+            {
+              "attributeRef": "Assertion.assertionId",
+              "column": "assertionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Assertion.assertionType",
+              "column": "assertionType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 AssertionType"
+            },
+            {
+              "attributeRef": "Assertion.subjectType",
+              "column": "subjectType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ObjectTypeName"
+            },
+            {
+              "attributeRef": "Assertion.subjectId",
+              "column": "subjectId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.predicate",
+              "column": "predicate",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 AssertionPredicate"
+            },
+            {
+              "attributeRef": "Assertion.objectValue",
+              "column": "objectValue",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.objectUnitId",
+              "column": "objectUnitId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "UnitOfMeasure",
+              "fkTargetColumn": "unitId"
+            },
+            {
+              "attributeRef": "Assertion.rangeLow",
+              "column": "rangeLow",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.rangeHigh",
+              "column": "rangeHigh",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.targetPeriodId",
+              "column": "targetPeriodId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "Assertion.scopeId",
+              "column": "scopeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "OntologyScope",
+              "fkTargetColumn": "scopeId"
+            },
+            {
+              "attributeRef": "Assertion.assertedByType",
+              "column": "assertedByType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 AssertedByType"
+            },
+            {
+              "attributeRef": "Assertion.assertedById",
+              "column": "assertedById",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.assertedAt",
+              "column": "assertedAt",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.horizon",
+              "column": "horizon",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 Horizon"
+            },
+            {
+              "attributeRef": "Assertion.rationale",
+              "column": "rationale",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Assertion.stanceStrength",
+              "column": "stanceStrength",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 StanceStrength"
+            },
+            {
+              "attributeRef": "Assertion.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-010",
+      "objectRef": "LNK-PT",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "价格传导",
+      "tableMappings": [
+        {
+          "tableName": "PriceTransmissionLink",
+          "tableRole": "MASTER",
+          "primaryKey": "linkId",
+          "columnMappings": [
+            {
+              "attributeRef": "PriceTransmissionLink.linkId",
+              "column": "linkId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.fromSeriesId",
+              "column": "fromSeriesId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "IndicatorSeries",
+              "fkTargetColumn": "seriesId"
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.toSeriesId",
+              "column": "toSeriesId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "IndicatorSeries",
+              "fkTargetColumn": "seriesId"
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.transmissionType",
+              "column": "transmissionType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 TransmissionType"
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.elasticity",
+              "column": "elasticity",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.lagDays",
+              "column": "lagDays",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.samplePeriodId",
+              "column": "samplePeriodId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "PriceTransmissionLink.regimeNote",
+              "column": "regimeNote",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本包收紧为必填"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-011",
+      "objectRef": "OBJ-PUB-CM",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "形态规格",
+      "tableMappings": [
+        {
+          "tableName": "CommodityForm",
+          "tableRole": "MASTER",
+          "primaryKey": "formId",
+          "columnMappings": [
+            {
+              "attributeRef": "CommodityForm.formId",
+              "column": "formId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "CommodityForm.commodityId",
+              "column": "commodityId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CmdCommodity",
+              "fkTargetColumn": "commodityId"
+            },
+            {
+              "attributeRef": "CommodityForm.formType",
+              "column": "formType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 FormType"
+            },
+            {
+              "attributeRef": "CommodityForm.derivedFromFormId",
+              "column": "derivedFromFormId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "CommodityForm",
+              "fkTargetColumn": "formId"
+            },
+            {
+              "attributeRef": "CommodityForm.standardCode",
+              "column": "standardCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "CommodityForm.grade",
+              "column": "grade",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "同一 commodityId 下 formType+grade 唯一；默认空串"
+            },
+            {
+              "attributeRef": "CommodityForm.qualityParams",
+              "column": "qualityParams",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "JSON 字符串，键名受控"
+            },
+            {
+              "attributeRef": "CommodityForm.formName",
+              "column": "formName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列（展示用）"
+            },
+            {
+              "attributeRef": "CommodityForm.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认「有效」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-012",
+      "objectRef": "OBJ-PUB-MK",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "市场场所",
+      "tableMappings": [
+        {
+          "tableName": "MarketPlace",
+          "tableRole": "MASTER",
+          "primaryKey": "placeId",
+          "mappingNote": "需建部分唯一索引 (exchangeCode) WHERE marketType='FUTURES' AND exchangeCode IS NOT NULL（索引由 app/market.py 建）",
+          "columnMappings": [
+            {
+              "attributeRef": "MarketPlace.placeId",
+              "column": "placeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "MarketPlace.placeName",
+              "column": "placeName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列"
+            },
+            {
+              "attributeRef": "MarketPlace.marketType",
+              "column": "marketType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 MarketType"
+            },
+            {
+              "attributeRef": "MarketPlace.regionId",
+              "column": "regionId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "Region",
+              "fkTargetColumn": "regionId"
+            },
+            {
+              "attributeRef": "MarketPlace.operatorOrgId",
+              "column": "operatorOrgId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "Organization 表未建，本期留空，不伪造引用"
+            },
+            {
+              "attributeRef": "MarketPlace.exchangeCode",
+              "column": "exchangeCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "需建部分唯一索引 (exchangeCode) WHERE marketType='FUTURES' AND exchangeCode IS NOT NULL（索引由 app/market.py 建）"
+            },
+            {
+              "attributeRef": "MarketPlace.tradingHours",
+              "column": "tradingHours",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "MarketPlace.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认「有效」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-013",
+      "objectRef": "OBJ-PUB-ED",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "证据",
+      "tableMappings": [
+        {
+          "tableName": "Evidence",
+          "tableRole": "MASTER",
+          "primaryKey": "evidenceId",
+          "mappingNote": "(targetType, targetId, quoteHash) 唯一（索引由 app/market.py 建）",
+          "columnMappings": [
+            {
+              "attributeRef": "Evidence.evidenceId",
+              "column": "evidenceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "Evidence.targetType",
+              "column": "targetType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ObjectTypeName（本期用到 Assertion / ImpactLink）"
+            },
+            {
+              "attributeRef": "Evidence.targetId",
+              "column": "targetId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Evidence.documentId",
+              "column": "documentId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "SourceDoc",
+              "fkTargetColumn": "docId"
+            },
+            {
+              "attributeRef": "Evidence.segmentId",
+              "column": "segmentId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "本期留空，阶段 5 联调补"
+            },
+            {
+              "attributeRef": "Evidence.quote",
+              "column": "quote",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "长度 1—200"
+            },
+            {
+              "attributeRef": "Evidence.quoteHash",
+              "column": "quoteHash",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "sha1(quote) 小写十六进制；(targetType, targetId, quoteHash) 唯一（索引由 app/market.py 建）"
+            },
+            {
+              "attributeRef": "Evidence.pageNo",
+              "column": "pageNo",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Evidence.evidenceType",
+              "column": "evidenceType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 EvidenceType"
+            },
+            {
+              "attributeRef": "Evidence.strength",
+              "column": "strength",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "0—1"
+            },
+            {
+              "attributeRef": "Evidence.verifiedBy",
+              "column": "verifiedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "Evidence.verifiedAt",
+              "column": "verifiedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-014",
+      "objectRef": "LNK-IM",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "政策影响",
+      "tableMappings": [
+        {
+          "tableName": "ImpactLink",
+          "tableRole": "MASTER",
+          "primaryKey": "linkId",
+          "columnMappings": [
+            {
+              "attributeRef": "ImpactLink.linkId",
+              "column": "linkId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "ImpactLink.sourceType",
+              "column": "sourceType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ImpactSourceType（EVENT / POLICY）"
+            },
+            {
+              "attributeRef": "ImpactLink.sourceId",
+              "column": "sourceId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "ImpactLink.targetType",
+              "column": "targetType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ImpactTargetType；本包收紧为 COMMODITY / FACTOR，禁止 SERIES"
+            },
+            {
+              "attributeRef": "ImpactLink.targetId",
+              "column": "targetId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "ImpactLink.impactDirection",
+              "column": "impactDirection",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ImpactDirection"
+            },
+            {
+              "attributeRef": "ImpactLink.impactMagnitude",
+              "column": "impactMagnitude",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 ImpactMagnitude；仅 assertedByType=MARKET_PACK 可填"
+            },
+            {
+              "attributeRef": "ImpactLink.lagDays",
+              "column": "lagDays",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "ImpactLink.mechanism",
+              "column": "mechanism",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "ImpactLink.assertedByType",
+              "column": "assertedByType",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "枚举 AssertedByType"
+            },
+            {
+              "attributeRef": "ImpactLink.assertedById",
+              "column": "assertedById",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "ImpactLink.version",
+              "column": "version",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认 1"
+            },
+            {
+              "attributeRef": "ImpactLink.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认「有效」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-015",
+      "objectRef": "FAC-DRIVES",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "因子驱动",
+      "tableMappings": [
+        {
+          "tableName": "FactorDriveLink",
+          "tableRole": "MASTER",
+          "primaryKey": "factorId,seriesId",
+          "mappingNote": "复合主键 (factorId, seriesId)；elasticity 与 lagDays 至少一项非空",
+          "columnMappings": [
+            {
+              "attributeRef": "FactorDriveLink.factorId",
+              "column": "factorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true,
+              "isForeignKey": true,
+              "fkTargetTable": "Factor",
+              "fkTargetColumn": "factorId"
+            },
+            {
+              "attributeRef": "FactorDriveLink.seriesId",
+              "column": "seriesId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true,
+              "isForeignKey": true,
+              "fkTargetTable": "IndicatorSeries",
+              "fkTargetColumn": "seriesId"
+            },
+            {
+              "attributeRef": "FactorDriveLink.elasticity",
+              "column": "elasticity",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "FactorDriveLink.lagDays",
+              "column": "lagDays",
+              "columnType": "INTEGER",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "FactorDriveLink.samplePeriodId",
+              "column": "samplePeriodId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false,
+              "isForeignKey": true,
+              "fkTargetTable": "TimePeriod",
+              "fkTargetColumn": "periodId"
+            },
+            {
+              "attributeRef": "FactorDriveLink.version",
+              "column": "version",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认 1"
+            },
+            {
+              "attributeRef": "FactorDriveLink.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认「有效」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-MKT-016",
+      "objectRef": "EV-FACTOR",
+      "objectRole": "RELATION_ENTITY",
+      "objectName": "事件因子关联",
+      "tableMappings": [
+        {
+          "tableName": "EventFactorLink",
+          "tableRole": "MASTER",
+          "primaryKey": "eventId,factorId",
+          "mappingNote": "复合主键 (eventId, factorId)",
+          "columnMappings": [
+            {
+              "attributeRef": "EventFactorLink.eventId",
+              "column": "eventId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true,
+              "isForeignKey": true,
+              "fkTargetTable": "Event",
+              "fkTargetColumn": "eventId"
+            },
+            {
+              "attributeRef": "EventFactorLink.factorId",
+              "column": "factorId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": true,
+              "isForeignKey": true,
+              "fkTargetTable": "Factor",
+              "fkTargetColumn": "factorId"
+            },
+            {
+              "attributeRef": "EventFactorLink.version",
+              "column": "version",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认 1"
+            },
+            {
+              "attributeRef": "EventFactorLink.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "扩展列，默认「有效」"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-OPS-017",
+      "objectRef": "OPS-QUALITY",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "质量指标快照",
+      "tableMappings": [
+        {
+          "tableName": "OpsQualityMetric",
+          "tableRole": "MASTER",
+          "primaryKey": "metricId",
+          "columnMappings": [
+            {
+              "attributeRef": "OpsQualityMetric.metricId",
+              "column": "metricId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "OpsQualityMetric.metricCode",
+              "column": "metricCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.metricName",
+              "column": "metricName",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.metricValue",
+              "column": "metricValue",
+              "columnType": "REAL",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.unit",
+              "column": "unit",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.threshold",
+              "column": "threshold",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.direction",
+              "column": "direction",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "GTE 越大越好 / LTE 越小越好"
+            },
+            {
+              "attributeRef": "OpsQualityMetric.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "OK / WARN / BREACH"
+            },
+            {
+              "attributeRef": "OpsQualityMetric.measuredAt",
+              "column": "measuredAt",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsQualityMetric.detail",
+              "column": "detail",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-OPS-018",
+      "objectRef": "OPS-ALERT",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "运营告警",
+      "tableMappings": [
+        {
+          "tableName": "OpsAlert",
+          "tableRole": "MASTER",
+          "primaryKey": "alertId",
+          "columnMappings": [
+            {
+              "attributeRef": "OpsAlert.alertId",
+              "column": "alertId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "OpsAlert.alertCode",
+              "column": "alertCode",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.severity",
+              "column": "severity",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "P1 / P2 / P3"
+            },
+            {
+              "attributeRef": "OpsAlert.title",
+              "column": "title",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.detail",
+              "column": "detail",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.metricCode",
+              "column": "metricCode",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.metricValue",
+              "column": "metricValue",
+              "columnType": "REAL",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "OPEN / ACK / CLOSED"
+            },
+            {
+              "attributeRef": "OpsAlert.raisedAt",
+              "column": "raisedAt",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.ackedBy",
+              "column": "ackedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.ackedAt",
+              "column": "ackedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsAlert.closedAt",
+              "column": "closedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-OPS-019",
+      "objectRef": "OPS-EVOLUTION",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "演进申请",
+      "tableMappings": [
+        {
+          "tableName": "OpsEvolutionRequest",
+          "tableRole": "MASTER",
+          "primaryKey": "changeId",
+          "columnMappings": [
+            {
+              "attributeRef": "OpsEvolutionRequest.changeId",
+              "column": "changeId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.targetKind",
+              "column": "targetKind",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "SCOPE / RULE / ONTOLOGY_META"
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.targetId",
+              "column": "targetId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.changeType",
+              "column": "changeType",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "CREATE / UPDATE / ARCHIVE"
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.draftPayload",
+              "column": "draftPayload",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.previousPayload",
+              "column": "previousPayload",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "DRAFT / PENDING_REVIEW / APPROVED / REJECTED / PUBLISHED / ROLLED_BACK"
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.impactSummary",
+              "column": "impactSummary",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.submittedBy",
+              "column": "submittedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.submittedAt",
+              "column": "submittedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.reviewedBy",
+              "column": "reviewedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.reviewedAt",
+              "column": "reviewedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.reviewRemark",
+              "column": "reviewRemark",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.publishedAt",
+              "column": "publishedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRequest.releaseId",
+              "column": "releaseId",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-MAP-OPS-020",
+      "objectRef": "OPS-RELEASE",
+      "objectRole": "AGGREGATE_ROOT",
+      "objectName": "演进发布版本",
+      "tableMappings": [
+        {
+          "tableName": "OpsEvolutionRelease",
+          "tableRole": "MASTER",
+          "primaryKey": "releaseId",
+          "columnMappings": [
+            {
+              "attributeRef": "OpsEvolutionRelease.releaseId",
+              "column": "releaseId",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": true
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.versionNo",
+              "column": "versionNo",
+              "columnType": "INTEGER",
+              "nullable": false,
+              "unique": true,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.summary",
+              "column": "summary",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.changeIds",
+              "column": "changeIds",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.snapshot",
+              "column": "snapshot",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.publishedBy",
+              "column": "publishedBy",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.publishedAt",
+              "column": "publishedAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.status",
+              "column": "status",
+              "columnType": "TEXT",
+              "nullable": false,
+              "unique": false,
+              "isPrimaryKey": false,
+              "mappingNote": "ACTIVE / ROLLED_BACK"
+            },
+            {
+              "attributeRef": "OpsEvolutionRelease.rolledBackAt",
+              "column": "rolledBackAt",
+              "columnType": "TEXT",
+              "nullable": true,
+              "unique": false,
+              "isPrimaryKey": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

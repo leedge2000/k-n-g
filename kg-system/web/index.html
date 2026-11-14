@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta name="description" content="粮油产业多维知识图谱：政策、农业经济、行业年鉴与全球农业情报的统一检索、关系探索和来源回溯。">
+  <title>粮油产业多维知识图谱</title>
+  <style>
+    :root{--paper:#f4f3ec;--surface:#fffef9;--ink:#173c34;--muted:#68766d;--line:#dce1d6;--green:#1c5b48;--green2:#2e7660;--gold:#c28c32;--gold-soft:#f3e8ce;--red:#a34b3f;--blue:#426c79;--shadow:0 18px 45px rgba(27,54,43,.07);--serif:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,serif;--sans:"Avenir Next","Microsoft YaHei UI","PingFang SC",sans-serif}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:linear-gradient(rgba(28,91,72,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,91,72,.05) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
+    .shell{position:relative;display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:30px 20px 24px;background:#edece3;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:5}.brand{display:flex;align-items:center;gap:12px;padding:0 8px 28px}.brand-mark{width:42px;height:42px;border:1px solid var(--green);border-radius:50%;display:grid;place-items:center;position:relative}.brand-mark:before,.brand-mark:after{content:"";position:absolute;width:18px;height:25px;border:1.5px solid var(--green);border-radius:100% 0 100% 0;transform:rotate(-30deg)}.brand-mark:after{transform:rotate(60deg);width:14px;height:21px}.brand strong{display:block;font-family:var(--serif);font-size:17px;letter-spacing:.08em}.brand small{display:block;margin-top:4px;color:var(--muted);font-size:10px;letter-spacing:.18em;text-transform:uppercase}.nav-label{padding:12px 12px 8px;color:#899087;font-size:10px;letter-spacing:.18em}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#5b6b62;padding:12px 13px;border-radius:8px;text-align:left;display:flex;align-items:center;gap:11px;transition:.2s}.nav button:hover{background:rgba(255,255,255,.55);color:var(--ink)}.nav button.active{background:var(--green);color:#fff;box-shadow:0 8px 20px rgba(28,91,72,.18)}.nav svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6}.sidebar-foot{margin-top:auto;border-top:1px solid var(--line);padding:18px 8px 0}.user{display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--gold-soft);color:#77591e;font-family:var(--serif);font-size:16px}.user-meta{min-width:0;flex:1}.user-meta b,.user-meta span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.user-meta span{font-size:11px;color:var(--muted);margin-top:2px}.text-btn{border:0;background:none;color:var(--muted);padding:5px}.text-btn:hover{color:var(--green)}
+    .main{min-width:0}.topbar{height:78px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(28,91,72,.1);background:rgba(244,243,236,.84);backdrop-filter:blur(14px);position:sticky;top:0;z-index:4}.breadcrumb{font-size:12px;color:var(--muted);letter-spacing:.05em}.breadcrumb b{color:var(--ink);font-weight:500}.live{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.live:before{content:"";width:7px;height:7px;border-radius:50%;background:#5b9870;box-shadow:0 0 0 4px rgba(91,152,112,.13)}.content{padding:34px 36px 50px;max-width:1700px;margin:auto}.view{display:none;animation:enter .35s ease both}.view.active{display:block}@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:26px}.eyebrow{font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}.page-head h1{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:.05em;margin:0 0 8px}.page-head p{margin:0;color:var(--muted);line-height:1.8}.head-actions{display:flex;gap:8px;flex-shrink:0}.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 16px;border-radius:7px;transition:.2s}.btn:hover{border-color:var(--green);transform:translateY(-1px)}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn.gold{background:var(--gold-soft);border-color:#e8d5aa;color:#70521b}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.stat{background:var(--surface);border:1px solid var(--line);padding:20px 22px;position:relative;overflow:hidden}.stat:first-child{border-radius:12px 2px 2px 12px}.stat:last-child{border-radius:2px 12px 12px 2px}.stat:after{content:"";position:absolute;right:-16px;bottom:-22px;width:70px;height:70px;border:1px solid var(--line);border-radius:50%}.stat-label{color:var(--muted);font-size:12px}.stat-value{font-family:var(--serif);font-size:31px;margin:9px 0 3px;font-variant-numeric:tabular-nums}.stat-note{font-size:10px;color:#8b928b;letter-spacing:.04em}
+    .explorer{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;min-height:610px}.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}.graph-panel{display:flex;flex-direction:column;min-width:0}.panel-tools{min-height:60px;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;flex-wrap:wrap}.panel-tools .spacer{flex:1}.chip{border:1px solid var(--line);background:#f8f8f2;color:var(--muted);border-radius:20px;padding:7px 12px;font-size:11px}.chip:hover,.chip.active{border-color:var(--green);color:var(--green);background:#edf4ee}.graph-wrap{position:relative;flex:1;min-height:520px;background:radial-gradient(circle at 50% 44%,#fff 0,#fafaf4 58%,#f2f3ea 100%)}#graph-canvas{display:block;width:100%;height:100%;min-height:520px}.graph-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);pointer-events:none}.graph-legend{position:absolute;left:16px;bottom:14px;background:rgba(255,254,249,.9);border:1px solid var(--line);border-radius:7px;padding:9px 11px;display:flex;gap:13px;font-size:10px;color:var(--muted);backdrop-filter:blur(6px)}.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}.graph-node{cursor:pointer;transition:opacity .2s}.graph-node circle{stroke:#fff;stroke-width:2;filter:drop-shadow(0 2px 4px rgba(23,60,52,.16));transition:.2s}.graph-node:hover circle{stroke:var(--gold);stroke-width:3}.graph-node text{font-family:var(--sans);font-size:10px;fill:var(--ink);paint-order:stroke;stroke:#fffef9;stroke-width:3px;stroke-linejoin:round;pointer-events:none}.graph-edge{stroke:#a9b7aa;stroke-width:1;opacity:.55}.graph-edge.business{stroke:var(--gold);stroke-width:1.8;opacity:.85}.edge-label{font-size:8px;fill:#8a783f;paint-order:stroke;stroke:#fffef9;stroke-width:2px}.detail-panel{padding:22px;overflow:auto;max-height:680px}.detail-kicker{font-size:10px;color:var(--gold);letter-spacing:.16em;margin-bottom:10px}.detail-panel h2{font-family:var(--serif);font-size:22px;line-height:1.5;margin:0 0 12px}.badge{display:inline-flex;align-items:center;border-radius:4px;background:#e9f2e9;color:#356442;padding:4px 8px;font-size:10px}.meta-grid{display:grid;grid-template-columns:90px 1fr;gap:10px 8px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:18px 0;font-size:12px}.meta-grid dt{color:var(--muted)}.meta-grid dd{margin:0;word-break:break-word}.section-title{font-size:12px;font-weight:600;margin:20px 0 10px;display:flex;align-items:center;gap:8px}.section-title:before{content:"";width:3px;height:13px;background:var(--gold)}.evidence{background:#f4f1e5;border-left:3px solid var(--gold);padding:14px;margin-top:10px}.evidence-title{font-family:var(--serif);font-size:13px;line-height:1.5;margin-bottom:8px}.evidence-text{font-family:var(--serif);font-size:13px;line-height:1.9;color:#4d584f}.evidence-meta{font-size:10px;color:var(--muted);margin-top:10px}.evidence a{color:var(--green);text-underline-offset:3px}.relation-list{display:grid;gap:7px}.relation-item{font-size:11px;padding:9px;background:#f7f8f2;border-radius:5px;color:#526259}.empty-note{color:var(--muted);font-size:12px;line-height:1.8;padding:12px 0}
+    .search-bar{display:grid;grid-template-columns:minmax(220px,1fr) 210px 150px auto;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px}.field{position:relative}.field input,.field select{width:100%;height:42px;border:1px solid var(--line);background:#fafaf5;border-radius:6px;padding:0 12px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(28,91,72,.08)}.results-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}.facets{padding:20px}.facet-group{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}.facet-group:last-child{border:0}.facet-title{font-size:11px;color:var(--muted);margin-bottom:12px}.facet-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:12px}.facet-row span:last-child{color:var(--gold);font-variant-numeric:tabular-nums}.results-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.result-item{display:grid;grid-template-columns:94px minmax(0,1fr) 80px;gap:16px;padding:20px;border-bottom:1px solid var(--line);cursor:pointer;transition:.2s}.result-item:last-child{border:0}.result-item:hover{background:#f7f8f1}.type-label{font-size:11px;color:var(--green);padding-top:4px}.result-title{font-family:var(--serif);font-size:16px;margin:0 0 8px}.result-path{font-size:11px;color:var(--muted);line-height:1.6}.result-id{font-family:monospace;font-size:11px;color:#899087;text-align:right}.result-score{margin-top:7px;color:var(--gold);font-size:10px}
+    .taxonomy-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px}.tree-panel{padding:14px;max-height:700px;overflow:auto}.tree-root{width:100%;border:0;background:none;text-align:left;padding:11px;border-radius:6px;color:var(--ink)}.tree-root:hover,.tree-root.active{background:#eaf1e9;color:var(--green)}.tree-root small{display:block;color:var(--muted);margin-top:4px}.category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:16px}.category-card{border:1px solid var(--line);background:#fafaf5;padding:15px;border-radius:7px;min-height:120px;cursor:pointer}.category-card:hover{border-color:var(--green);background:#f3f7ef}.category-card b{font-family:var(--serif);font-weight:600}.category-card code{display:block;color:var(--gold);font-size:10px;margin:8px 0}.category-card p{font-size:11px;color:var(--muted);line-height:1.7;margin:0}.governance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.rule-card{padding:20px;border-top:3px solid var(--green)}.rule-card h3{font-family:var(--serif);margin:0 0 9px}.rule-card p{color:var(--muted);font-size:12px;line-height:1.8;margin:0}.quality-table{width:100%;border-collapse:collapse}.quality-table th,.quality-table td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);font-size:12px}.quality-table th{color:var(--muted);font-weight:500;background:#f7f7f0}.issue-tag{font-size:10px;padding:4px 7px;border-radius:4px;background:#f4e8df;color:var(--red)}.issue-tag.duplicate{background:var(--gold-soft);color:#77591e}
+    .entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;padding:22px}.entry-grid .full{grid-column:1/-1}.entry-grid label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.entry-grid input,.entry-grid select,.entry-grid textarea{width:100%;height:40px;border:1px solid var(--line);background:#fafaf5;border-radius:6px;padding:0 11px;color:var(--ink);outline:none}.entry-grid textarea{min-height:86px;height:auto;padding:10px 11px;line-height:1.7;resize:vertical}.entry-grid input:focus,.entry-grid select:focus,.entry-grid textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(28,91,72,.08)}.form-actions{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding-top:14px;border-top:1px dashed var(--line);flex-wrap:wrap}.hint{font-size:11px;color:var(--muted);line-height:1.7}.hint code{background:#f2f1e6;padding:1px 5px;border-radius:3px}.nav-scroll{overflow:auto;flex:1;padding-bottom:8px}.nav-scroll::-webkit-scrollbar{width:6px}.nav-scroll::-webkit-scrollbar-thumb{background:#d3d6cb;border-radius:3px}.guide{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px;background:#f8f8f1;border-bottom:1px solid var(--line)}.guide div{font-size:12px;color:var(--muted);line-height:1.7}.guide b{display:block;color:var(--ink);font-family:var(--serif);margin-bottom:4px;font-size:13px}.report-list{display:grid;gap:6px;padding:12px}.report-list button{border:1px solid transparent;background:none;text-align:left;padding:11px 12px;border-radius:7px;color:#5b6b62}.report-list button:hover{background:#f4f6ee;color:var(--ink)}.report-list button.active{background:var(--green);color:#fff}.report-list small{display:block;font-size:10px;color:inherit;opacity:.65;margin-top:3px}.preview-seg{border-left:2px solid var(--gold);padding:8px 12px;background:#f8f6ec;font-size:12px;line-height:1.8;color:#4d584f;margin-bottom:8px}
+    .nav a.nav-entry{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:8px;color:#5b6b62;text-decoration:none;font-size:14px;transition:.2s}.nav a.nav-entry:hover{background:rgba(255,255,255,.55);color:var(--ink)}.nav a.nav-entry svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6}
+    .toast{position:fixed;right:28px;bottom:28px;background:var(--ink);color:#fff;padding:13px 18px;border-radius:8px;box-shadow:var(--shadow);z-index:30;opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s;max-width:420px}.toast.show{opacity:1;transform:none}.toast.error{background:var(--red)}.login{position:fixed;inset:0;z-index:20;background:rgba(237,236,227,.96);display:grid;place-items:center;padding:20px}.login.hidden{display:none}.login-card{width:min(900px,100%);min-height:540px;background:var(--surface);border:1px solid var(--line);box-shadow:0 30px 80px rgba(23,60,52,.12);display:grid;grid-template-columns:1.1fr 1fr;border-radius:16px;overflow:hidden}.login-art{position:relative;padding:54px;background:var(--green);color:#f7f3e5;overflow:hidden}.login-art:before,.login-art:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.17);border-radius:50%;width:400px;height:400px;right:-180px;bottom:-120px}.login-art:after{width:280px;height:280px;right:-90px;bottom:-60px}.login-art h1{font-family:var(--serif);font-size:37px;line-height:1.45;letter-spacing:.08em;margin:80px 0 20px;position:relative}.login-art p{line-height:1.9;color:#cfddd3;max-width:320px;position:relative}.login-seal{font-size:10px;letter-spacing:.25em;color:#d9bc7b}.login-form{padding:54px 44px;display:flex;flex-direction:column;justify-content:center}.login-form h2{font-family:var(--serif);font-size:25px;margin:0 0 8px}.login-form>p{color:var(--muted);margin:0 0 30px}.login-form label{display:block;font-size:11px;color:var(--muted);margin:16px 0 7px}.login-form input{width:100%;height:44px;border:1px solid var(--line);border-radius:6px;background:#fafaf5;padding:0 12px;outline:none}.login-form input:focus{border-color:var(--green)}.login-form .btn{margin-top:26px;height:44px}.login-hint{font-size:10px;color:#92988f;line-height:1.7;margin-top:18px}.mobile-menu{display:none}
+    @media(max-width:1100px){.explorer{grid-template-columns:1fr}.detail-panel{max-height:none}.stats{grid-template-columns:repeat(2,1fr)}.stat:first-child,.stat:last-child{border-radius:8px}.search-bar{grid-template-columns:1fr 1fr}.category-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.shell{grid-template-columns:1fr}.sidebar{position:fixed;left:-250px;width:232px;transition:.25s}.sidebar.open{left:0}.mobile-menu{display:block;background:none;border:0;color:var(--ink);font-size:20px}.topbar{padding:0 18px;height:64px}.breadcrumb{margin-left:10px;margin-right:auto}.content{padding:24px 16px}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:25px}.stats{grid-template-columns:1fr 1fr;gap:8px}.stat{padding:15px}.stat-value{font-size:25px}.search-bar{grid-template-columns:1fr}.results-layout,.taxonomy-layout{grid-template-columns:1fr}.facets{display:none}.result-item{grid-template-columns:70px minmax(0,1fr)}.result-id{display:none}.category-grid{grid-template-columns:1fr}.governance-grid{grid-template-columns:1fr}.login-card{grid-template-columns:1fr}.login-art{display:none}.login-form{padding:36px 28px}.graph-legend{max-width:90%;flex-wrap:wrap}.live{font-size:0}.live:after{content:"在线";font-size:11px}}
+  </style>
+</head>
+<body>
+  <div class="login" id="login-screen">
+    <div class="login-card">
+      <section class="login-art">
+        <div class="login-seal">GRAIN & OIL KNOWLEDGE ATLAS</div>
+        <h1>让每一条粮油知识<br>都有关系，也有来处。</h1>
+        <p>连接政策法规、农业经济、行业年鉴与全球农业情报，以统一三轴体系支撑产业研判。</p>
+      </section>
+      <form class="login-form" id="login-form">
+        <h2>进入知识图谱</h2>
+        <p>使用系统账号完成身份认证</p>
+        <label for="username">账号</label>
+        <input id="username" name="username" autocomplete="username" value="admin" required>
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button class="btn primary" type="submit">登录系统</button>
+        <div class="login-hint">本地初始管理员：admin / admin123。生产部署时请通过环境变量更换默认账号与密钥。</div>
+      </form>
+    </div>
+  </div>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><div class="brand-mark"></div><div><strong>粮油知识图谱</strong><small>Knowledge Atlas</small></div></div>
+      <div class="nav-scroll">
+      <div class="nav-label">知识工作台</div>
+      <nav class="nav">
+        <button class="active" data-view="explorer"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8.5 10.5 7-3M8.5 13.5l7 3"/></svg>图谱探索</button>
+        <button data-view="search"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>知识检索</button>
+        <button data-view="semantic"><svg viewBox="0 0 24 24"><path d="M5 4h9l4 4v12H5z"/><path d="M8 11h7M8 15h5"/><circle cx="17.5" cy="17.5" r="3"/><path d="m20 20 2 2"/></svg>语义检索</button>
+        <button data-view="taxonomy"><svg viewBox="0 0 24 24"><path d="M4 5h6v5H4zM14 14h6v5h-6zM4 14h6v5H4zM10 7h4v10h0M7 10v4M17 10v4"/></svg>分类体系</button>
+        <button data-view="ontology"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg>本体模型</button>
+        <button data-view="governance"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v5c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/><path d="m8 12 2.5 2.5L16 9"/></svg>质量治理</button>
+      </nav>
+      <div class="nav-label">市场研判</div>
+      <nav class="nav">
+        <a class="nav-entry" href="/market.html"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="m5 16 4-6 3 3 5-8"/><path d="M17 5h2v2"/></svg>市场行情</a>
+        <a class="nav-entry" href="/ops.html"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="18" r="2"/></svg>运营工作台</a>
+      </nav>
+      <div class="nav-label">知识采集</div>
+      <nav class="nav">
+        <button data-view="crawl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>采集源管理</button>
+        <button data-view="upload"><svg viewBox="0 0 24 24"><path d="M4 4h9l4 4v12H4z"/><path d="M12 10v6M9 13l3-3 3 3"/></svg>文档上传抽取</button>
+      </nav>
+      <div class="nav-label">知识录入</div>
+      <nav class="nav">
+        <button data-view="policy"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>政策法规</button>
+        <button data-view="ivd"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-5 3 3 4-6"/></svg>指标数据</button>
+        <button data-view="yearbook"><svg viewBox="0 0 24 24"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/></svg>年鉴记录</button>
+        <button data-view="intel"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>农业情报</button>
+        <button data-view="relation"><svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8 16 16 8"/></svg>知识关系</button>
+        <button data-view="master"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="3"/></svg>主数据登记</button>
+      </nav>
+      <div class="nav-label">审核与报表</div>
+      <nav class="nav">
+        <button data-view="review"><svg viewBox="0 0 24 24"><path d="M9 4h9a2 2 0 0 1 2 2v14H9z"/><path d="M4 7v13h5M6 3v8h5"/></svg>审核工作台</button>
+        <button data-view="reports"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-9"/></svg>报表中心</button>
+      </nav>
+      </div>
+      <div class="sidebar-foot">
+        <div class="user"><div class="avatar" id="avatar">知</div><div class="user-meta"><b id="user-name">未登录</b><span id="user-role">—</span></div><button class="text-btn" id="logout" title="退出登录">退出</button></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><button class="mobile-menu" id="mobile-menu">☰</button><div class="breadcrumb">粮油产业 / <b id="current-view">图谱探索</b></div><div class="live" id="health-label">知识服务运行中</div></header>
+      <div class="content">
+        <section class="view active" id="view-explorer">
+          <div class="page-head"><div><div class="eyebrow">MULTIDIMENSIONAL KNOWLEDGE GRAPH</div><h1>粮油产业多维知识图谱</h1><p>从真实业务实体出发，沿产业关系探索知识，并逐层回溯原始证据。</p></div><div class="head-actions"><button class="btn" id="refresh-graph">刷新图谱</button></div></div>
+          <div class="stats">
+            <div class="stat"><div class="stat-label">业务实体</div><div class="stat-value" id="stat-entities">—</div><div class="stat-note">主数据与四类知识实体</div></div>
+            <div class="stat"><div class="stat-label">已发布关系</div><div class="stat-value" id="stat-relations">—</div><div class="stat-note">经审核的知识三元组</div></div>
+            <div class="stat"><div class="stat-label">来源文档</div><div class="stat-value" id="stat-documents">—</div><div class="stat-note">段落级来源定位</div></div>
+            <div class="stat"><div class="stat-label">知识分类</div><div class="stat-value" id="stat-categories">—</div><div class="stat-note">完整四级分类树</div></div>
+          </div>
+          <div class="explorer">
+            <div class="panel graph-panel">
+              <div class="panel-tools"><button class="chip active" data-root="品种:CMD0001">稻谷产业关系</button><button class="chip" data-root="政策法规:POL0001">最低收购价政策</button><button class="chip" data-root="指标数据:IVD0002">全国稻谷产量</button><div class="spacer"></div><select id="graph-depth" class="chip" aria-label="展开层级"><option value="1">一跳关系</option><option value="2" selected>两跳关系</option><option value="3">三跳关系</option></select></div>
+              <div class="graph-wrap"><svg id="graph-canvas" role="img" aria-label="真实粮油业务知识关系图" viewBox="0 0 1000 580"></svg><div class="graph-empty" id="graph-empty">正在装载业务图谱…</div><div class="graph-legend"><span><i class="legend-dot" style="background:#1c5b48"></i>品种/产品</span><span><i class="legend-dot" style="background:#426c79"></i>指标知识</span><span><i class="legend-dot" style="background:#c28c32"></i>政策/地区</span><span><i class="legend-dot" style="background:#87927f"></i>分类/来源</span></div></div>
+            </div>
+            <aside class="panel detail-panel" id="entity-detail"><div class="detail-kicker">ENTITY INSPECTOR</div><h2>选择一个图谱节点</h2><p class="empty-note">点击节点查看实体属性、关联关系和来源段落。图谱中的金色连线代表已发布知识三元组。</p></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-search">
+          <div class="page-head"><div><div class="eyebrow">KNOWLEDGE DISCOVERY</div><h1>统一知识检索</h1><p>跨四类已发布知识检索，分类编码自动展开全部后代节点。</p></div></div>
+          <form class="search-bar" id="search-form"><div class="field"><input id="search-keyword" placeholder="输入品种、政策、指标或实体编号" value="稻谷" maxlength="100"></div><div class="field"><select id="search-category"><option value="">全部知识分类</option><option value="AE-02">粮食生产经济（含后代）</option><option value="AE-09">重庆市粮油经济（含后代）</option><option value="PL">政策法规</option><option value="YB">行业年鉴</option><option value="GI">全球农业情报</option></select></div><div class="field"><select id="search-stage"><option value="">全部产业环节</option><option>生产</option><option>收储</option><option>加工</option><option>物流</option><option>贸易</option><option>消费</option></select></div><button class="btn primary" type="submit">检索知识</button></form>
+          <div class="results-layout"><aside class="panel facets" id="facets"><div class="empty-note">检索后展示分类、产业环节与要素维度分面。</div></aside><div class="panel"><div class="results-head"><span id="result-count">—</span><span>仅显示已发布知识</span></div><div id="search-results"></div></div></div>
+        </section>
+
+        <section class="view" id="view-semantic">
+          <div class="page-head"><div><div class="eyebrow">SEMANTIC RETRIEVAL</div><h1>文档语义检索</h1><p>面向政策文件、研究报告与情报原文的向量＋关键词混合召回，段落级引用可直接回溯原文。</p></div><div class="head-actions"><button class="btn" id="toggle-rag-config">模型配置</button><button class="btn" id="rebuild-rag">重建索引</button></div></div>
+          <form class="search-bar" id="semantic-form"><div class="field"><input id="semantic-query" placeholder="例如：玉米深加工补贴政策有哪些变化" maxlength="200" required></div><div class="field"><select id="semantic-mode"><option value="mix">全景检索（图谱＋向量）</option><option value="hybrid">混合检索（实体＋关系＋向量）</option><option value="local">实体聚焦（local）</option><option value="global">关系全局（global）</option><option value="naive">向量语义（naive）</option></select></div><div class="field"><select id="semantic-topk"><option value="10">返回 10 条</option><option value="20">返回 20 条</option><option value="30">返回 30 条</option></select></div><button class="btn primary" type="submit">语义检索</button></form>
+          <div class="panel" id="semantic-keywords" style="margin-bottom:16px;display:none"></div>
+          <div class="panel" style="margin-bottom:16px"><div class="results-head"><span id="rag-status">索引状态加载中…</span><span>段落级召回 · 可回溯原文</span></div></div>
+          <div class="panel" id="rag-config-panel" style="margin-bottom:16px;display:none">
+            <div style="padding:18px 20px">
+              <div class="section-title" style="margin-top:0">模型配置 · 向量后端与归纳模型</div>
+              <form class="entry-grid" id="rag-config-form">
+                <div><label for="rag-backend">向量后端</label><select id="rag-backend"><option value="hash">hash（离线，无需密钥）</option><option value="openai">OpenAI 兼容 /embeddings</option></select></div>
+                <div><label for="rag-embed-base">向量接口地址</label><input id="rag-embed-base" placeholder="https://api.openai.com/v1"></div>
+                <div><label for="rag-embed-model">向量模型</label><input id="rag-embed-model" placeholder="text-embedding-3-small"></div>
+                <div><label for="rag-embed-key">向量 API Key</label><input id="rag-embed-key" type="password" autocomplete="new-password" placeholder="留空则沿用已保存值"></div>
+                <div><label for="rag-llm-base">归纳模型地址</label><input id="rag-llm-base" placeholder="https://api.openai.com/v1"></div>
+                <div><label for="rag-llm-model">归纳模型</label><input id="rag-llm-model" placeholder="gpt-4o-mini"></div>
+                <div><label for="rag-llm-key">归纳模型 Key</label><input id="rag-llm-key" type="password" autocomplete="new-password" placeholder="留空则沿用已保存值"></div>
+                <div><label for="rag-rerank">结果重排</label><select id="rag-rerank"><option value="lexical">lexical（本地覆盖度，默认）</option><option value="llm">llm（模型重排，成本高）</option><option value="none">关闭</option></select></div>
+                <div><label for="rag-entity-extract">段落实体抽取</label><select id="rag-entity-extract"><option value="false">关闭（仅主数据词典）</option><option value="true">LLM 抽取（成本高，需归纳模型）</option></select></div>
+                <div style="display:flex;align-items:flex-end;gap:10px"><button class="btn primary" type="submit">保存并重建索引</button><span id="rag-config-note" style="color:var(--muted);font-size:11px;line-height:1.6"></span></div>
+              </form>
+            </div>
+          </div>
+          <div class="panel" id="semantic-answer-panel" style="margin-bottom:16px;display:none"></div>
+          <div class="panel"><div class="results-head"><span id="semantic-count">—</span><span>按相关度排序</span></div><div id="semantic-results"></div></div>
+        </section>
+
+        <section class="view" id="view-taxonomy">
+          <div class="page-head"><div><div class="eyebrow">THREE-AXIS TAXONOMY</div><h1>三轴知识分类体系</h1><p>280 个分类节点，贯通知识大类、产业环节与要素维度。</p></div><div class="head-actions"><button class="btn" id="load-taxonomy">重新载入</button></div></div>
+          <div class="taxonomy-layout"><div class="panel tree-panel" id="taxonomy-roots"></div><div class="panel"><div class="results-head"><span id="taxonomy-count">分类节点</span><span>点击卡片检索该分类</span></div><div class="category-grid" id="category-grid"></div></div></div>
+        </section>
+
+        <section class="view" id="view-ontology">
+          <div class="page-head"><div><div class="eyebrow">OPERATIONAL ONTOLOGY</div><h1>操作本体模型</h1><p>Palantir 式操作本体：对象类型、属性、关系类型与动作类型由业务映射自动编译，实例仍读写原业务表。</p></div><div class="head-actions"><button class="btn" id="refresh-ontology">重新编译</button></div></div>
+          <div class="stats">
+            <div class="stat"><div class="stat-label">对象类型</div><div class="stat-value" id="onto-object-types">—</div><div class="stat-note" id="onto-instances">聚合根与明细对象</div></div>
+            <div class="stat"><div class="stat-label">属性</div><div class="stat-value" id="onto-properties">—</div><div class="stat-note">类型化属性与系统审计列</div></div>
+            <div class="stat"><div class="stat-label">关系类型</div><div class="stat-value" id="onto-link-types">—</div><div class="stat-note">外键承载的一对多 / 多对一</div></div>
+            <div class="stat"><div class="stat-label">动作类型</div><div class="stat-value" id="onto-action-types">—</div><div class="stat-note">受控写入口与审批要求</div></div>
+          </div>
+          <div class="explorer">
+            <div class="panel graph-panel">
+              <div class="panel-tools"><input id="ontology-filter" class="chip" style="min-width:200px;padding:8px 12px;outline:none" placeholder="筛选对象类型 / 领域"><div class="spacer"></div><button class="chip active" data-onto-role="ALL">全部</button><button class="chip" data-onto-role="AGGREGATE_ROOT">聚合根</button><button class="chip" data-onto-role="DETAIL">明细</button></div>
+              <div class="graph-wrap"><svg id="ontology-canvas" role="img" aria-label="操作本体对象类型与关系类型" viewBox="0 0 1000 580" style="display:block;width:100%;height:100%;min-height:520px"></svg><div class="graph-empty" id="ontology-empty">正在编译本体…</div><div class="graph-legend"><span><i class="legend-dot" style="background:#1c5b48"></i>聚合根对象</span><span><i class="legend-dot" style="background:#87927f"></i>明细对象</span><span><i class="legend-dot" style="background:#c28c32"></i>当前选中</span></div></div>
+            </div>
+            <aside class="panel detail-panel" id="ontology-detail"><div class="detail-kicker">OBJECT TYPE INSPECTOR</div><h2>选择一个对象类型</h2><p class="empty-note">点击左侧节点查看对象属性、关系类型与可执行动作。注册表由 seed/mapping.json 编译，不复制业务数据。</p></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-upload">
+          <div class="page-head"><div><div class="eyebrow">DOCUMENT INGESTION</div><h1>文档上传抽取</h1><p>上传 Excel、Word、PDF、TXT、Markdown 或 CSV 原始文档，登记为来源文档并切分为可回溯段落，再据此派生知识。</p></div><div class="head-actions"><button class="btn" id="download-template">下载 Excel 模板</button></div></div>
+          <div class="panel">
+            <div class="guide"><div><b>① 登记来源</b>上传原始文档，记录标题、发文机构与分类，系统计算校验和去重。</div><div><b>② 段落切分</b>按标题层级与篇幅切分正文段落，供知识条目精确定位。</div><div><b>③ 派生知识</b>Excel 自动识别表头抽取四类知识；其他文档进入录入页手工登记并绑定段落。</div></div>
+            <form id="upload-form" class="entry-grid">
+              <div><label for="upload-file">文档文件（.xlsx / .xlsm / .docx / .pdf / .txt / .md / .csv，≤20MB）</label><input type="file" id="upload-file" accept=".xlsx,.xlsm,.docx,.pdf,.txt,.md,.csv" required></div>
+              <div><label for="upload-title">文档标题（留空取文件名）</label><input id="upload-title" placeholder="例如：2024 年粮油产业统计年报"></div>
+              <div><label for="upload-doctype">文档类型</label><select id="upload-doctype"><option value="">按扩展名自动识别</option><option>政策文件</option><option>年鉴</option><option>统计报表</option><option>研究报告</option><option>新闻资讯</option><option>监测数据</option></select></div>
+              <div><label for="upload-issuer">发文/发布机构</label><input id="upload-issuer" placeholder="例如：国家粮食和物资储备局"></div>
+              <div><label for="upload-date">发布日期</label><input type="date" id="upload-date"></div>
+              <div><label for="upload-url">原始链接</label><input id="upload-url" placeholder="https://"></div>
+              <div class="full"><label for="upload-category">知识分类</label><select id="upload-category"><option value="">不指定分类</option></select></div>
+              <label class="full hint" style="display:flex;align-items:center;gap:8px;margin:0"><input type="checkbox" id="upload-publish" style="width:auto"> Excel 抽取的知识直接发布（取消则保存为草稿，进入审核工作台）</label>
+              <div class="form-actions"><button class="btn primary" type="submit" id="upload-submit">上传并抽取</button><span class="hint">文档段落生成后可用于政策法规、指标数据、年鉴记录、农业情报与知识关系的来源回溯。</span></div>
+            </form>
+            <div id="upload-result" style="padding:0 22px 22px"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-crawl">
+          <div class="page-head"><div><div class="eyebrow">SOURCE CRAWLING</div><h1>采集源管理</h1><p>维护政策网站、行业媒体、监测机构等采集源，控制启停、间隔与重试，并查看采集执行记录。</p></div><div class="head-actions"><button class="btn" id="refresh-crawl">刷新</button></div></div>
+          <div class="panel"><div class="results-head"><span id="crawl-count">采集源</span><span>启停切换与手动采集</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>名称</th><th>类型</th><th>内容分类</th><th>采集模式</th><th>最小间隔</th><th>状态</th><th>最近运行</th><th>操作</th></tr></thead><tbody id="crawl-rows"></tbody></table></div></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>新建采集源</span><span>FUNC-11 采集源登记</span></div>
+            <form id="crawl-form" class="entry-grid">
+              <div><label for="crawl-name">采集源名称 *</label><input id="crawl-name" required placeholder="例如：国家粮食和物资储备局"></div>
+              <div><label for="crawl-url">采集地址 *</label><input id="crawl-url" required placeholder="https://www.lswz.gov.cn"></div>
+              <div><label for="crawl-type">来源类型 *</label><select id="crawl-type"><option>政府网站</option><option>行业媒体</option><option>监测机构</option><option>交易所</option><option>国际组织</option><option>企业官网</option></select></div>
+              <div><label for="crawl-content">内容分类 *</label><select id="crawl-content"><option>政策法规</option><option>市场行情</option><option>农业情报</option><option>年鉴数据</option><option>统计指标</option></select></div>
+              <div><label for="crawl-mode">采集模式</label><select id="crawl-mode"><option>手动</option><option>定时</option></select></div>
+              <div><label for="crawl-interval">最小采集间隔（分钟）</label><input type="number" id="crawl-interval" value="60" min="1"></div>
+              <div><label for="crawl-retry">最大重试次数</label><input type="number" id="crawl-retry" value="3" min="0"></div>
+              <div><label for="crawl-category">知识分类 *</label><select id="crawl-category"><option value="">请选择知识分类</option></select></div>
+              <div class="form-actions"><button class="btn primary" type="submit">保存采集源</button><span class="hint">采集源启用后由调度器按最小间隔执行，也可在列表中手动触发。</span></div>
+            </form>
+          </div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>采集执行记录</span><span id="crawl-run-count">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>执行编号</th><th>采集源</th><th>开始时间</th><th>结束时间</th><th>状态</th><th>新增文档</th><th>重复</th><th>错误信息</th></tr></thead><tbody id="crawl-runs"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-policy">
+          <div class="page-head"><div><div class="eyebrow">POLICY REGISTRATION</div><h1>政策法规登记</h1><p>登记政策主体信息、适用地区与产业环节，并绑定来源文档段落形成可回溯证据链。</p></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>来源文档与段落为必填，保存后进入草稿</span></div><form class="entry-grid" data-knowledge="政策法规"></form></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>最近登记</span><span id="count-policy">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="list-policy"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-ivd">
+          <div class="page-head"><div><div class="eyebrow">INDICATOR DATA</div><h1>指标数据登记</h1><p>按指标定义、地区、品种与统计期间登记指标值，保留来源段落与质量标识。</p></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>需要先在主数据中登记指标定义与地区</span></div><form class="entry-grid" data-knowledge="指标数据"></form></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>最近登记</span><span id="count-ivd">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="list-ivd"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-yearbook">
+          <div class="page-head"><div><div class="eyebrow">YEARBOOK RECORD</div><h1>年鉴记录登记</h1><p>登记年鉴名称、版次、统计年份与表格口径，保留可追溯的年鉴来源。</p></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>指标、地区、来源段落均为必填</span></div><form class="entry-grid" data-knowledge="年鉴记录"></form></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>最近登记</span><span id="count-yearbook">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="list-yearbook"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-intel">
+          <div class="page-head"><div><div class="eyebrow">AGRICULTURAL INTELLIGENCE</div><h1>农业情报登记</h1><p>登记全球农业情报的标题、类型、发布机构与可信度，沉淀关键要点。</p></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>可信度为必填，影响后续审核通过判断</span></div><form class="entry-grid" data-knowledge="农业情报"></form></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>最近登记</span><span id="count-intel">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="list-intel"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-relation">
+          <div class="page-head"><div><div class="eyebrow">KNOWLEDGE RELATION</div><h1>知识关系登记</h1><p>登记真实业务实体之间的关系三元组，置信度低于 0.6 的关系不得发布。</p></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>关系两端实体必须已存在</span></div><form class="entry-grid" data-knowledge="知识关系"></form></div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span>最近登记</span><span id="count-relation">—</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>标题</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="list-relation"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-master">
+          <div class="page-head"><div><div class="eyebrow">MASTER DATA</div><h1>主数据登记</h1><p>维护品种、产品、地区、企业、本体概念与指标定义，为知识登记与关系构建提供统一编码。</p></div><div class="head-actions"><button class="btn" id="refresh-master">刷新</button></div></div>
+          <div class="panel"><div class="results-head"><span>登记表单</span><span>主数据保存后立即生效</span></div>
+            <div style="padding:16px 22px 0"><select id="master-type" class="chip" style="height:36px;padding:0 12px"><option>品种</option><option>产品</option><option>地区</option><option>企业</option><option>本体概念</option><option>指标定义</option></select></div>
+            <form id="master-form" class="entry-grid" data-master="品种"></form>
+          </div>
+          <div class="panel" style="margin-top:18px"><div class="results-head"><span id="master-count">现有主数据</span><span>按类型查看</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>编号</th><th>名称</th><th>状态</th></tr></thead><tbody id="master-rows"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-review">
+          <div class="page-head"><div><div class="eyebrow">REVIEW WORKBENCH</div><h1>审核工作台</h1><p>集中处理草稿提交、待审核通过与退回，所有动作写入变更日志。</p></div><div class="head-actions"><button class="btn" id="refresh-review">刷新</button></div></div>
+          <form class="search-bar" id="review-filter" style="grid-template-columns:200px 200px minmax(180px,1fr) auto">
+            <div class="field"><select id="review-status"><option>待审核</option><option>草稿</option><option>已退回</option><option>已发布</option></select></div>
+            <div class="field"><select id="review-type"><option value="">全部知识类型</option><option>政策法规</option><option>指标数据</option><option>年鉴记录</option><option>农业情报</option><option>知识关系</option></select></div>
+            <div class="field"><input id="review-keyword" placeholder="按标题或编号筛选"></div>
+            <button class="btn primary" type="submit">查询</button>
+          </form>
+          <div class="panel"><div class="results-head"><span id="review-count">—</span><span>通过需 ROLE-03 审核员或管理员</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>类型</th><th>标题</th><th>编号</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="review-rows"></tbody></table></div></div>
+        </section>
+
+        <section class="view" id="view-reports">
+          <div class="page-head"><div><div class="eyebrow">STATISTICS & REPORTS</div><h1>报表中心</h1><p>需求 Q-01 至 Q-07 的统计报表，覆盖知识总览、来源覆盖、审核时效、质量治理、采集任务、增量变更与分类分布。</p></div></div>
+          <div class="taxonomy-layout" style="grid-template-columns:280px minmax(0,1fr)">
+            <div class="panel"><div class="report-list" id="report-list"></div></div>
+            <div class="panel"><div class="results-head"><span id="report-title">请选择报表</span><span id="report-time"></span></div><div id="report-body" style="padding:18px"><p class="empty-note">从左侧选择报表查看统计结果。</p></div></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-governance">
+          <div class="page-head"><div><div class="eyebrow">KNOWLEDGE QUALITY</div><h1>知识质量治理</h1><p>识别重复知识与统计值冲突，保留完整处置记录和融合轨迹。</p></div><div class="head-actions"><button class="btn gold" id="detect-quality">运行质量检测</button></div></div>
+          <div class="governance-grid"><div class="panel rule-card"><h3>重复检测</h3><p>按指标、地区、品种、期间类型和统计期间识别同一业务事实的重复登记。</p></div><div class="panel rule-card"><h3>冲突标识</h3><p>同一统计键出现不同数值或单位时形成冲突记录，不自动覆盖原始数据。</p></div><div class="panel rule-card"><h3>实体融合</h3><p>融合后保留源实体状态，改挂结构引用和知识关系，并写入增量变更日志。</p></div></div>
+          <div class="panel"><div class="results-head"><span id="quality-count">治理记录</span><span>管理员权限</span></div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>问题</th><th>主实体</th><th>对照实体</th><th>冲突字段</th><th>处置状态</th></tr></thead><tbody id="quality-records"></tbody></table></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const state={token:localStorage.getItem('kg_token')||'',role:localStorage.getItem('kg_role')||'',user:localStorage.getItem('kg_user')||'',root:['品种','CMD0001'],graph:null,taxonomy:[],view:'explorer'};
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const roleNames={'ROLE-01':'知识管理员','ROLE-02':'数据录入员','ROLE-03':'审核员','ROLE-04':'分析师'};
+    const colors={'品种':'#1c5b48','产品':'#2e7660','指标数据':'#426c79','指标定义':'#65858c','年鉴记录':'#5c7b84','农业情报':'#52777c','政策法规':'#c28c32','地区':'#b79551','来源文档':'#87927f','知识分类':'#a2aa98','本体概念':'#8b6f55','知识关系':'#9b7442'};
+    function toast(message,error=false){const el=$('#toast');el.textContent=message;el.className='toast show'+(error?' error':'');clearTimeout(el.timer);el.timer=setTimeout(()=>el.className='toast',3200)}
+    async function api(path,options={}){const response=await fetch(path,{...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(state.token?{Authorization:`Bearer ${state.token}`} : {}),...(options.headers||{})}});if(response.status===401){logout();throw new Error('登录已失效，请重新登录')}if(!response.ok){let detail=`请求失败 (${response.status})`;try{detail=(await response.json()).detail||detail}catch{}throw new Error(detail)}return response.json()}
+    function logout(){state.token='';localStorage.removeItem('kg_token');$('#login-screen').classList.remove('hidden')}
+    function docFileUrl(docId){const base=`/api/sources/${encodeURIComponent(docId)}/file`;return state.token?`${base}?token=${encodeURIComponent(state.token)}`:base}
+    function openDoc(docId){if(!docId)return;window.open(docFileUrl(docId),'_blank','noopener');toast('正在打开原文档，若未保存原件将提示无法访问')}
+    async function bootstrap(){if(!state.token)return;try{await api('/api/kg/stats');$('#login-screen').classList.add('hidden');$('#user-name').textContent=state.user||'系统用户';$('#user-role').textContent=roleNames[state.role]||state.role;$('#avatar').textContent=(state.user||'知').slice(0,1).toUpperCase();await Promise.all([loadStats(),loadGraph(),loadTaxonomy()]);const deep=readEntityLink();if(deep){switchView('explorer');await showDetail(deep.type,deep.id);}}catch(e){toast(e.message,true)}}
+    function readEntityLink(){try{const params=new URLSearchParams(location.search||'');const type=(params.get('entityType')||'').trim();const id=(params.get('entityId')||'').trim();if(!type||!id)return null;if(!Object.keys(colors).includes(type))return null;return {type,id}}catch(e){return null}}
+    let detailSeq=0;
+    async function loadStats(){const s=await api('/api/kg/stats');for(const key of ['entities','relations','documents','categories']){$(`#stat-${key}`).textContent=s[key].toLocaleString('zh-CN')}}
+    async function loadGraph(){const [type,id]=state.root;$('#graph-empty').textContent='正在装载业务图谱…';$('#graph-empty').style.display='grid';try{state.graph=await api(`/api/kg/graph/expand?entityType=${encodeURIComponent(type)}&entityId=${encodeURIComponent(id)}&depth=${$('#graph-depth').value}`);renderGraph();showDetail(type,id)}catch(e){$('#graph-empty').textContent=e.message;toast(e.message,true)}}
+    function renderGraph(){const svg=$('#graph-canvas'),data=state.graph;if(!data||!data.nodes.length){$('#graph-empty').style.display='grid';return}$('#graph-empty').style.display='none';const W=1000,H=580,cx=480,cy=285,root=state.root[1],levels=new Map([[root,0]]);for(let pass=0;pass<3;pass++){for(const e of data.edges){if(levels.has(e.source)&&!levels.has(e.target))levels.set(e.target,levels.get(e.source)+1);if(levels.has(e.target)&&!levels.has(e.source))levels.set(e.source,levels.get(e.target)+1)}}const groups={};for(const n of data.nodes){const d=Math.min(levels.get(n.id)??2,3);(groups[d]??=[]).push(n)}const pos={};for(const [depth,nodes] of Object.entries(groups)){const d=Number(depth);if(d===0){pos[nodes[0].id]=[cx,cy];continue}const radius=d===1?175:d===2?265:325;nodes.forEach((n,i)=>{const angle=-Math.PI/2+(i/nodes.length)*Math.PI*2+(d%2?.18:0);const squash=d===3?.72:1;pos[n.id]=[cx+Math.cos(angle)*radius,cy+Math.sin(angle)*radius*squash]})}let html='<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#a9b7aa"/></marker></defs>';for(const e of data.edges){const a=pos[e.source],b=pos[e.target];if(!a||!b)continue;html+=`<line class="graph-edge ${e.kind==='知识三元组'?'business':''}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" marker-end="url(#arrow)"><title>${esc(e.predicate)} · ${esc(e.kind)}</title></line>`;if(e.kind==='知识三元组'){html+=`<text class="edge-label" x="${(a[0]+b[0])/2}" y="${(a[1]+b[1])/2-4}" text-anchor="middle">${esc(e.predicate)}</text>`}}for(const n of data.nodes){const p=pos[n.id];if(!p)continue;const isRoot=n.id===root,r=isRoot?24:n.entityType==='指标数据'?14:12;const label=n.label.length>16?n.label.slice(0,15)+'…':n.label;html+=`<g class="graph-node" data-type="${esc(n.entityType)}" data-id="${esc(n.id)}" transform="translate(${p[0]},${p[1]})"><circle r="${r}" fill="${colors[n.entityType]||'#87927f'}"/><text y="${r+15}" text-anchor="middle">${esc(label)}</text><title>${esc(n.entityType)} / ${esc(n.id)}\n${esc(n.label)}</title></g>`}svg.innerHTML=html;$$('.graph-node').forEach(el=>el.addEventListener('click',()=>showDetail(el.dataset.type,el.dataset.id)))}
+    async function showDetail(type,id){const panel=$('#entity-detail');panel.innerHTML='<div class="detail-kicker">ENTITY INSPECTOR</div><p class="empty-note">正在读取实体与来源证据…</p>';const seq=++detailSeq;try{const d=await api(`/api/kg/entities/${encodeURIComponent(type)}/${encodeURIComponent(id)}`);if(seq!==detailSeq)return;const ignored=new Set(['createdBy','createdAt','updatedBy','updatedAt']);const props=Object.entries(d.properties).filter(([k,v])=>v!==null&&v!==''&&!ignored.has(k)).slice(0,10);const sources=d.sources.map(s=>`<div class="evidence"><div class="evidence-title"><a href="${docFileUrl(s.sourceDocId)}" target="_blank" rel="noopener" style="color:var(--ink);border-bottom:1px dashed var(--gold)" title="打开原文档">${esc(s.docTitle)}</a></div><div class="evidence-text">${esc(s.segmentText)}</div><div class="evidence-meta">${esc(s.chapterPath||'正文')} · 第 ${esc(s.pageNo||'—')} 页 · 字符 ${esc(s.charStart)}–${esc(s.charEnd)}<br><a href="${docFileUrl(s.sourceDocId)}" target="_blank" rel="noopener">打开原文档 ↗</a>${s.sourceUrl?` · <a href="${esc(s.sourceUrl)}" target="_blank" rel="noopener noreferrer">打开原始来源 ↗</a>`:''}</div></div>`).join('');const relations=d.relations.slice(0,8).map(r=>`<div class="relation-item">${esc(r.sourceEntityId)} <b>${esc(r.predicate)}</b> ${esc(r.targetEntityId)}</div>`).join('');const marketLink=(()=>{let url='';if(type==='品种'||type==='产品')url=`market.html?commodity=${encodeURIComponent(d.properties.commodityId||d.properties.productId||id)}`;else if(type==='指标数据')url=`market.html?indicator=${encodeURIComponent(d.properties.indicatorId||id)}`;else if(type==='政策法规')url=`market.html?policy=${encodeURIComponent(d.properties.policyId||id)}`;if(!url)return '';return `<a class="text-btn" href="${url}" target="_self" style="text-decoration:none;margin-left:8px">查看市场行情 →</a>`})();panel.innerHTML=`<div class="detail-kicker">${esc(d.entityType)} / ${esc(d.entityId)}</div><h2>${esc(d.title)}</h2><span class="badge">${esc(d.status||'有效')}</span>${marketLink}<dl class="meta-grid">${props.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(typeof v==='object'?JSON.stringify(v):v)}</dd>`).join('')}</dl><div class="section-title">来源证据</div>${sources||'<p class="empty-note">该主数据节点无直接文档证据，可通过相邻知识节点继续回溯。</p>'}<div class="section-title">一跳关系 · ${d.relations.length}</div><div class="relation-list">${relations||'<p class="empty-note">暂无可展示关系</p>'}</div>`}catch(e){if(seq===detailSeq)panel.innerHTML=`<p class="empty-note">${esc(e.message)}</p>`}}
+    async function runSearch(event){event?.preventDefault();const params=new URLSearchParams({pageSize:'100'});const keyword=$('#search-keyword').value.trim(),category=$('#search-category').value,stage=$('#search-stage').value;if(keyword)params.set('keyword',keyword);if(category)params.set('categoryCode',category);if(stage)params.set('industryStage',stage);try{const data=await api('/api/kg/search?'+params);$('#result-count').textContent=`共 ${data.total} 条知识`;$('#search-results').innerHTML=data.items.length?data.items.map(i=>`<article class="result-item" data-type="${esc(i.entityType)}" data-id="${esc(i.entityId)}"><div class="type-label">${esc(i.entityType)}</div><div><h3 class="result-title">${esc(i.title)}</h3><div class="result-path">${esc(i.categoryPath||i.knowledgeType)}${i.period?` · ${esc(i.period)}`:''}</div></div><div class="result-id">${esc(i.entityId)}<div class="result-score">相关度 ${esc(i.score)}</div></div></article>`).join(''):'<p class="empty-note" style="padding:24px">没有找到符合筛选条件的已发布知识。</p>';$$('.result-item').forEach(el=>el.addEventListener('click',()=>{switchView('explorer');showDetail(el.dataset.type,el.dataset.id)}));renderFacets(data.facets)}catch(e){toast(e.message,true)}}
+    function renderFacets(facets){const labels={category:'知识分类',industryStage:'产业环节',factorDimension:'要素维度'};$('#facets').innerHTML=Object.entries(labels).map(([key,label])=>`<div class="facet-group"><div class="facet-title">${label}</div>${facets[key].slice(0,10).map(f=>`<div class="facet-row"><span>${esc(f.label)}</span><span>${f.count}</span></div>`).join('')||'<div class="empty-note">暂无数据</div>'}</div>`).join('')}
+    async function loadTaxonomy(){try{const data=await api('/api/kg/taxonomy?pageSize=400');state.taxonomy=data.items;const roots=data.items.filter(i=>i.level===1);$('#taxonomy-roots').innerHTML=roots.map(r=>`<button class="tree-root" data-root="${esc(r.rootCategory)}"><b>${esc(r.categoryName)}</b><small>${data.items.filter(i=>i.rootCategory===r.rootCategory).length} 个分类节点 · ${esc(r.industryStage)}</small></button>`).join('');$$('.tree-root').forEach(el=>el.addEventListener('click',()=>{$$('.tree-root').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderCategories(el.dataset.root)}));if(roots[0]){$('.tree-root').classList.add('active');renderCategories(roots[0].rootCategory)}}catch(e){toast(e.message,true)}}
+    function renderCategories(root){const items=state.taxonomy.filter(i=>i.rootCategory===root);$('#taxonomy-count').textContent=`${root} · ${items.length} 个节点`;$('#category-grid').innerHTML=items.map(i=>`<article class="category-card" data-code="${esc(i.categoryCode)}"><b>${esc(i.categoryName)}</b><code>${esc(i.categoryCode)} · L${i.level}</code><p>${esc(i.definition)}</p></article>`).join('');$$('.category-card').forEach(el=>el.addEventListener('click',()=>{const code=el.dataset.code,select=$('#search-category'),item=state.taxonomy.find(i=>i.categoryCode===code);if(![...select.options].some(option=>option.value===code))select.add(new Option(`${item.categoryName}（含后代）`,code));select.value=code;$('#search-keyword').value='';switchView('search')}))}
+    async function loadQuality(){if(state.role!=='ROLE-01'){$('#quality-records').innerHTML='<tr><td colspan="5" class="empty-note">质量治理记录仅知识管理员可见。</td></tr>';$('#detect-quality').disabled=true;return}try{const data=await api('/api/governance/records');$('#quality-count').textContent=`${data.total} 条治理记录`;$('#quality-records').innerHTML=data.items.length?data.items.map(i=>`<tr><td><span class="issue-tag ${i.issueType==='重复'?'duplicate':''}">${esc(i.issueType)}</span></td><td>${esc(i.primaryEntityId)}</td><td>${esc(i.duplicateEntityId||'—')}</td><td>${esc(i.conflictField||'—')}</td><td>${esc(i.handleStatus)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty-note">暂无治理记录，可运行质量检测。</td></tr>'}catch(e){toast(e.message,true)}}
+    function fillImportCategories(){const select=$('#import-category');if(!select)return;const current=select.value;const roots=[...new Set(state.taxonomy.map(i=>i.rootCategory))];select.innerHTML='<option value="">自动归属到根分类</option>'+roots.map(root=>`<optgroup label="${esc(root)}">`+state.taxonomy.filter(i=>i.rootCategory===root).map(i=>`<option value="${esc(i.categoryId)}">${esc(i.categoryName)}（${esc(i.categoryCode)}）</option>`).join('')+'</optgroup>').join('');if(current&&[...select.options].some(o=>o.value===current))select.value=current}
+    function renderImportResult(data){const rows=data.extracted.map(i=>`<tr><td><span class="type-label">${esc(i.entityType)}</span></td><td>${esc(i.label)}</td><td>${esc(i.sheet)} · 第${esc(i.rowNo)}行</td><td><span class="badge">${esc(i.status)}</span></td><td><button class="text-btn import-view" data-type="${esc(i.entityType)}" data-id="${esc(i.entityId)}">查看</button></td></tr>`).join('');const warnings=data.warnings.length?`<div class="section-title">跳过与提示 · ${data.warnings.length}</div><ul class="import-warnings">${data.warnings.slice(0,30).map(w=>`<li>${esc(w)}</li>`).join('')}</ul>`:'';$('#import-result').innerHTML=`<div class="results-head"><span>来源文档 ${esc(data.docId)} · ${esc(data.title)}</span><span>${data.sheetCount} 个工作表 / ${data.segmentCount} 条段落 / 抽取 ${data.imported} 条知识</span></div>`+(rows?`<div style="overflow:auto"><table class="quality-table"><thead><tr><th>知识类型</th><th>名称</th><th>来源位置</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="empty-note">未识别到可抽取的知识行，请参照模板调整表头或工作表名称。</p>')+warnings;$$('.import-view').forEach(el=>el.addEventListener('click',()=>{switchView('explorer');showDetail(el.dataset.type,el.dataset.id)}))}
+    async function runExcelImport(event){event.preventDefault();const file=$('#import-file').files[0];if(!file)return toast('请选择 Excel 文件',true);const form=new FormData();form.append('file',file);const category=$('#import-category').value;if(category)form.append('knowledgeCategoryId',category);form.append('autoPublish',$('#import-publish').checked?'true':'false');const button=$('#import-submit');button.disabled=true;$('#import-result').innerHTML='<p class="empty-note">正在解析工作簿并抽取知识…</p>';try{const response=await fetch('/api/sources/excel',{method:'POST',headers:state.token?{Authorization:`Bearer ${state.token}`}:{},body:form});if(response.status===401){logout();throw new Error('登录已失效，请重新登录')}const data=await response.json();if(!response.ok)throw new Error(data.detail||`导入失败 (${response.status})`);renderImportResult(data);toast(`导入完成：${data.imported} 条知识`);loadStats()}catch(e){$('#import-result').innerHTML=`<p class="empty-note">${esc(e.message)}</p>`;toast(e.message,true)}finally{button.disabled=false}}
+    async function downloadTemplate(){try{const response=await fetch('/api/sources/excel/template',{headers:state.token?{Authorization:`Bearer ${state.token}`}:{}});if(!response.ok)throw new Error('模板下载失败');const blob=await response.blob();const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='粮油知识导入模板.xlsx';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);toast('模板已开始下载')}catch(e){toast(e.message,true)}}
+    function switchView(name){state.view=name;$$('.view').forEach(v=>v.classList.toggle('active',v.id===`view-${name}`));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const titles={explorer:'图谱探索',search:'知识检索',taxonomy:'分类体系',import:'知识导入',governance:'质量治理'};$('#current-view').textContent=titles[name];$('#sidebar').classList.remove('open');if(name==='search')runSearch();if(name==='governance')loadQuality();if(name==='import')fillImportCategories()}
+    $('#login-form').addEventListener('submit',async e=>{e.preventDefault();const button=e.target.querySelector('button');button.disabled=true;try{const body=new URLSearchParams({username:$('#username').value,password:$('#password').value});const response=await fetch('/api/auth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});if(!response.ok)throw new Error('账号或密码错误');const data=await response.json();state.token=data.access_token;state.role=data.role;state.user=$('#username').value;localStorage.setItem('kg_token',state.token);localStorage.setItem('kg_role',state.role);localStorage.setItem('kg_user',state.user);await bootstrap();toast('身份认证成功')}catch(err){toast(err.message,true)}finally{button.disabled=false}});
+    $('#logout').addEventListener('click',logout);$$('.nav button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));$$('[data-root]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('chip')){$$('[data-root].chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.root=b.dataset.root.split(':');loadGraph()}}));$('#graph-depth').addEventListener('change',loadGraph);$('#refresh-graph').addEventListener('click',loadGraph);$('#search-form').addEventListener('submit',runSearch);$('#load-taxonomy').addEventListener('click',loadTaxonomy);$('#detect-quality').addEventListener('click',async()=>{try{const r=await api('/api/governance/detect',{method:'POST'});toast(`检测完成：新增 ${r.duplicates} 条重复、${r.conflicts} 条冲突记录`);loadQuality()}catch(e){toast(e.message,true)}});$('#mobile-menu').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));bootstrap();
+  </script>
+  <script>
+    (() => {
+      const STAGES = ['生产','收储','加工','物流','贸易','消费'];
+      const ENTITY_TYPES = ['品种','产品','地区','企业','本体概念','指标定义','政策法规','指标数据','年鉴记录','农业情报'];
+      const LOOKUP_TYPES = ['品种','产品','地区','企业','本体概念','指标定义','来源文档'];
+      const CACHE = {lookups:{}};
+      const VIEW_TITLES = {explorer:'图谱探索',search:'知识检索',semantic:'语义检索',taxonomy:'分类体系',ontology:'本体模型',governance:'质量治理',crawl:'采集源管理',upload:'文档上传抽取',policy:'政策法规登记',ivd:'指标数据登记',yearbook:'年鉴记录登记',intel:'农业情报登记',relation:'知识关系登记',master:'主数据登记',review:'审核工作台',reports:'报表中心'};
+
+      async function ensureTaxonomy(){ if(state.taxonomy && state.taxonomy.length) return; await loadTaxonomy(); }
+      async function ensureLookups(){
+        const missing = LOOKUP_TYPES.filter(t => !CACHE.lookups[t]);
+        if(!missing.length) return;
+        await Promise.all(missing.map(async t => {
+          try{ const d = await api(`/api/entities/${encodeURIComponent(t)}?limit=1000`); CACHE.lookups[t] = d.items || []; }
+          catch(e){ CACHE.lookups[t] = []; }
+        }));
+      }
+      function catGroups(){
+        const roots = [...new Set(state.taxonomy.map(i => i.rootCategory))];
+        return roots.map(root => `<optgroup label="${esc(root)}">` + state.taxonomy.filter(i => i.rootCategory === root)
+          .map(i => `<option value="${esc(i.categoryId)}">${esc(i.categoryName)}（${esc(i.categoryCode)}）</option>`).join('') + '</optgroup>').join('');
+      }
+      function lookupOptions(type){
+        const items = CACHE.lookups[type] || [];
+        return `<option value="">请选择${type}</option>` + items.map(i => `<option value="${esc(i.entityId)}">${esc(i.title)}（${esc(i.entityId)}）</option>`).join('');
+      }
+      function fieldHtml(f){
+        let c = ''; const req = f.r ? ' required' : '';
+        if(f.t === 'select') c = `<select name="${f.n}"${req}>${(f.o||[]).map(o => `<option${o === f.d ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+        else if(f.t === 'category') c = `<select name="${f.n}"${req}><option value="">请选择知识分类</option>${catGroups()}</select>`;
+        else if(f.t === 'lookup') c = `<select name="${f.n}"${req}>${lookupOptions(f.lk)}</select>`;
+        else if(f.t === 'doc') c = `<select name="${f.n}"${req}>${lookupOptions('来源文档')}</select>`;
+        else if(f.t === 'segment') c = `<select name="${f.n}"${req}><option value="">请先选择来源文档</option></select>`;
+        else if(f.t === 'dynamic') c = `<select name="${f.n}"${req}><option value="">请选择类型后加载</option></select>`;
+        else if(f.t === 'textarea') c = `<textarea name="${f.n}"${req} placeholder="${esc(f.ph||'')}"></textarea>`;
+        else{
+          const attrs = [`type="${f.t}"`, `name="${f.n}"`];
+          if(f.r) attrs.push('required');
+          if(f.d !== undefined) attrs.push(`value="${esc(f.d)}"`);
+          if(f.ph) attrs.push(`placeholder="${esc(f.ph)}"`);
+          ['step','min','max'].forEach(k => { if(f[k] !== undefined) attrs.push(`${k}="${f[k]}"`); });
+          c = `<input ${attrs.join(' ')}>`;
+        }
+        return `<div class="${f.full ? 'full' : ''}"><label>${esc(f.l)}${f.r ? ' *' : ''}</label>${c}</div>`;
+      }
+
+      const F = {
+        '政策法规':[
+          {n:'policyTitle',l:'政策标题',t:'text',r:1,full:1,ph:'例如：关于做好2024年秋粮收购工作的通知'},
+          {n:'docNumber',l:'文号',t:'text',ph:'国粮粮〔2024〕1号'},
+          {n:'policyLevel',l:'政策层级',t:'select',r:1,o:['国家级','省级','市级','区县级']},
+          {n:'issuer',l:'发布机构',t:'text',r:1},
+          {n:'policyStatus',l:'政策状态',t:'select',r:1,o:['现行有效','已废止','已修订'],d:'现行有效'},
+          {n:'effectiveDate',l:'生效日期',t:'date'},
+          {n:'expireDate',l:'失效日期',t:'date'},
+          {n:'regionId',l:'适用地区',t:'lookup',lk:'地区',r:1},
+          {n:'industryStage',l:'产业环节',t:'select',r:1,o:STAGES},
+          {n:'knowledgeCategoryId',l:'知识分类',t:'category',r:1},
+          {n:'sourceDocId',l:'来源文档',t:'doc',r:1},
+          {n:'segmentId',l:'来源段落',t:'segment',r:1},
+          {n:'factorDimensions',l:'要素维度',t:'text',ph:'价格 / 补贴 / 储备'},
+          {n:'summary',l:'政策摘要',t:'textarea',full:1}
+        ],
+        '指标数据':[
+          {n:'indicatorId',l:'指标定义',t:'lookup',lk:'指标定义',r:1},
+          {n:'regionId',l:'地区',t:'lookup',lk:'地区',r:1},
+          {n:'commodityId',l:'品种',t:'lookup',lk:'品种'},
+          {n:'periodType',l:'期间类型',t:'select',r:1,o:['年度','季度','月度'],d:'年度'},
+          {n:'period',l:'统计期间',t:'text',r:1,ph:'2024 / 2024Q3 / 2024-09'},
+          {n:'value',l:'数值',t:'number',r:1,step:'any'},
+          {n:'unit',l:'单位',t:'text',ph:'万吨 / 元/吨'},
+          {n:'qualityFlag',l:'质量标识',t:'select',r:1,o:['待核验','已核验','存疑'],d:'待核验'},
+          {n:'industryStage',l:'产业环节',t:'select',r:1,o:STAGES},
+          {n:'knowledgeCategoryId',l:'知识分类',t:'category',r:1},
+          {n:'sourceDocId',l:'来源文档',t:'doc',r:1},
+          {n:'segmentId',l:'来源段落',t:'segment',r:1},
+          {n:'remark',l:'备注',t:'textarea',full:1}
+        ],
+        '年鉴记录':[
+          {n:'yearbookName',l:'年鉴名称',t:'text',r:1,ph:'中国粮食年鉴'},
+          {n:'edition',l:'版次',t:'text',ph:'2024 版'},
+          {n:'statYear',l:'统计年份',t:'number',r:1,min:'1900',max:'2100'},
+          {n:'tableName',l:'表格名称',t:'text'},
+          {n:'indicatorId',l:'指标定义',t:'lookup',lk:'指标定义',r:1},
+          {n:'regionId',l:'地区',t:'lookup',lk:'地区',r:1},
+          {n:'commodityId',l:'品种',t:'lookup',lk:'品种'},
+          {n:'value',l:'数值',t:'number',r:1,step:'any'},
+          {n:'unit',l:'单位',t:'text'},
+          {n:'industryStage',l:'产业环节',t:'select',o:STAGES},
+          {n:'knowledgeCategoryId',l:'知识分类',t:'category',r:1},
+          {n:'sourceDocId',l:'来源文档',t:'doc',r:1},
+          {n:'segmentId',l:'来源段落',t:'segment',r:1},
+          {n:'caliberNote',l:'口径说明',t:'textarea',full:1}
+        ],
+        '农业情报':[
+          {n:'intelTitle',l:'情报标题',t:'text',r:1,full:1},
+          {n:'intelType',l:'情报类型',t:'select',r:1,o:['市场动态','价格行情','供需信息','政策动态','灾害预警','贸易动态','研究报告']},
+          {n:'regionId',l:'地区',t:'lookup',lk:'地区'},
+          {n:'commodityId',l:'品种',t:'lookup',lk:'品种'},
+          {n:'publishOrg',l:'发布机构',t:'text'},
+          {n:'publishDate',l:'发布日期',t:'date'},
+          {n:'credibility',l:'可信度',t:'select',r:1,o:['高','中','低'],d:'中'},
+          {n:'industryStage',l:'产业环节',t:'select',r:1,o:STAGES},
+          {n:'knowledgeCategoryId',l:'知识分类',t:'category',r:1},
+          {n:'sourceDocId',l:'来源文档',t:'doc',r:1},
+          {n:'segmentId',l:'来源段落',t:'segment',r:1},
+          {n:'factorDimensions',l:'要素维度',t:'text'},
+          {n:'keyPoints',l:'关键要点',t:'textarea',full:1}
+        ],
+        '知识关系':[
+          {n:'subjectEntityType',l:'主体实体类型',t:'select',r:1,o:ENTITY_TYPES,d:'品种'},
+          {n:'subjectEntityId',l:'主体实体',t:'dynamic',r:1},
+          {n:'predicate',l:'关系谓词',t:'text',r:1,ph:'属于 / 影响 / 来源于 / 适用于'},
+          {n:'objectEntityType',l:'客体实体类型',t:'select',r:1,o:ENTITY_TYPES,d:'地区'},
+          {n:'objectEntityId',l:'客体实体',t:'dynamic',r:1},
+          {n:'confidence',l:'置信度（0~1）',t:'number',r:1,d:'0.8',step:'0.05',min:'0',max:'1'},
+          {n:'extractedBy',l:'抽取方式',t:'text',r:1,d:'人工登记'},
+          {n:'sourceDocId',l:'来源文档',t:'doc',r:1},
+          {n:'segmentId',l:'来源段落',t:'segment',r:1},
+          {n:'validFrom',l:'生效日期',t:'date'},
+          {n:'validTo',l:'失效日期',t:'date'}
+        ]
+      };
+      const MF = {
+        '品种':[
+          {n:'commodityCode',l:'品种编码',t:'text',r:1,ph:'SOY'},
+          {n:'commodityName',l:'品种名称',t:'text',r:1,ph:'大豆'},
+          {n:'commodityCategory',l:'品种类别',t:'select',r:1,o:['粮食','油料','油品','饲料','其他']},
+          {n:'scientificName',l:'学名',t:'text'},
+          {n:'parentCommodityId',l:'上级品种',t:'lookup',lk:'品种'},
+          {n:'description',l:'说明',t:'textarea',full:1}
+        ],
+        '产品':[
+          {n:'productCode',l:'产品编码',t:'text'},
+          {n:'productName',l:'产品名称',t:'text',r:1},
+          {n:'commodityId',l:'所属品种',t:'lookup',lk:'品种',r:1},
+          {n:'productCategory',l:'产品类别',t:'select',r:1,o:['原粮','成品粮','食用油','饲料','深加工产品']},
+          {n:'grade',l:'等级',t:'text'},
+          {n:'standardCode',l:'标准号',t:'text'},
+          {n:'enterpriseId',l:'生产企业',t:'lookup',lk:'企业'},
+          {n:'description',l:'说明',t:'textarea',full:1}
+        ],
+        '地区':[
+          {n:'regionCode',l:'地区编码',t:'text',r:1,ph:'CN-500000'},
+          {n:'regionName',l:'地区名称',t:'text',r:1,ph:'重庆市'},
+          {n:'regionLevel',l:'地区层级',t:'select',r:1,o:['国家','省级','市级','区县级']},
+          {n:'parentRegionId',l:'上级地区',t:'lookup',lk:'地区'},
+          {n:'adminCode',l:'行政区划代码',t:'text'},
+          {n:'faoRegion',l:'FAO 区域',t:'text'}
+        ],
+        '企业':[
+          {n:'enterpriseCode',l:'企业编码',t:'text',r:1},
+          {n:'enterpriseName',l:'企业名称',t:'text',r:1},
+          {n:'creditCode',l:'统一社会信用代码',t:'text',r:1},
+          {n:'enterpriseType',l:'企业类型',t:'select',r:1,o:['生产企业','加工企业','贸易企业','储备企业','物流企业','合作社']},
+          {n:'regionId',l:'所在地区',t:'lookup',lk:'地区',r:1},
+          {n:'scale',l:'企业规模',t:'select',o:['大型','中型','小型','微型']},
+          {n:'legalPerson',l:'法人代表',t:'text'},
+          {n:'address',l:'地址',t:'text',full:1}
+        ],
+        '本体概念':[
+          {n:'conceptCode',l:'概念编码',t:'text',r:1,ph:'GO-CONCEPT-001'},
+          {n:'conceptName',l:'概念名称',t:'text',r:1},
+          {n:'conceptType',l:'概念类型',t:'select',r:1,o:['实体概念','属性概念','关系概念','指标概念']},
+          {n:'sourceOntology',l:'所属本体',t:'text',r:1,d:'自建粮油本体'},
+          {n:'parentConceptId',l:'上级概念',t:'lookup',lk:'本体概念'},
+          {n:'externalUri',l:'外部链接',t:'text'},
+          {n:'definition',l:'定义',t:'textarea',full:1}
+        ],
+        '指标定义':[
+          {n:'indicatorCode',l:'指标编码',t:'text',r:1,ph:'GO-IND-001'},
+          {n:'indicatorName',l:'指标名称',t:'text',r:1,ph:'大豆产量'},
+          {n:'indicatorCategory',l:'指标类别',t:'select',r:1,o:['产量','面积','价格','库存','进出口','消费','成本收益']},
+          {n:'unit',l:'计量单位',t:'text',r:1,ph:'万吨'},
+          {n:'frequency',l:'统计频率',t:'select',r:1,o:['年度','季度','月度','周度','日度']},
+          {n:'knowledgeCategoryId',l:'知识分类',t:'category',r:1},
+          {n:'industryStage',l:'产业环节',t:'select',r:1,o:STAGES},
+          {n:'caliber',l:'统计口径',t:'text'},
+          {n:'sourceOrg',l:'来源机构',t:'text'}
+        ]
+      };
+
+      function collect(form, fields){
+        const p = {};
+        [...new FormData(form).entries()].forEach(([k, v]) => { if(k === '__submit') return; const val = String(v).trim(); if(val !== '') p[k] = val; });
+        (fields || []).forEach(f => { if(f.t === 'number' && p[f.n] !== undefined) p[f.n] = Number(p[f.n]); });
+        return p;
+      }
+      function buildForm(form, fields, type, kind){
+        form.innerHTML = fields.map(fieldHtml).join('') +
+          `<div class="form-actions"><button class="btn primary" type="submit">保存${esc(type)}</button>` +
+          (kind === 'knowledge' ? '<label class="hint" style="display:flex;align-items:center;gap:7px;margin:0"><input type="checkbox" name="__submit" style="width:auto"> 保存后直接提交审核</label>' : '') +
+          '<span class="hint">带 * 为必填项。</span></div>';
+        wireForm(form, type, kind);
+      }
+      function wireForm(form, type, kind){
+        const doc = form.querySelector('[name=sourceDocId]');
+        if(doc) doc.addEventListener('change', () => fillSegments(form, doc.value));
+        form.querySelectorAll('[name=subjectEntityType],[name=objectEntityType]').forEach(sel => {
+          sel.addEventListener('change', () => fillDynamic(form, sel));
+          fillDynamic(form, sel);
+        });
+        form.onsubmit = e => { e.preventDefault(); kind === 'master' ? saveMaster(form, type) : saveKnowledge(form, type); };
+      }
+      async function fillSegments(form, docId){
+        const sel = form.querySelector('[name=segmentId]'); if(!sel) return;
+        if(!docId){ sel.innerHTML = '<option value="">请先选择来源文档</option>'; return; }
+        sel.innerHTML = '<option value="">加载中…</option>';
+        try{
+          const d = await api(`/api/sources/${encodeURIComponent(docId)}/segments`);
+          const items = d.items || [];
+          sel.innerHTML = items.length ? items.map(s => `<option value="${esc(s.segmentId)}">${esc(s.segmentId)} · ${esc((s.segmentText||'').slice(0,40))}</option>`).join('') : '<option value="">该文档暂无段落</option>';
+        }catch(e){ sel.innerHTML = '<option value="">加载失败</option>'; toast(e.message, true); }
+      }
+      async function fillDynamic(form, typeSel){
+        const target = form.querySelector(`[name=${typeSel.name.replace('EntityType','EntityId')}]`); if(!target) return;
+        const type = typeSel.value;
+        target.innerHTML = '<option value="">加载中…</option>';
+        try{
+          const d = await api(`/api/entities/${encodeURIComponent(type)}?limit=1000`);
+          const items = d.items || [];
+          target.innerHTML = items.length ? items.map(i => `<option value="${esc(i.entityId)}">${esc(i.title)}（${esc(i.entityId)}）</option>`).join('') : '<option value="">该类型暂无可用实体</option>';
+        }catch(e){ target.innerHTML = '<option value="">加载失败</option>'; toast(e.message, true); }
+      }
+      async function saveKnowledge(form, type){
+        const btn = form.querySelector('button[type=submit]'); btn.disabled = true;
+        try{
+          const created = await api(`/api/knowledge/${encodeURIComponent(type)}`, {method:'POST', body:JSON.stringify(collect(form, F[type]))});
+          let msg = `已保存 ${created.entityId}（${created.status || '草稿'}）`;
+          const box = form.querySelector('[name=__submit]');
+          if(box && box.checked){
+            await api(`/api/knowledge/${encodeURIComponent(type)}/${encodeURIComponent(created.entityId)}/submit`, {method:'POST'});
+            msg = `已提交审核：${created.entityId}`;
+          }
+          toast(msg); form.reset();
+          const seg = form.querySelector('[name=segmentId]'); if(seg) seg.innerHTML = '<option value="">请先选择来源文档</option>';
+          loadKnowledgeList(type); loadStats();
+        }catch(e){ toast(e.message, true); }finally{ btn.disabled = false; }
+      }
+      async function saveMaster(form, type){
+        const btn = form.querySelector('button[type=submit]'); btn.disabled = true;
+        try{
+          const r = await api(`/api/master/${encodeURIComponent(type)}`, {method:'POST', body:JSON.stringify(collect(form, MF[type]))});
+          toast(`已登记${type}：${r.entityId}`);
+          form.reset(); CACHE.lookups[type] = null;
+          await loadMasterList(type); loadStats();
+        }catch(e){ toast(e.message, true); }finally{ btn.disabled = false; }
+      }
+
+      const LIST_KEYS = {'政策法规':'policy','指标数据':'ivd','年鉴记录':'yearbook','农业情报':'intel','知识关系':'relation'};
+      function actions(i){
+        const t = encodeURIComponent(i.entityType), id = encodeURIComponent(i.entityId);
+        let html = '';
+        if(i.status === '草稿' || i.status === '已退回') html += `<button class="text-btn act" data-act="submit" data-type="${t}" data-id="${id}">提交审核</button>`;
+        if(i.status === '待审核') html += `<button class="text-btn act" data-act="pass" data-type="${t}" data-id="${id}">通过</button><button class="text-btn act" data-act="reject" data-type="${t}" data-id="${id}">退回</button>`;
+        html += `<button class="text-btn act" data-act="view" data-type="${t}" data-id="${id}">查看</button>`;
+        return html;
+      }
+      function bindActions(root){
+        root.querySelectorAll('.act').forEach(el => el.addEventListener('click', async () => {
+          const type = decodeURIComponent(el.dataset.type), id = decodeURIComponent(el.dataset.id), act = el.dataset.act;
+          try{
+            if(act === 'view'){ switchView('explorer'); showDetail(type, id); return; }
+            if(act === 'submit') await api(`/api/knowledge/${encodeURIComponent(type)}/${encodeURIComponent(id)}/submit`, {method:'POST'});
+            if(act === 'pass' || act === 'reject') await api(`/api/knowledge/${encodeURIComponent(type)}/${encodeURIComponent(id)}/review`, {method:'POST', body:JSON.stringify({decision: act === 'pass' ? '通过' : '退回'})});
+            toast(act === 'submit' ? '已提交审核' : act === 'pass' ? '已审核通过' : '已退回');
+            refreshCurrent();
+          }catch(e){ toast(e.message, true); }
+        }));
+      }
+      function refreshCurrent(){
+        if(state.view === 'review') return loadReviewTasks();
+        const m = {policy:'政策法规',ivd:'指标数据',yearbook:'年鉴记录',intel:'农业情报',relation:'知识关系'}[state.view];
+        if(m) initKnowledge(m);
+      }
+      async function initKnowledge(type){
+        const form = document.querySelector(`form[data-knowledge="${type}"]`);
+        await ensureLookups().catch(()=>{}); await ensureTaxonomy().catch(()=>{});
+        if(form && !form.dataset.ready){ buildForm(form, F[type], type, 'knowledge'); form.dataset.ready = '1'; }
+        loadKnowledgeList(type);
+      }
+      async function loadKnowledgeList(type){
+        const key = LIST_KEYS[type], tbody = $(`#list-${key}`), count = $(`#count-${key}`);
+        if(!tbody) return;
+        try{
+          const d = await api(`/api/knowledge/${encodeURIComponent(type)}?pageSize=20`);
+          count.textContent = `共 ${d.total} 条`;
+          tbody.innerHTML = d.items.length ? d.items.map(i =>
+            `<tr><td class="result-id">${esc(i.entityId)}</td><td>${esc(i.title)}</td><td><span class="badge">${esc(i.status)}</span></td><td>${esc((i.updatedAt||'').replace('T',' ').slice(0,16))}</td><td>${actions(i)}</td></tr>`).join('')
+            : '<tr><td colspan="5" class="empty-note">暂无登记记录</td></tr>';
+          bindActions(tbody);
+        }catch(e){ tbody.innerHTML = `<tr><td colspan="5" class="empty-note">${esc(e.message)}</td></tr>`; }
+      }
+
+      function fillCategorySelect(select, placeholder){
+        if(!select || select.dataset.ready === '1') return;
+        const groups = catGroups();
+        if(!groups) return;
+        select.innerHTML = `<option value="">${placeholder}</option>` + groups;
+        select.dataset.ready = '1';
+      }
+      async function doUpload(e){
+        e.preventDefault();
+        const file = $('#upload-file').files[0];
+        if(!file) return toast('请选择文档', true);
+        const fd = new FormData(); fd.append('file', file);
+        const map = {title:'#upload-title', docType:'#upload-doctype', issuer:'#upload-issuer', publishDate:'#upload-date', sourceUrl:'#upload-url', knowledgeCategoryId:'#upload-category'};
+        Object.entries(map).forEach(([k, s]) => { const v = $(s).value.trim(); if(v) fd.append(k, v); });
+        fd.append('autoPublish', $('#upload-publish').checked ? 'true' : 'false');
+        const btn = $('#upload-submit'); btn.disabled = true;
+        $('#upload-result').innerHTML = '<p class="empty-note">正在解析并切分文档…</p>';
+        try{
+          const response = await fetch('/api/sources/upload', {method:'POST', headers: state.token ? {Authorization:`Bearer ${state.token}`} : {}, body: fd});
+          if(response.status === 401){ logout(); throw new Error('登录已失效，请重新登录'); }
+          const data = await response.json();
+          if(!response.ok) throw new Error(data.detail || `上传失败 (${response.status})`);
+          renderUpload(data); toast(`已登记 ${data.docId}，切分 ${data.segmentCount} 个段落`); loadStats();
+        }catch(err){ $('#upload-result').innerHTML = `<p class="empty-note">${esc(err.message)}</p>`; toast(err.message, true); }
+        finally{ btn.disabled = false; }
+      }
+      function renderUpload(d){
+        const stats = [['来源文档', d.docId], ['段落数', d.segmentCount], ['页数', d.pageCount || '—'], ['自动抽取', d.extractedCount || 0]];
+        const rows = (d.extracted || []).map(i =>
+          `<tr><td>${esc(i.entityType)}</td><td>${esc(i.label || i.title || '')}</td><td>${esc(i.sheet || '')}</td><td>${esc(i.rowNo || '')}</td><td><span class="badge">${esc(i.status || '')}</span></td><td><button class="text-btn act" data-act="view" data-type="${encodeURIComponent(i.entityType)}" data-id="${encodeURIComponent(i.entityId)}">查看</button></td></tr>`).join('');
+        const warn = (d.warnings || []).map(w => `<li>${esc(w)}</li>`).join('');
+        $('#upload-result').innerHTML =
+          `<div class="stats" style="margin:4px 0 16px">${stats.map(([l, v]) => `<div class="stat"><div class="stat-label">${esc(l)}</div><div class="stat-value" style="font-size:20px">${esc(v)}</div><div class="stat-note">${esc(d.fileFormat || '')}</div></div>`).join('')}</div>` +
+          `<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap"><button class="btn" id="preview-segments">预览段落</button><button class="btn gold" id="open-original">打开原文档</button><button class="btn" id="go-entry-policy">登记政策法规</button><button class="btn" id="go-entry-ivd">登记指标数据</button></div>` +
+          (warn ? `<div class="evidence"><div class="evidence-title">解析提示</div><ul class="hint" style="margin:6px 0 0;padding-left:18px">${warn}</ul></div>` : '') +
+          (rows ? `<div class="section-title">抽取结果 · ${d.extractedCount} 条知识</div><div style="overflow:auto"><table class="quality-table"><thead><tr><th>类型</th><th>标题/名称</th><th>工作表</th><th>行号</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div>`
+                : '<p class="empty-note">该文档未自动抽取知识条目，可预览段落或到录入页手工登记并绑定段落。</p>') +
+          '<div id="segment-preview" style="margin-top:16px"></div>';
+        bindActions($('#upload-result'));
+        $('#preview-segments').addEventListener('click', () => previewSegments(d.docId));
+        const openBtn = $('#open-original');
+        if(openBtn) openBtn.addEventListener('click', () => openDoc(d.docId));
+        $('#go-entry-policy').addEventListener('click', () => switchView('policy'));
+        $('#go-entry-ivd').addEventListener('click', () => switchView('ivd'));
+      }
+      async function previewSegments(docId){
+        const box = $('#segment-preview'); box.innerHTML = '<p class="empty-note">正在加载段落…</p>';
+        try{
+          const d = await api(`/api/sources/${encodeURIComponent(docId)}/segments`);
+          const items = (d.items || []).slice(0, 12);
+          box.innerHTML = `<div class="section-title">来源段落 · 前 ${items.length} / ${d.total} 段</div>` + (items.length ? items.map(s =>
+            `<div class="preview-seg"><b>${esc(s.segmentId)}</b>${s.pageNo ? ` · 第 ${esc(s.pageNo)} 页` : ''}${s.chapterPath ? ` · ${esc(s.chapterPath)}` : ''}<br>${esc((s.segmentText || '').slice(0, 180))}${(s.segmentText || '').length > 180 ? '…' : ''}</div>`).join('')
+            : '<p class="empty-note">暂无段落</p>');
+        }catch(e){ box.innerHTML = `<p class="empty-note">${esc(e.message)}</p>`; }
+      }
+      async function initUpload(){
+        await ensureTaxonomy().catch(()=>{});
+        fillCategorySelect($('#upload-category'), '不指定分类');
+      }
+      async function initCrawl(){
+        await ensureTaxonomy().catch(()=>{});
+        fillCategorySelect($('#crawl-category'), '请选择知识分类');
+        await Promise.all([loadCrawlSources(), loadCrawlRuns()]);
+      }
+      async function loadCrawlSources(){
+        const tb = $('#crawl-rows'); if(!tb) return;
+        try{
+          const d = await api('/api/crawl/sources');
+          $('#crawl-count').textContent = `${d.total} 个采集源`;
+          tb.innerHTML = d.items.length ? d.items.map(r =>
+            `<tr><td class="result-id">${esc(r.crawlSourceId)}</td><td>${esc(r.sourceName)}</td><td>${esc(r.sourceType)}</td><td>${esc(r.contentCategory)}</td><td>${esc(r.crawlMode)}</td><td>${esc(r.minIntervalMinutes)} 分钟</td><td><span class="badge">${esc(r.enabledFlag)}</span></td><td>${esc((r.lastRunAt||'').replace('T',' ').slice(0,16) || '—')}</td><td><button class="text-btn crawl-act" data-id="${esc(r.crawlSourceId)}" data-act="toggle">${r.enabledFlag === '启用' ? '停用' : '启用'}</button><button class="text-btn crawl-act" data-id="${esc(r.crawlSourceId)}" data-act="run">立即采集</button></td></tr>`).join('')
+            : '<tr><td colspan="9" class="empty-note">暂无采集源，请在下方新建。</td></tr>';
+          tb.querySelectorAll('.crawl-act').forEach(el => el.addEventListener('click', async () => {
+            el.disabled = true;
+            try{
+              if(el.dataset.act === 'toggle'){
+                const r = await api(`/api/crawl/sources/${encodeURIComponent(el.dataset.id)}/toggle`, {method:'POST'});
+                toast(`已${r.enabledFlag}`);
+              }else{
+                const r = await api('/api/crawl/trigger', {method:'POST', body:JSON.stringify({crawlSourceId: el.dataset.id})});
+                toast(`采集完成：新增 ${r.newDocCount ?? 0} 篇，重复 ${r.duplicateCount ?? 0} 篇`);
+              }
+              await Promise.all([loadCrawlSources(), loadCrawlRuns()]);
+            }catch(e){ toast(e.message, true); }finally{ el.disabled = false; }
+          }));
+        }catch(e){ tb.innerHTML = `<tr><td colspan="9" class="empty-note">${esc(e.message)}</td></tr>`; }
+      }
+      async function loadCrawlRuns(){
+        const tb = $('#crawl-runs'); if(!tb) return;
+        try{
+          const d = await api('/api/crawl/runs?limit=30');
+          $('#crawl-run-count').textContent = `${d.total} 条执行记录`;
+          tb.innerHTML = d.items.length ? d.items.map(r =>
+            `<tr><td class="result-id">${esc(r.runId)}</td><td>${esc(r.crawlSourceId)}</td><td>${esc((r.startedAt||'').replace('T',' ').slice(0,19))}</td><td>${esc((r.finishedAt||'').replace('T',' ').slice(0,19) || '—')}</td><td><span class="badge">${esc(r.runStatus)}</span></td><td>${esc(r.newDocCount ?? 0)}</td><td>${esc(r.duplicateCount ?? 0)}</td><td>${esc(r.errorMessage || '—')}</td></tr>`).join('')
+            : '<tr><td colspan="8" class="empty-note">暂无采集执行记录</td></tr>';
+        }catch(e){ tb.innerHTML = `<tr><td colspan="8" class="empty-note">${esc(e.message)}</td></tr>`; }
+      }
+      async function doCreateCrawl(e){
+        e.preventDefault();
+        const payload = {
+          sourceName: $('#crawl-name').value.trim(), sourceUrl: $('#crawl-url').value.trim(),
+          sourceType: $('#crawl-type').value, contentCategory: $('#crawl-content').value,
+          crawlMode: $('#crawl-mode').value, minIntervalMinutes: Number($('#crawl-interval').value || 60),
+          maxRetry: Number($('#crawl-retry').value || 3), knowledgeCategoryId: $('#crawl-category').value,
+          enabledFlag: '启用'
+        };
+        if(!payload.knowledgeCategoryId) return toast('请选择知识分类', true);
+        const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
+        try{
+          const r = await api('/api/crawl/sources', {method:'POST', body:JSON.stringify(payload)});
+          toast(`已创建采集源 ${r.crawlSourceId}`);
+          e.target.reset(); $('#crawl-interval').value = 60; $('#crawl-retry').value = 3;
+          $('#crawl-category').value = '';
+          await loadCrawlSources();
+        }catch(err){ toast(err.message, true); }finally{ btn.disabled = false; }
+      }
+
+      async function initMaster(){
+        await ensureLookups().catch(()=>{}); await ensureTaxonomy().catch(()=>{});
+        const sel = $('#master-type');
+        if(sel.dataset.ready !== '1'){
+          sel.dataset.ready = '1';
+          sel.addEventListener('change', () => { buildMasterForm(sel.value); loadMasterList(sel.value); });
+        }
+        buildMasterForm(sel.value); loadMasterList(sel.value);
+      }
+      function buildMasterForm(type){
+        const form = $('#master-form'); if(!form) return;
+        form.dataset.master = type;
+        buildForm(form, MF[type], type, 'master');
+      }
+      async function loadMasterList(type){
+        const tb = $('#master-rows'); if(!tb) return;
+        try{
+          const d = await api(`/api/master/${encodeURIComponent(type)}?limit=1000`);
+          const items = d.items || [];
+          $('#master-count').textContent = `${type}：${items.length} 条`;
+          tb.innerHTML = items.length ? items.slice(0, 100).map(i =>
+            `<tr><td class="result-id">${esc(i.entityId)}</td><td>${esc(i.title)}</td><td><span class="badge">${esc(i.status || '—')}</span></td></tr>`).join('')
+            : '<tr><td colspan="3" class="empty-note">暂无数据</td></tr>';
+        }catch(e){ tb.innerHTML = `<tr><td colspan="3" class="empty-note">${esc(e.message)}</td></tr>`; }
+      }
+
+      async function initReview(){ await loadReviewTasks(); }
+      async function loadReviewTasks(){
+        const tb = $('#review-rows'); if(!tb) return;
+        const status = $('#review-status').value, type = $('#review-type').value, kw = $('#review-keyword').value.trim();
+        let url = `/api/review/tasks?status=${encodeURIComponent(status)}&pageSize=100`;
+        if(type) url += `&entityType=${encodeURIComponent(type)}`;
+        if(kw) url += `&keyword=${encodeURIComponent(kw)}`;
+        try{
+          const d = await api(url);
+          $('#review-count').textContent = `${d.total} 条${status}知识`;
+          tb.innerHTML = d.items.length ? d.items.map(i =>
+            `<tr><td>${esc(i.entityType)}</td><td>${esc(i.title)}</td><td class="result-id">${esc(i.entityId)}</td><td><span class="badge">${esc(i.status)}</span></td><td>${esc((i.updatedAt||'').replace('T',' ').slice(0,16))}</td><td>${actions(i)}</td></tr>`).join('')
+            : `<tr><td colspan="6" class="empty-note">没有${esc(status)}的知识条目</td></tr>`;
+          bindActions(tb);
+        }catch(e){ tb.innerHTML = `<tr><td colspan="6" class="empty-note">${esc(e.message)}</td></tr>`; }
+      }
+
+      const REPORT_DEFS = [['REP-01','知识总量与状态总览'],['REP-02','来源文档覆盖情况'],['REP-03','审核时效统计'],['REP-04','数据质量治理统计'],['REP-05','采集任务统计'],['REP-06','增量变更导出'],['REP-07','分类体系分布']];
+      function initReports(){
+        const list = $('#report-list'); if(!list) return;
+        if(list.dataset.ready !== '1'){
+          list.innerHTML = REPORT_DEFS.map(([c, t]) => `<button data-code="${c}">${esc(t)}<small>${c}</small></button>`).join('');
+          list.dataset.ready = '1';
+          list.querySelectorAll('button').forEach(b => b.addEventListener('click', () => loadReport(b.dataset.code)));
+          loadReport('REP-01'); return;
+        }
+        loadReport(list.querySelector('button.active')?.dataset.code || 'REP-01');
+      }
+      async function loadReport(code){
+        const list = $('#report-list');
+        list.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.code === code));
+        const def = REPORT_DEFS.find(r => r[0] === code) || [code, code];
+        $('#report-title').textContent = `${def[0]} ${def[1]}`;
+        $('#report-body').innerHTML = '<p class="empty-note">正在统计…</p>';
+        let url = `/api/reports/${code}`;
+        if(code === 'REP-06'){
+          const since = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 19) + 'Z';
+          url += `?since=${encodeURIComponent(since)}`;
+          $('#report-title').textContent = `${def[0]} ${def[1]}（近 30 天）`;
+        }
+        try{
+          const d = await api(url);
+          $('#report-time').textContent = `生成于 ${(d.generatedAt || '').replace('T',' ').slice(0,19)}`;
+          renderReport(d.data);
+        }catch(e){ $('#report-body').innerHTML = `<p class="empty-note">${esc(e.message)}</p>`; }
+      }
+      const fmt = v => v === null || v === undefined ? '—' : typeof v === 'object' ? JSON.stringify(v) : String(v);
+      function renderReport(data){
+        if(!data || typeof data !== 'object'){ $('#report-body').innerHTML = '<p class="empty-note">无数据</p>'; return; }
+        let html = '';
+        Object.entries(data).forEach(([k, v]) => {
+          if(Array.isArray(v)){
+            if(!v.length){ html += `<div class="section-title">${esc(k)}</div><p class="empty-note">暂无数据</p>`; return; }
+            const keys = Object.keys(v[0]);
+            html += `<div class="section-title">${esc(k)} · ${v.length}</div><div style="overflow:auto"><table class="quality-table"><thead><tr>${keys.map(x => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${v.map(row => `<tr>${keys.map(x => `<td>${esc(fmt(row[x]))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+          }else if(v && typeof v === 'object'){
+            html += `<div class="section-title">${esc(k)}</div>` + Object.entries(v).map(([a, b]) => `<div class="facet-row"><span>${esc(a)}</span><span>${esc(fmt(b))}</span></div>`).join('');
+          }else{
+            html += `<div class="facet-row"><span>${esc(k)}</span><span>${esc(fmt(v))}</span></div>`;
+          }
+        });
+        $('#report-body').innerHTML = html || '<p class="empty-note">无数据</p>';
+      }
+
+      async function loadRagStatus(){
+        try{
+          const s = await api('/api/rag/status');
+          const llm = s.llmEnabled ? ` · 归纳模型 ${s.llmModel}` : ' · 抽取式归纳';
+          const model = s.backend === 'hash' ? 'hash（离线词面向量）' : s.embeddingModel;
+          const rerank = ` · 重排 ${s.rerankMode || 'none'}`;
+          const extract = s.llmEntityExtraction ? ` · LLM 抽取 ${s.extractedSegments ?? 0} 段${s.extractionPending ? `（待处理 ${s.extractionPending}）` : ''}` : '';
+          $('#rag-status').textContent = `已索引 ${s.segments} 个段落 / ${s.documents} 份文档 · 实体 ${s.entities ?? 0} · 关系 ${s.relations ?? 0} · ${model} · 向量维度 ${s.dim}${llm}${rerank}${extract}${s.lastError ? ` · 异常：${s.lastError}` : ''}`;
+        }catch(e){ $('#rag-status').textContent = '索引状态不可用：' + e.message; }
+      }
+
+      async function loadRagConfig(){
+        const c = await api('/api/rag/config');
+        $('#rag-backend').value = c.embeddingBackend;
+        $('#rag-embed-base').value = c.embeddingBaseUrl || '';
+        $('#rag-embed-model').value = c.embeddingModel || '';
+        $('#rag-llm-base').value = c.llmBaseUrl || '';
+        $('#rag-llm-model').value = c.llmModel || '';
+        $('#rag-rerank').value = c.rerankMode || 'lexical';
+        $('#rag-entity-extract').value = c.llmEntityExtraction ? 'true' : 'false';
+        $('#rag-embed-key').placeholder = c.hasEmbeddingApiKey ? `已保存 ${c.embeddingApiKeyMasked}，留空沿用` : '留空则沿用已保存值';
+        $('#rag-llm-key').placeholder = c.hasLlmApiKey ? `已保存 ${c.llmApiKeyMasked}，留空沿用` : '留空则沿用已保存值';
+        $('#rag-config-note').textContent = `配置文件：${c.configFile}`;
+      }
+
+      async function saveRagConfig(e){
+        if(e) e.preventDefault();
+        const btn = $('#rag-config-form').querySelector('button[type=submit]');
+        btn.disabled = true;
+        $('#rag-config-note').textContent = '正在校验向量接口并重建索引…';
+        const payload = {
+          embeddingBackend: $('#rag-backend').value,
+          embeddingBaseUrl: $('#rag-embed-base').value.trim(),
+          embeddingModel: $('#rag-embed-model').value.trim(),
+          llmBaseUrl: $('#rag-llm-base').value.trim(),
+          llmModel: $('#rag-llm-model').value.trim(),
+          rerankMode: $('#rag-rerank').value,
+          llmEntityExtraction: $('#rag-entity-extract').value === 'true'
+        };
+        const embedKey = $('#rag-embed-key').value.trim();
+        const llmKey = $('#rag-llm-key').value.trim();
+        if(embedKey) payload.embeddingApiKey = embedKey;
+        if(llmKey) payload.llmApiKey = llmKey;
+        try{
+          const r = await api('/api/rag/config', {method:'POST', body: JSON.stringify(payload)});
+          $('#rag-embed-key').value = '';
+          $('#rag-llm-key').value = '';
+          await loadRagConfig();
+          await loadRagStatus();
+          toast(`配置已保存并重建索引：${r.status.segments} 个段落`);
+          if(r.status.lastError) toast(r.status.lastError, true);
+        }catch(err){
+          $('#rag-config-note').textContent = '保存失败：' + err.message;
+          toast(err.message, true);
+        }finally{ btn.disabled = false; }
+      }
+
+      function initSemantic(){ loadRagStatus(); }
+
+      async function runSemantic(e){
+        if(e) e.preventDefault();
+        const query = $('#semantic-query').value.trim();
+        if(!query) return;
+        const btn = $('#semantic-form').querySelector('button[type=submit]');
+        btn.disabled = true;
+        $('#semantic-count').textContent = '检索中…';
+        try{
+          const result = await api('/api/rag/query', {method:'POST', body: JSON.stringify({query, mode:$('#semantic-mode').value, topK:Number($('#semantic-topk').value)})});
+          renderSemantic(result);
+        }catch(err){
+          $('#semantic-count').textContent = '检索失败：' + err.message;
+          $('#semantic-results').innerHTML = '';
+        }finally{ btn.disabled = false; }
+      }
+
+      function renderSemantic(result){
+        const items = result.items || [];
+        $('#semantic-count').textContent = `命中 ${items.length} 个段落 · ${result.mode}`;
+        const keywords = result.keywords || {};
+        const entities = result.matchedEntities || [];
+        const relations = result.relations || [];
+        const keywordPanel = $('#semantic-keywords');
+        if(entities.length || relations.length || (keywords.high || []).length){
+          keywordPanel.style.display = 'block';
+          const entityChips = entities.length
+            ? entities.map(e => `<span class="chip" style="cursor:default;border-color:var(--green);color:var(--green)">${esc(e.name)} · ${esc(e.type || '实体')} · ${e.segments} 段</span>`).join(' ')
+            : '<span style="font-size:11px;color:var(--muted)">未命中主数据实体</span>';
+          const highChips = (keywords.high || []).map(x => `<span class="chip" style="cursor:default">${esc(x)}</span>`).join(' ') || '<span style="font-size:11px;color:var(--muted)">—</span>';
+          const relationChips = relations.length
+            ? `<span style="font-size:11px;color:var(--muted);margin-left:8px">关联关系</span>` + relations.map(r => `<span class="chip" style="cursor:default;border-color:var(--gold);color:#77591e">${esc(r.source)} — ${esc(r.target)}</span>`).join(' ')
+            : '';
+          keywordPanel.innerHTML = `<div style="padding:14px 18px;display:flex;flex-wrap:wrap;gap:9px;align-items:center"><span style="font-size:11px;color:var(--muted)">问题实体</span>${entityChips}<span style="font-size:11px;color:var(--muted);margin-left:8px">主题词</span>${highChips}${relationChips}</div>`;
+        }else{
+          keywordPanel.style.display = 'none';
+        }
+        const answerPanel = $('#semantic-answer-panel');
+        if(result.answer){
+          const cites = (result.citations || []).map((c, i) => `[${i+1}] <a href="${docFileUrl(c.docId)}" target="_blank" rel="noopener" style="color:var(--green);border-bottom:1px dashed currentColor" title="打开原文档">${esc(c.docTitle)}</a>${c.pageNo ? ` 第${c.pageNo}页` : ''}（${esc(c.segmentId)}）`).join(' · ');
+          answerPanel.style.display = 'block';
+          answerPanel.innerHTML = `<div style="padding:18px 20px"><div class="section-title" style="margin-top:0">要点归纳 · ${result.answerMode === 'llm' ? '模型生成' : '抽取式'}</div><div class="evidence-text">${esc(result.answer)}</div><div class="evidence-meta">${cites}</div></div>`;
+        }else{
+          answerPanel.style.display = 'none';
+        }
+        if(!items.length){
+          $('#semantic-results').innerHTML = '<p class="empty-note" style="padding:20px">未召回到相关段落，请更换关键词，或先在「文档上传抽取」登记政策文件与研报。</p>';
+          return;
+        }
+        $('#semantic-results').innerHTML = items.map(item => {
+          const text = item.segmentText || '';
+          const preview = text.slice(0, 180) + (text.length > 180 ? '…' : '');
+          return `<div class="result-item"><div><span class="badge">${esc(item.docType || '文档')}</span></div><div><div style="font-weight:600;margin-bottom:6px"><a href="${docFileUrl(item.docId)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--ink);border-bottom:1px dashed var(--gold)" title="打开原文档">${esc(item.docTitle || '')}</a>${item.pageNo ? ` · 第${item.pageNo}页` : ''}</div><div style="color:var(--muted);line-height:1.9">${esc(preview)}</div><div class="seg-full" style="display:none;font-family:var(--serif);line-height:2;padding-top:10px;margin-top:10px;border-top:1px dashed var(--line)">${esc(text)}</div><div class="evidence-meta">${esc(item.segmentId)} · 综合 ${item.score} · 向量 ${item.vectorScore} · 关键词 ${item.keywordScore}${item.localScore ? ` · 实体 ${item.localScore}` : ''}${item.relationScore ? ` · 关系 ${item.relationScore}` : ''}${item.graphBoost ? ` · 图谱 ${item.graphBoost}` : ''}${item.rerankScore ? ` · 重排 ${item.rerankScore.toFixed ? item.rerankScore.toFixed(3) : item.rerankScore}` : ''}${(item.matchedEntities || []).length ? ` · 命中 ${item.matchedEntities.map(esc).join('/')}` : ''}</div></div><div style="text-align:right;color:var(--gold);font-variant-numeric:tabular-nums">${item.score}</div></div>`;
+        }).join('');
+        $('#semantic-results').querySelectorAll('.result-item').forEach(card => {
+          card.addEventListener('click', () => {
+            const full = card.querySelector('.seg-full');
+            if(full) full.style.display = full.style.display === 'none' ? 'block' : 'none';
+          });
+        });
+      }
+
+      const ontoState = {data:null, selected:null, role:'ALL'};
+      let ontoTicket = 0;
+
+      async function initOntology(force){
+        if(force || !ontoState.data){
+          const [stats, types, graph] = await Promise.all([
+            api('/api/ontology/stats'), api('/api/ontology/object-types'), api('/api/ontology/graph')
+          ]);
+          ontoState.data = {stats, types: types.items, graph};
+        }
+        const s = ontoState.data.stats;
+        $('#onto-object-types').textContent = s.objectTypes;
+        $('#onto-properties').textContent = s.properties;
+        $('#onto-link-types').textContent = s.linkTypes;
+        $('#onto-action-types').textContent = s.actionTypes;
+        $('#onto-instances').textContent = `${s.instances} 个对象实例`;
+        renderOntologyGraph();
+        if(!ontoState.selected && ontoState.data.types.length){
+          selectOntologyType(ontoState.data.types[0].objectTypeId);
+        }
+      }
+
+      function renderOntologyGraph(){
+        if(!ontoState.data) return;
+        const svg = $('#ontology-canvas'), empty = $('#ontology-empty');
+        const keyword = ($('#ontology-filter').value || '').trim().toLowerCase();
+        const nodes = ontoState.data.graph.nodes.filter(n =>
+          (ontoState.role === 'ALL' || n.role === ontoState.role) &&
+          (!keyword || `${n.label} ${n.id} ${n.domain || ''}`.toLowerCase().includes(keyword))
+        );
+        const ids = new Set(nodes.map(n => n.id));
+        const edges = ontoState.data.graph.edges.filter(e => ids.has(e.source) && ids.has(e.target));
+        if(!nodes.length){
+          svg.innerHTML = '';
+          empty.style.display = 'grid';
+          empty.textContent = '没有符合筛选条件的对象类型';
+          return;
+        }
+        empty.style.display = 'none';
+        const cx = 500, cy = 290, R = nodes.length === 1 ? 0 : Math.min(230, 120 + nodes.length * 6);
+        const pos = {};
+        nodes.forEach((n, i) => {
+          const angle = -Math.PI / 2 + (i / nodes.length) * Math.PI * 2;
+          pos[n.id] = [cx + Math.cos(angle) * R, cy + Math.sin(angle) * R];
+        });
+        let html = '<defs><marker id="onto-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#b9c4b7"/></marker></defs>';
+        for(const e of edges){
+          const a = pos[e.source], b = pos[e.target];
+          if(!a || !b) continue;
+          html += `<line class="graph-edge" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" marker-end="url(#onto-arrow)"><title>${esc(e.label)} · ${esc(e.cardinality || '')}</title></line>`;
+        }
+        for(const n of nodes){
+          const p = pos[n.id];
+          const root = n.role === 'AGGREGATE_ROOT';
+          const r = root ? 16 : Math.max(8, Math.min(13, Math.round((n.size || 18) * 0.32)));
+          const dx = p[0] - cx, dy = p[1] - cy, len = Math.hypot(dx, dy) || 1;
+          const lx = p[0] + dx / len * (r + 10) - p[0];
+          const ly = p[1] + dy / len * (r + 10) + 3.5 - p[1];
+          const anchor = dx > 18 ? 'start' : dx < -18 ? 'end' : 'middle';
+          const label = n.label.length > 10 ? n.label.slice(0, 9) + '…' : n.label;
+          html += `<g class="graph-node" data-id="${esc(n.id)}" transform="translate(${p[0]},${p[1]})"><circle r="${r}" fill="${root ? '#1c5b48' : '#87927f'}"/><text x="${lx}" y="${ly}" text-anchor="${anchor}">${esc(label)}</text><title>${esc(n.label)} · ${esc(n.domain || '')}
+${esc(n.id)} · ${n.instanceCount} 个实例</title></g>`;
+        }
+        svg.innerHTML = html;
+        $$('#ontology-canvas .graph-node').forEach(el => el.addEventListener('click', () => selectOntologyType(el.dataset.id)));
+        if(ontoState.selected) highlightOntologyNode(ontoState.selected);
+      }
+
+      function highlightOntologyNode(id){
+        $$('#ontology-canvas .graph-node').forEach(el => {
+          const circle = el.querySelector('circle');
+          const on = el.dataset.id === id;
+          circle.setAttribute('stroke', on ? '#c28c32' : '#fff');
+          circle.setAttribute('stroke-width', on ? '3' : '2');
+        });
+      }
+
+      async function selectOntologyType(id){
+        ontoState.selected = id;
+        highlightOntologyNode(id);
+        const ticket = ++ontoTicket;
+        const host = $('#ontology-detail');
+        host.innerHTML = '<div class="detail-kicker">OBJECT TYPE INSPECTOR</div><p class="empty-note">正在读取对象类型定义…</p>';
+        try{
+          const d = await api(`/api/ontology/object-types/${encodeURIComponent(id)}`);
+          if(ticket !== ontoTicket) return;
+          const nameOf = tid => (ontoState.data.types.find(t => t.objectTypeId === tid) || {}).displayName || tid;
+          const propRows = d.properties.map(p => {
+            const flags = [p.primaryKeyFlag ? 'PK' : '', p.linkFlag ? 'FK' : '', p.requiredFlag ? '必填' : '', p.systemFlag ? '系统' : ''].filter(Boolean).join(' · ');
+            return `<div class="relation-item"><b>${esc(p.displayName)}</b> · ${esc(p.dataType || '')}${flags ? ` · ${esc(flags)}` : ''}<div style="color:var(--muted);margin-top:3px">${esc(p.attributeRef || p.column)}${p.mappingNote ? ` · ${esc(p.mappingNote)}` : ''}</div></div>`;
+          }).join('');
+          const linkRow = (l, direction) => `<div class="relation-item"><b>${esc(l.predicate || l.displayName)}</b> ${direction === 'out' ? '→' : '←'} ${esc(direction === 'out' ? nameOf(l.targetTypeId) : nameOf(l.sourceTypeId))}<div style="color:var(--muted);margin-top:3px">${esc(l.cardinality || '')} · ${esc(l.sourceProperty || '')}${l.targetProperty ? ` → ${esc(l.targetProperty)}` : ''}</div></div>`;
+          const actionRows = d.actions.map(a => `<div class="relation-item"><b>${esc(a.displayName)}</b> <span style="color:var(--muted)">${esc(a.httpMethod)} ${esc(a.path)}</span><div style="color:var(--muted);margin-top:3px">${esc(roleNames[a.requiredRole] || a.requiredRole || '')}${a.requiresApproval ? ' · 需审批' : ''} · ${esc(a.description || '')}</div></div>`).join('');
+          host.innerHTML = `<div class="detail-kicker">${esc(d.objectRole === 'AGGREGATE_ROOT' ? 'AGGREGATE ROOT' : 'DETAIL OBJECT')}</div><h2>${esc(d.displayName)}</h2><span class="badge">${esc(d.domain || '未分域')}</span><dl class="meta-grid"><dt>对象类型</dt><dd>${esc(d.objectTypeId)}</dd><dt>主表</dt><dd>${esc(d.primaryTable)}</dd><dt>主键</dt><dd>${esc(d.primaryKey)}</dd><dt>实例数</dt><dd>${esc(d.instanceCount)}</dd></dl>`
+            + `<div class="section-title">属性 · ${d.properties.length}</div><div class="relation-list">${propRows || '<p class="empty-note">暂无属性定义</p>'}</div>`
+            + `<div class="section-title">出边关系 · ${d.outgoingLinks.length}</div><div class="relation-list">${d.outgoingLinks.map(l => linkRow(l, 'out')).join('') || '<p class="empty-note">无出边关系</p>'}</div>`
+            + `<div class="section-title">入边关系 · ${d.incomingLinks.length}</div><div class="relation-list">${d.incomingLinks.map(l => linkRow(l, 'in')).join('') || '<p class="empty-note">无入边关系</p>'}</div>`
+            + `<div class="section-title">动作类型 · ${d.actions.length}</div><div class="relation-list">${actionRows || '<p class="empty-note">无可用动作</p>'}</div>`
+            + `<div class="section-title">对象实例</div><button class="btn" id="onto-load-instances">浏览前 10 条实例</button><div id="onto-instance-box"></div>`;
+          host.querySelector('#onto-load-instances').addEventListener('click', () => {
+            loadOntologyInstances(d.objectTypeId).catch(e => toast(e.message, true));
+          });
+        }catch(e){
+          if(ticket !== ontoTicket) return;
+          host.innerHTML = `<p class="empty-note">${esc(e.message)}</p>`;
+        }
+      }
+
+      async function loadOntologyInstances(id){
+        const box = $('#onto-instance-box');
+        if(!box) return;
+        box.innerHTML = '<p class="empty-note">正在读取实例…</p>';
+        const data = await api(`/api/ontology/object-types/${encodeURIComponent(id)}/objects?pageSize=10`);
+        box.innerHTML = data.items.length
+          ? `<div class="results-head" style="padding:12px 0;border-bottom:0"><span>共 ${data.total} 条</span><span>第 ${data.pageNo} 页</span></div>` + data.items.map(i => `<div class="relation-item"><b>${esc(i.objectId)}</b> · ${esc(i.title || '')}${i.status ? ` · ${esc(i.status)}` : ''}</div>`).join('')
+          : '<p class="empty-note">该对象类型暂无实例。</p>';
+      }
+
+      $('#refresh-ontology').addEventListener('click', async () => {
+        try{
+          const s = await api('/api/ontology/refresh', {method:'POST'});
+          toast(`本体已重新编译：${s.objectTypes} 个对象类型 / ${s.linkTypes} 个关系类型`);
+          ontoState.selected = null;
+          await initOntology(true);
+        }catch(e){ toast(e.message, true); }
+      });
+      $('#ontology-filter').addEventListener('input', () => renderOntologyGraph());
+      $$('[data-onto-role]').forEach(button => button.addEventListener('click', () => {
+        ontoState.role = button.dataset.ontoRole;
+        $$('[data-onto-role]').forEach(x => x.classList.toggle('active', x === button));
+        renderOntologyGraph();
+      }));
+
+      window.switchView = function(name){
+        state.view = name;
+        document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+        document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+        $('#current-view').textContent = VIEW_TITLES[name] || name;
+        $('#sidebar').classList.remove('open');
+        const tasks = {
+          search: runSearch, semantic: initSemantic, governance: loadQuality, taxonomy: loadTaxonomy,
+          ontology: initOntology,
+          upload: initUpload, crawl: initCrawl, master: initMaster, review: initReview, reports: initReports,
+          policy: () => initKnowledge('政策法规'), ivd: () => initKnowledge('指标数据'),
+          yearbook: () => initKnowledge('年鉴记录'), intel: () => initKnowledge('农业情报'),
+          relation: () => initKnowledge('知识关系')
+        };
+        const task = tasks[name];
+        if(task) Promise.resolve().then(task).catch(e => toast(e.message, true));
+      };
+
+      $('#download-template').addEventListener('click', downloadTemplate);
+      $('#upload-form').addEventListener('submit', doUpload);
+      $('#crawl-form').addEventListener('submit', doCreateCrawl);
+      $('#refresh-crawl').addEventListener('click', () => initCrawl());
+      $('#refresh-review').addEventListener('click', () => loadReviewTasks());
+      $('#refresh-master').addEventListener('click', () => loadMasterList($('#master-type').value));
+      $('#review-filter').addEventListener('submit', e => { e.preventDefault(); loadReviewTasks(); });
+      $('#semantic-form').addEventListener('submit', runSemantic);
+      $('#rag-config-form').addEventListener('submit', saveRagConfig);
+      $('#toggle-rag-config').addEventListener('click', async () => {
+        const panel = $('#rag-config-panel');
+        const show = panel.style.display === 'none';
+        panel.style.display = show ? 'block' : 'none';
+        if(show){ try{ await loadRagConfig(); }catch(e){ toast(e.message, true); } }
+      });
+      $('#rebuild-rag').addEventListener('click', async () => {
+        try{
+          const s = await api('/api/rag/rebuild', {method:'POST'});
+          toast(`索引已重建：${s.segments} 个段落 / ${s.documents} 份文档`);
+          loadRagStatus();
+        }catch(e){ toast(e.message, true); }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+{
+  "schemaVersion": "1.1",
+  "stage": "Stage 0",
+  "sourceBaseline": "STAGE0-执行分解.md §6.1（24 条）+ 方案定稿.md §10（E 组 6 条）",
+  "note": "能力问题是本体的验收用例：每条必须能用 29 个内核类型 + 34 条语义边回答；不在能力问题里的对象与边原则上不建（R1）。Stage 0 只做路径检查，不要求真实数据。gate 为验收规则引用：primary 标出该问题答案最容易被判错的主规则，secondary 列出同一答案还需同时满足的次规则；编号以 gates/rules.json 为唯一真相（旧稿编号已按 STAGE0-执行分解.md §7.7 映射对齐）。G3-4（能力问题路径可达）对全部问题默认适用，不在各条中重复列出。",
+  "coverage": {
+    "total": 30,
+    "byGroup": { "A": 6, "B": 6, "C": 6, "D": 6, "E": 6 },
+    "stage0Enabled": 24,
+    "stage2Enabled": 6
+  },
+  "hopPolicy": {
+    "stage0Limit": 5,
+    "stage2Limit": 6,
+    "note": "Stage 0 问题按 stage0Limit 判定；Stage 2 问题仅在管理员开启 Stage 2 后生效，按 stage2Limit 判定，超出 stage2Limit 记 WARN。开启前 Stage 2 问题不参与 Stage 0 交付验收。"
+  },
+  "groups": [
+    { "code": "A", "label": "指标与口径", "focus": "单位、税基、价格口径、期间、来源、派生" },
+    { "code": "B", "label": "政策与事件", "focus": "适用范围、退场、影响、参与方、原文证据" },
+    { "code": "C", "label": "价格与传导", "focus": "基差、传导、替代、加工、归因" },
+    { "code": "D", "label": "主体与地理贸易", "focus": "企业、地区、物流节点、市场、人物" },
+    { "code": "E", "label": "条款适用性", "focus": "三态判定、条件、例外、后果、优先级、官方启动" }
+  ],
+  "questions": [
+    {
+      "id": "A1",
+      "group": "A",
+      "question": "某品种在某地区、某期间的价格是多少？两个数字能否直接比较？",
+      "requiredTypes": ["Commodity", "CommodityForm", "Region", "TimePeriod", "IndicatorSeries", "DataPoint", "UnitOfMeasure", "Scope"],
+      "requiredEdges": ["SERIES_FOR_FORM", "HAS_POINT", "POINT_FOR_PERIOD", "SCOPED_BY", "UNIT_OF"],
+      "maxHops": 4,
+      "answerShape": "值 + 单位 + 价格口径 + 税基 + 期间 + 来源",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G2-2", "G1-2"]
+      }
+    },
+    {
+      "id": "A2",
+      "group": "A",
+      "question": "同一指标在不同地区的可比序列有哪些？哪些因口径不同不可比？",
+      "requiredTypes": ["Indicator", "IndicatorSeries", "Scope", "Region", "UnitOfMeasure"],
+      "requiredEdges": ["HAS_SERIES", "SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "序列列表 + 不可比原因（单位/税基/价格口径/地区层级）",
+      "evidenceRequired": false,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G2-2", "G2-11"]
+      }
+    },
+    {
+      "id": "A3",
+      "group": "A",
+      "question": "某数据点由哪个统计来源发布、何时发布、是否修订过？",
+      "requiredTypes": ["DataPoint", "IndicatorSeries", "StatisticalSource", "Organization"],
+      "requiredEdges": ["SERIES_FROM_SOURCE", "HAS_POINT", "DOC_ISSUED_BY"],
+      "maxHops": 3,
+      "answerShape": "来源 + 发布时间 + revisionNo + qualityFlag",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G0-4"]
+      }
+    },
+    {
+      "id": "A4",
+      "group": "A",
+      "question": "两个序列不能直接比较时，差在哪个口径维度？",
+      "requiredTypes": ["IndicatorSeries", "Scope", "Dimension", "UnitOfMeasure"],
+      "requiredEdges": ["SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "差异维度列表（unitPriceBasis/taxBasis/geography/tradeFlow/qualityGrade）",
+      "evidenceRequired": false,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G2-11", "G2-2"]
+      }
+    },
+    {
+      "id": "A5",
+      "group": "A",
+      "question": "某指标从哪一期开始有数据、哪些期间缺失？",
+      "requiredTypes": ["Indicator", "IndicatorSeries", "DataPoint", "TimePeriod"],
+      "requiredEdges": ["HAS_SERIES", "HAS_POINT", "POINT_FOR_PERIOD"],
+      "maxHops": 3,
+      "answerShape": "起止期间 + 缺失期间列表",
+      "evidenceRequired": false,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-1",
+        "secondary": ["G0-4"]
+      }
+    },
+    {
+      "id": "A6",
+      "group": "A",
+      "question": "某个派生指标的公式是什么、依赖哪些基础指标？",
+      "requiredTypes": ["Indicator", "UnitOfMeasure"],
+      "requiredEdges": ["UNIT_OF"],
+      "maxHops": 2,
+      "answerShape": "公式文本 + 依赖指标列表（仅描述，不执行计算）",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G0-4",
+        "secondary": ["G1-2"]
+      }
+    },
+    {
+      "id": "B1",
+      "group": "B",
+      "question": "某项政策在给定年份的适用品种、适用地区、适用期间与税基口径是什么？",
+      "requiredTypes": ["Event", "EventType", "Scope", "Dimension", "Commodity", "Region", "TimePeriod"],
+      "requiredEdges": ["SCOPED_BY", "EVENT_OF_TYPE"],
+      "maxHops": 4,
+      "answerShape": "Scope 成员展开表 + 有效期",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-11",
+        "secondary": ["G2-2", "G2-1"]
+      }
+    },
+    {
+      "id": "B2",
+      "group": "B",
+      "question": "新旧两个政策之间是取代、修订、延期还是自然到期？",
+      "requiredTypes": ["Event", "Document"],
+      "requiredEdges": ["SUPERSEDES", "AMENDS", "EXTENDS", "EVIDENCED_BY"],
+      "maxHops": 3,
+      "answerShape": "关系类型 + 依据原文 + 生效日",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-10",
+        "secondary": ["G1-5", "G2-9"]
+      }
+    },
+    {
+      "id": "B3",
+      "group": "B",
+      "question": "某政策事件影响了哪些品种或因子，方向如何，证据在哪一段？",
+      "requiredTypes": ["Event", "ImpactLink", "Commodity", "Factor", "Evidence"],
+      "requiredEdges": ["IMPACTS", "EVIDENCED_BY"],
+      "maxHops": 3,
+      "answerShape": "影响对象 + 方向 + 滞后（若有）+ 摘句",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G2-4"]
+      }
+    },
+    {
+      "id": "B4",
+      "group": "B",
+      "question": "某品种在某期间受哪些政策事件影响？按时间排序。",
+      "requiredTypes": ["Event", "Commodity", "TimePeriod"],
+      "requiredEdges": ["IMPACTS", "SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "事件时间线 + 方向 + 有效期",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-10",
+        "secondary": ["G2-1", "G2-9"]
+      }
+    },
+    {
+      "id": "B5",
+      "group": "B",
+      "question": "某机构在某政策事件中扮演什么角色？",
+      "requiredTypes": ["Event", "Organization", "Person", "Document"],
+      "requiredEdges": ["EVENT_INVOLVES_ACTOR", "DOC_ISSUED_BY", "PERSON_AFFILIATED_WITH"],
+      "maxHops": 3,
+      "answerShape": "机构 + 角色（发文/执行/参与）+ 依据",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G0-4"]
+      }
+    },
+    {
+      "id": "B6",
+      "group": "B",
+      "question": "某政策文件的文号、发布机构、发布日期、生效日期与原文段落是哪些？",
+      "requiredTypes": ["Document", "DocumentSegment", "Organization", "Evidence"],
+      "requiredEdges": ["DOC_ISSUED_BY", "HAS_SEGMENT", "EVIDENCE_FROM"],
+      "maxHops": 5,
+      "answerShape": "文档元数据 + 段落定位（页码/偏移）",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G0-4", "G3-4"]
+      }
+    },
+    {
+      "id": "C1",
+      "group": "C",
+      "question": "某品种现货与期货的基差在给定期间如何变化？",
+      "requiredTypes": ["IndicatorSeries", "DataPoint", "TimePeriod", "UnitOfMeasure", "Scope"],
+      "requiredEdges": ["HAS_POINT", "POINT_FOR_PERIOD", "SCOPED_BY"],
+      "maxHops": 4,
+      "answerShape": "基差序列 + 口径说明（现货价口径 vs 期货合约）",
+      "evidenceRequired": false,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G2-2", "G2-1"]
+      }
+    },
+    {
+      "id": "C2",
+      "group": "C",
+      "question": "上游价格变动传导到下游的滞后期与系数是多少？基于哪段样本期？",
+      "requiredTypes": ["PriceTransmissionLink", "IndicatorSeries", "TimePeriod"],
+      "requiredEdges": ["SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "elasticity + lagDays + samplePeriod + regimeNote",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-5",
+        "secondary": ["G2-2", "G1-1"]
+      }
+    },
+    {
+      "id": "C3",
+      "group": "C",
+      "question": "两个品种形态之间是否存在替代关系？替代比与触发条件是什么？",
+      "requiredTypes": ["SubstitutionRelation", "CommodityForm", "Scope"],
+      "requiredEdges": ["SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "方向 + 替代比 + 触发条件 + 适用范围",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-5",
+        "secondary": ["G2-2", "G2-11"]
+      }
+    },
+    {
+      "id": "C4",
+      "group": "C",
+      "question": "加工某原料的产出结构、出率与适用工艺是什么？",
+      "requiredTypes": ["TransformationProcess", "CommodityForm", "UnitOfMeasure"],
+      "requiredEdges": [],
+      "maxHops": 3,
+      "answerShape": "输入→输出列表 + 出率 + 工艺类型 + 地区",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-5",
+        "secondary": ["G2-3", "G1-1"]
+      }
+    },
+    {
+      "id": "C5",
+      "group": "C",
+      "question": "某地区某期间的价格异常波动可归因到哪些事件或因子？",
+      "requiredTypes": ["DataPoint", "Event", "Factor", "ImpactLink", "Assertion"],
+      "requiredEdges": ["IMPACTS", "ACTS_ON_FACTOR", "SUPPORTED_BY"],
+      "maxHops": 5,
+      "answerShape": "候选归因列表（事实/断言分列）+ 证据强度",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G2-6", "G3-4"]
+      }
+    },
+    {
+      "id": "C6",
+      "group": "C",
+      "question": "某品种的进口成本由哪些部分构成，分别对应哪个序列？",
+      "requiredTypes": ["IndicatorSeries", "Scope", "UnitOfMeasure", "MarketPlace"],
+      "requiredEdges": ["SCOPED_BY", "SERIES_FROM_SOURCE"],
+      "maxHops": 4,
+      "answerShape": "成本分项 + 单位 + 口径 + 来源",
+      "evidenceRequired": false,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G2-2", "G0-4"]
+      }
+    },
+    {
+      "id": "D1",
+      "group": "D",
+      "question": "某企业的类型、所在地、产能与关联品种是什么？",
+      "requiredTypes": ["Enterprise", "Region", "Commodity", "UnitOfMeasure"],
+      "requiredEdges": ["ORG_IN_REGION", "SERIES_FOR_FORM"],
+      "maxHops": 3,
+      "answerShape": "企业画像 + 关联品种 + 产能口径",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G0-4"]
+      }
+    },
+    {
+      "id": "D2",
+      "group": "D",
+      "question": "某地区的上级地区、是否主产区或主销区？",
+      "requiredTypes": ["Region"],
+      "requiredEdges": ["REGION_PARENT"],
+      "maxHops": 4,
+      "answerShape": "地区路径 + 主产/主销标记",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-1",
+        "secondary": ["G0-4", "G3-4"]
+      }
+    },
+    {
+      "id": "D3",
+      "group": "D",
+      "question": "某港口或仓库的设计能力与所在地区是什么？",
+      "requiredTypes": ["LogisticsNode", "Region", "UnitOfMeasure"],
+      "requiredEdges": ["PLACE_LOCATED_IN"],
+      "maxHops": 2,
+      "answerShape": "节点类型 + 能力 + 单位 + 地区 + 经纬度",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-3",
+        "secondary": ["G0-4", "G1-2"]
+      }
+    },
+    {
+      "id": "D4",
+      "group": "D",
+      "question": "某市场（交易所/批发市场）的运营方与所在地是什么？",
+      "requiredTypes": ["MarketPlace", "Organization", "Region"],
+      "requiredEdges": ["MARKET_OPERATED_BY", "PLACE_LOCATED_IN"],
+      "maxHops": 2,
+      "answerShape": "市场类型 + 运营方 + 地区 + 交易所代码",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G0-4", "G1-1"]
+      }
+    },
+    {
+      "id": "D5",
+      "group": "D",
+      "question": "某品种的海关编码与贸易流向口径是什么？",
+      "requiredTypes": ["Commodity", "CommodityForm", "Scope", "Dimension"],
+      "requiredEdges": ["HAS_FORM", "SCOPED_BY"],
+      "maxHops": 3,
+      "answerShape": "HS 编码 + 贸易流向 + 计价口径",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G2-11",
+        "secondary": ["G2-2", "G0-4"]
+      }
+    },
+    {
+      "id": "D6",
+      "group": "D",
+      "question": "某人物所属机构、角色与职务是什么？",
+      "requiredTypes": ["Person", "Organization"],
+      "requiredEdges": ["PERSON_AFFILIATED_WITH"],
+      "maxHops": 2,
+      "answerShape": "姓名 + 机构 + 角色 + 职务",
+      "evidenceRequired": true,
+      "stage": "Stage 0",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G0-4"]
+      }
+    },
+    {
+      "id": "E1",
+      "group": "E",
+      "question": "给定情形（品种/地区/期间/主体），某条款是否适用？",
+      "requiredTypes": ["PolicyClause", "NormativeStatement", "ClauseCondition", "Scope", "CompiledRule"],
+      "requiredEdges": ["SCOPED_BY", "SUPPORTED_BY"],
+      "maxHops": 6,
+      "answerShape": "三态之一：APPLICABLE / NOT_APPLICABLE / UNABLE + 逐条件判定明细",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G2-8",
+        "secondary": ["G2-2", "G1-2", "G3-4"]
+      }
+    },
+    {
+      "id": "E2",
+      "group": "E",
+      "question": "某条款的前提条件有哪些？当前哪些满足、哪些不满足、哪些无数据？",
+      "requiredTypes": ["ClauseCondition", "RuleParameter", "IndicatorSeries", "TimePeriod"],
+      "requiredEdges": ["SCOPED_BY"],
+      "maxHops": 5,
+      "answerShape": "条件清单，每条标注 SATISFIED / UNSATISFIED / UNKNOWN 与数据来源",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G2-8",
+        "secondary": ["G2-2", "G0-4", "G3-4"]
+      }
+    },
+    {
+      "id": "E3",
+      "group": "E",
+      "question": "某条款有哪些例外？本例是否命中例外？",
+      "requiredTypes": ["ClauseException", "PolicyClause", "Scope", "TimePeriod"],
+      "requiredEdges": ["SCOPED_BY"],
+      "maxHops": 5,
+      "answerShape": "例外清单 + 是否命中 + 命中依据",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G2-8",
+        "secondary": ["G1-2", "G2-2", "G3-4"]
+      }
+    },
+    {
+      "id": "E4",
+      "group": "E",
+      "question": "某条款的后果是什么？是否需要另一条款授权才能执行？",
+      "requiredTypes": ["ClauseConsequence", "ClauseRelation", "PolicyClause"],
+      "requiredEdges": [],
+      "maxHops": 4,
+      "answerShape": "后果类型 + 触发动作 + 授权链",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G2-8",
+        "secondary": ["G2-9", "G1-2"]
+      }
+    },
+    {
+      "id": "E5",
+      "group": "E",
+      "question": "两个条款冲突时哪个优先？依据是什么？",
+      "requiredTypes": ["ClauseRelation", "NormativeStatement", "PolicyClause"],
+      "requiredEdges": [],
+      "maxHops": 5,
+      "answerShape": "胜出条款 + 优先依据（上位法/新规/特别规定）+ 是否可判定",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G2-8",
+        "secondary": ["G2-10", "G1-2", "G3-4"]
+      }
+    },
+    {
+      "id": "E6",
+      "group": "E",
+      "question": "某政策工具是否已官方启动？",
+      "requiredTypes": ["Event", "Document", "Evidence", "EventType"],
+      "requiredEdges": ["EVENT_OF_TYPE", "EVIDENCED_BY"],
+      "maxHops": 4,
+      "answerShape": "officiallyActivated ∈ {TRUE, FALSE, UNKNOWN} + 公告证据或『无公告』说明",
+      "evidenceRequired": true,
+      "stage": "Stage 2",
+      "gate": {
+        "primary": "G1-2",
+        "secondary": ["G1-1", "G2-8"]
+      }
+    }
+  ]
+}

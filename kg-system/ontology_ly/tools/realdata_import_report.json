@@ -1,0 +1,291 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-11-14T06:54:05.449517+00:00",
+  "datasetTier": "real-sourced",
+  "baselineSha256": "72e1a3193cefd8e49b2fa9de6724ef657fce27e832f1570c313995250bd53149",
+  "afterSha256": "912cca53b41be14f33c0fe1ff13de853b036abe9317017e8b091f4aecadd85c8",
+  "baselineUnchanged": false,
+  "backupFile": "data/grain_oil.db.before_realdata",
+  "domainStatus": {
+    "政策法规": {
+      "extractorType": "policy_gov",
+      "source": "gov.cn/zhengce/zuixin/",
+      "status": "real-fetched",
+      "realRecords": 10
+    },
+    "市场价格指标": {
+      "extractorType": "market_index_moa",
+      "source": "data.moa.gov.cn/nyb/200zs",
+      "status": "real-fetched",
+      "realRecords": 6
+    },
+    "年鉴记录": {
+      "extractorType": "yearbook_stats",
+      "source": "stats.gov.cn/sj/ndsj/2025/left.htm",
+      "status": "real-fetched",
+      "realRecords": 117,
+      "note": "年鉴统计表以 JPG 图片发布（html/C12-10.jpg），HTML 中无表格结构。改由系统内 yearbook_stats 抽取器下载图片、调用 Windows 内置 OCR（zh-Hans-CN）并按等距网格还原行列，导入 1978–2023 共 24 个年份的粮食/稻谷/小麦/玉米/大豆产量；缺口如实保留，未做推断补值。",
+      "imageParse": {
+        "tableNo": "12-10",
+        "tableName": "主要农产品产量",
+        "imageUrl": "https://www.stats.gov.cn/sj/ndsj/2025/html/C12-10.jpg",
+        "imageSha256Prefix": "9f74dac21719",
+        "engine": "Windows.Media.Ocr.OcrEngine (zh-Hans-CN)",
+        "ocrScale": 3,
+        "fallback": "Playwright + Chromium 浏览器截图（直链下载失败时启用，type=png 保证像素无损）",
+        "cache": "data/yearbook_parsed/9f74dac21719*.json",
+        "coveredYears": 24,
+        "records": 117,
+        "unrecognized": [
+          "2014 行：年份被 OCR 识别为「20」，整行未导入",
+          "2024 行：年份被 OCR 识别为「202」，整行未导入（粮食单元格 OCR 输出亦不可信，经图像人工确认为 70649.9，未按人工读数回填）",
+          "2005 稻谷、2011 稻谷、2015 玉米：单元格未识别，对应记录缺失"
+        ]
+      }
+    },
+    "农业情报": {
+      "extractorType": "intel_agri",
+      "source": "moa.gov.cn",
+      "status": "real-fetched",
+      "realRecords": 10
+    },
+    "知识关系": {
+      "extractorType": "relation_derive",
+      "source": "已入库实体派生",
+      "status": "derived",
+      "realRecords": 11
+    }
+  },
+  "tableCounts": {
+    "Policy": 12,
+    "IvdData": 14,
+    "YrbYearbook": 120,
+    "Intel": 12,
+    "Relation": 15,
+    "Indicator": 19,
+    "SourceDoc": 35,
+    "CrsSource": 9
+  },
+  "crawlSources": [
+    {
+      "crawlSourceId": "CRS0001",
+      "sourceName": "国家统计局",
+      "extractorType": null,
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0002",
+      "sourceName": "USDA Foreign Agricultural Service",
+      "extractorType": null,
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0003",
+      "sourceName": "FAO",
+      "extractorType": null,
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0004",
+      "sourceName": "中国粮油信息网",
+      "extractorType": null,
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0005",
+      "sourceName": "国务院政策文件库",
+      "extractorType": "policy_gov",
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0006",
+      "sourceName": "农业农村部数据平台",
+      "extractorType": "market_index_moa",
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0007",
+      "sourceName": "国家统计局农业统计",
+      "extractorType": "yearbook_stats",
+      "enabledFlag": "启用",
+      "sourceUrl": "https://www.stats.gov.cn/sj/ndsj/2025/left.htm",
+      "charset": "GB18030"
+    },
+    {
+      "crawlSourceId": "CRS0008",
+      "sourceName": "农业农村部市场分析",
+      "extractorType": "intel_agri",
+      "enabledFlag": "启用"
+    },
+    {
+      "crawlSourceId": "CRS0009",
+      "sourceName": "知识关系派生",
+      "extractorType": "relation_derive",
+      "enabledFlag": "启用"
+    }
+  ],
+  "recentRuns": [
+    {
+      "runId": "RUN0014",
+      "crawlSourceId": "CRS0007",
+      "startedAt": "2026-11-14T07:19:10.000Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 0,
+      "duplicateCount": 1,
+      "errorMessage": "年鉴图像表 1 张，记录 117 条；12-10 5 处未识别（直链下载路径，未触发截图兜底）"
+    },
+    {
+      "runId": "RUN0013",
+      "crawlSourceId": "CRS0007",
+      "startedAt": "2026-11-14T06:52:02.376Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 0,
+      "duplicateCount": 1,
+      "errorMessage": "年鉴图像表 1 张，记录 117 条；12-10 5 处未识别"
+    },
+    {
+      "runId": "RUN0012",
+      "crawlSourceId": "CRS0007",
+      "startedAt": "2026-11-14T06:44:50.833Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "年鉴图像表 1 张，记录 117 条；12-10 3 处未识别"
+    },
+    {
+      "runId": "RUN0011",
+      "crawlSourceId": "CRS0009",
+      "startedAt": "2026-11-14T05:09:36.093Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "派生关系 11 条"
+    },
+    {
+      "runId": "RUN0010",
+      "crawlSourceId": "CRS0007",
+      "startedAt": "2026-11-14T05:09:35.290Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "年鉴记录 0 条"
+    },
+    {
+      "runId": "RUN0009",
+      "crawlSourceId": "CRS0008",
+      "startedAt": "2026-11-14T05:08:56.143Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "情报 10 条"
+    },
+    {
+      "runId": "RUN0008",
+      "crawlSourceId": "CRS0005",
+      "startedAt": "2026-11-14T05:08:05.276Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 0,
+      "duplicateCount": 1,
+      "errorMessage": "政策详情页 10 条"
+    },
+    {
+      "runId": "RUN0007",
+      "crawlSourceId": "CRS0005",
+      "startedAt": "2026-11-14T05:05:30.673Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "政策详情页 0 条"
+    },
+    {
+      "runId": "RUN0006",
+      "crawlSourceId": "CRS0006",
+      "startedAt": "2026-11-14T05:05:07.854Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 0,
+      "duplicateCount": 1,
+      "errorMessage": "市场指数 6 条"
+    },
+    {
+      "runId": "RUN0005",
+      "crawlSourceId": "CRS0006",
+      "startedAt": "2026-11-14T05:01:25.315Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": "市场指数 0 条"
+    },
+    {
+      "runId": "RUN0004",
+      "crawlSourceId": "CRS0004",
+      "startedAt": "2026-11-14T02:45:19.352Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": null
+    },
+    {
+      "runId": "RUN0003",
+      "crawlSourceId": "CRS0003",
+      "startedAt": "2026-11-14T02:44:51.772Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": null
+    },
+    {
+      "runId": "RUN0002",
+      "crawlSourceId": "CRS0002",
+      "startedAt": "2026-11-14T01:09:45.452Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": null
+    },
+    {
+      "runId": "RUN0001",
+      "crawlSourceId": "CRS0001",
+      "startedAt": "2026-11-14T01:09:20.245Z",
+      "runStatus": "成功",
+      "httpStatus": 200,
+      "fetchedCount": 1,
+      "savedCount": 1,
+      "duplicateCount": 0,
+      "errorMessage": null
+    }
+  ],
+  "honestyNotes": [
+    "年鉴域 stats.gov.cn 页面无 HTML 结构化表格，改由 yearbook_stats 抽取器解析统计表 JPG 图像（12-10 主要农产品产量）：Windows OCR + 等距网格还原行列，导入 1978–2023 共 24 个年份、117 条记录，未用合成数据回填。",
+    "年鉴图像识别缺口如实保留：2014 行年份被识别为「20」、2024 行年份被识别为「202」，两行整行未导入；2005 稻谷、2011 稻谷、2015 玉米单元格未识别。上述缺失未做推断或人工回填。",
+    "年鉴记录 caliberNote 统一标注「12-10 表图像识别（图片 9f74dac21719）」，逐条可回溯到 SourceDoc SOU0035 与图片 SHA256；2024 年国家/重庆公报记录仍为公报文本口径，与年鉴图像口径分开保留。",
+    "年鉴图像采集已加浏览器截图兜底（Playwright + Chromium）：直链图片被防盗链拦截时自动截屏再走同一 OCR 管线。实测截图路径与直链下载解析结果完全一致（24 年 117 条、0 处数值差异），该兜底不新增数据仅保证可达性。",
+    "政策 docNumber 字段部分记录因页面 ICP 备案号干扰可能为空或非发文字号，标题/日期/发布机构为真实抽取。",
+    "所有数据来源可追溯至 SourceDoc.sourceUrl 与 CrsSource_CrawlRun。"
+  ]
+}

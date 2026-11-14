@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0",
+  "stage": "Stage 0",
+  "bridge": "factor",
+  "label": "因子桥",
+  "owner": "SHARED",
+  "purpose": "把政策侧的『方向判断』与市场侧的『量化驱动』接到同一个 Factor 上：类型归内核，实例由包提案，边各写一侧。",
+  "defaultPolicy": "白名单之外一律拒绝（G2-7 / AP_BRIDGE_ILLEGAL_WRITE）",
+  "ownershipRule": {
+    "type": "Factor 类型归内核，定义不可被扩展包修改",
+    "instances": "实例由扩展包提案：status=DRAFT + proposedBy=POLICY_PACK|MARKET_PACK；内核评审后置 ACTIVE",
+    "edges": "政策包只写 Event→Factor（ACTS_ON_FACTOR）；市场包只写 Factor→IndicatorSeries（DRIVES）与 Factor→Indicator（MEASURED_BY）"
+  },
+  "allowedWrites": {
+    "POLICY_PACK": [
+      {
+        "targetType": "Factor",
+        "operation": "PROPOSE",
+        "allowedFields": ["name", "alias", "description", "factorCode", "factorCategory", "factorSubCategory", "defaultDirection", "mechanism", "proposedBy", "status"],
+        "conditions": ["status 只能为 DRAFT", "proposedBy 必须为 POLICY_PACK", "mechanism 必填"]
+      }
+    ],
+    "MARKET_PACK": [
+      {
+        "targetType": "Factor",
+        "operation": "PROPOSE",
+        "allowedFields": ["name", "alias", "description", "factorCode", "factorCategory", "factorSubCategory", "defaultDirection", "measuredByIndicatorId", "scopeId", "mechanism", "proposedBy", "status"],
+        "conditions": ["status 只能为 DRAFT", "proposedBy 必须为 MARKET_PACK", "可定量化的因子必须填 measuredByIndicatorId 或 scopeId 之一"]
+      }
+    ],
+    "KERNEL": [
+      {
+        "targetType": "Factor",
+        "operation": "APPROVE",
+        "allowedFields": ["status", "version", "mergedIntoId"],
+        "conditions": ["仅内核评审可把 DRAFT 转 ACTIVE", "转 ACTIVE 前必须至少 1 条 Evidence"]
+      }
+    ]
+  },
+  "allowedEdges": {
+    "POLICY_PACK": [
+      {
+        "name": "ACTS_ON_FACTOR",
+        "from": ["Event"],
+        "to": ["Factor"],
+        "requiredAttributes": [],
+        "requiredEvidence": 1
+      }
+    ],
+    "MARKET_PACK": [
+      {
+        "name": "DRIVES",
+        "from": ["Factor"],
+        "to": ["IndicatorSeries"],
+        "requiredAnyAttributes": ["elasticity", "lagDays"],
+        "requiredEvidence": 1,
+        "conditions": ["elasticity 必须在 -3 到 3 之间，且写 samplePeriodId 对应样本期", "lagDays 必须 ≥ 0"]
+      },
+      {
+        "name": "MEASURED_BY",
+        "from": ["Factor"],
+        "to": ["Indicator"],
+        "requiredAttributes": [],
+        "requiredEvidence": 1
+      }
+    ],
+    "KERNEL": [
+      {
+        "name": "SCOPED_BY",
+        "from": ["Factor"],
+        "to": ["Scope"],
+        "requiredAttributes": [],
+        "requiredEvidence": 0
+      }
+    ]
+  },
+  "forbidden": [
+    {
+      "code": "AP_PACK_WRITES_OTHER_SIDE",
+      "rule": "政策包不得写 DRIVES / MEASURED_BY；市场包不得写 ACTS_ON_FACTOR",
+      "reason": "因子桥两侧各写一侧，双向都写会形成无证据闭环",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_FACTOR_WITHOUT_MECHANISM",
+      "rule": "新建 Factor（含 DRAFT）必须有 mechanism",
+      "reason": "没有作用机理的因子只是标签，无法进入解释与反验",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_FACTOR_DUPLICATE",
+      "rule": "factorCode 或 (factorCategory+factorSubCategory+scopeId) 重复的 Factor 不得新建",
+      "reason": "同一语义的因子分散会让反验样本被拆碎",
+      "severity": "ERROR"
+    },
+    {
+      "code": "AP_ELASTICITY_WITHOUT_PERIOD",
+      "rule": "DRIVES 带 elasticity 时必须能定位估计样本期",
+      "reason": "无样本期的弹性系数不可复现",
+      "severity": "ERROR"
+    }
+  ],
+  "required": [
+    "Factor 转 ACTIVE 前必须至少 1 条 Evidence 且 proposedBy 非空",
+    "DRIVES 的 elasticity 与 lagDays 至少一项非空（requiresAnyAttribute）",
+    "Factor.defaultDirection 只是默认值，Event→Factor→Series 的解释不得把它当作事实结论"
+  ],
+  "gateRules": ["G2-1", "G2-4", "G2-7", "G3-3"]
+}
