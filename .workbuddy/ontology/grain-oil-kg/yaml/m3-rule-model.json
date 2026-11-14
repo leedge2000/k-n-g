@@ -1,0 +1,211 @@
+{
+  "model_type": "RULE",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "跨对象与事件驱动规则集；v1 由审核卡控、重复检测与质量治理显式调用",
+  "rules": [
+    {
+      "id": "R-01",
+      "name": "发布前置校验",
+      "ruleType": "VALIDATION",
+      "scope": "四类知识条目",
+      "condition": "来源文档状态=有效 且 必填属性完整 且 已挂有效分类",
+      "action": "阻止提交审核与发布",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-01",
+        "B-02"
+      ],
+      "description": "发布前置校验：来源文档状态=有效 且 必填属性完整 且 已挂有效分类 → 阻止提交审核与发布"
+    },
+    {
+      "id": "R-02",
+      "name": "指标四维重复检测",
+      "ruleType": "VALIDATION",
+      "scope": "指标数据",
+      "condition": "同指标+地区+品种+期间已存在有效记录",
+      "action": "生成质量治理记录（重复）",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-05"
+      ],
+      "description": "指标四维重复检测：同指标+地区+品种+期间已存在有效记录 → 生成质量治理记录（重复）"
+    },
+    {
+      "id": "R-03",
+      "name": "来源失效传播判定",
+      "ruleType": "EVENT_DRIVEN",
+      "scope": "四类知识条目与知识关系",
+      "condition": "订阅 E-01，命中引用该来源文档的下游条目",
+      "action": "触发 B-08 标记下游条目失效",
+      "subscribedEvents": [
+        "E-01"
+      ],
+      "triggeredBehaviors": [
+        "B-08"
+      ],
+      "description": "来源失效传播判定：订阅 E-01，命中引用该来源文档的下游条目 → 触发 B-08 标记下游条目失效"
+    },
+    {
+      "id": "R-04",
+      "name": "融合相似度阈值",
+      "ruleType": "VALIDATION",
+      "scope": "质量治理记录",
+      "condition": "相似度 >= 0.85 才允许融合",
+      "action": "允许或阻止实体融合",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-05"
+      ],
+      "description": "融合相似度阈值：相似度 >= 0.85 才允许融合 → 允许或阻止实体融合"
+    },
+    {
+      "id": "R-05",
+      "name": "关系置信度准入",
+      "ruleType": "VALIDATION",
+      "scope": "知识关系",
+      "condition": "置信度 < 0.60 不得发布",
+      "action": "阻止审核通过",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-02"
+      ],
+      "description": "关系置信度准入：置信度 < 0.60 不得发布 → 阻止审核通过"
+    },
+    {
+      "id": "R-06",
+      "name": "审核状态迁移合法性",
+      "ruleType": "VALIDATION",
+      "scope": "四类知识条目与知识关系",
+      "condition": "当前状态必须为待审核",
+      "action": "允许或阻止审核通过/退回",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-02",
+        "B-03"
+      ],
+      "description": "审核状态迁移合法性：当前状态必须为待审核 → 允许或阻止审核通过/退回"
+    },
+    {
+      "id": "R-07",
+      "name": "冲突标识判定",
+      "ruleType": "VALIDATION",
+      "scope": "质量治理记录",
+      "condition": "同一实体同一属性存在不同值且来源均有效",
+      "action": "生成质量治理记录（冲突）",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-06"
+      ],
+      "description": "冲突标识判定：同一实体同一属性存在不同值且来源均有效 → 生成质量治理记录（冲突）"
+    },
+    {
+      "id": "R-08",
+      "name": "增量范围判定",
+      "ruleType": "VALIDATION",
+      "scope": "全模型",
+      "condition": "updatedAt > 上次同步时间",
+      "action": "纳入增量变更集",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-07"
+      ],
+      "description": "增量范围判定：updatedAt > 上次同步时间 → 纳入增量变更集"
+    },
+    {
+      "id": "R-09",
+      "name": "采集快照去重",
+      "ruleType": "VALIDATION",
+      "scope": "来源文档",
+      "condition": "同一 URL 或同一 checksum 已存在有效来源文档",
+      "action": "跳过入库并生成治理记录（重复）",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-12"
+      ],
+      "description": "采集快照去重：同一 URL 或同一 checksum 已存在有效来源文档 → 跳过入库并生成治理记录（重复）"
+    },
+    {
+      "id": "R-10",
+      "name": "采集频率与重试上限",
+      "ruleType": "VALIDATION",
+      "scope": "采集源",
+      "condition": "单源抓取间隔 >= 配置下限；连续失败达阈值自动暂停",
+      "action": "允许或阻止执行并触发暂停",
+      "subscribedEvents": [
+        "E-09"
+      ],
+      "triggeredBehaviors": [
+        "FUNC-12",
+        "B-11"
+      ],
+      "description": "采集频率与重试上限：单源抓取间隔 >= 配置下限；连续失败达阈值自动暂停 → 允许或阻止执行并触发 B-11 自动暂停"
+    },
+    {
+      "id": "R-11",
+      "name": "采集目标安全校验",
+      "ruleType": "VALIDATION",
+      "scope": "采集源",
+      "condition": "仅 http/https；解析后 IP 不得属于内网/回环/链路本地/云元数据网段",
+      "action": "阻止请求并记录失败",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-12"
+      ],
+      "description": "采集目标安全校验：仅 http/https；解析后 IP 不得属于内网/回环/链路本地/云元数据网段 → 阻止请求并记录失败"
+    },
+    {
+      "id": "R-12",
+      "name": "采集内容有效性",
+      "ruleType": "VALIDATION",
+      "scope": "来源文档",
+      "condition": "HTTP 2xx、正文长度 >= 阈值、语种可识别",
+      "action": "允许或阻止登记来源文档",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-12"
+      ],
+      "description": "采集内容有效性：HTTP 2xx、正文长度 >= 阈值、语种可识别 → 允许或阻止登记来源文档"
+    },
+    {
+      "id": "R-13",
+      "name": "分类层级合法性",
+      "ruleType": "VALIDATION",
+      "scope": "知识分类",
+      "condition": "父分类存在且有效；level=父 level+1；编码同级唯一；路径一致；沿父链回溯无环",
+      "action": "允许或阻止保存",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-13"
+      ],
+      "description": "分类层级合法性：父分类存在且有效；level=父 level+1；编码同级唯一；路径一致；沿父链回溯无环 → 允许或阻止保存"
+    },
+    {
+      "id": "R-14",
+      "name": "分类挂接与发布卡控",
+      "ruleType": "VALIDATION",
+      "scope": "四类知识条目与指标定义",
+      "condition": "必须挂有效分类且分类层级 >= 2，产业环节必填",
+      "action": "阻止提交审核与发布",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "B-01",
+        "B-02"
+      ],
+      "description": "分类挂接与发布卡控：必须挂有效分类且分类层级 >= 2，产业环节必填 → 阻止提交审核与发布"
+    },
+    {
+      "id": "R-15",
+      "name": "分类停用影响判定",
+      "ruleType": "VALIDATION",
+      "scope": "知识分类",
+      "condition": "分类存在有效子节点或被有效知识条目引用",
+      "action": "阻止停用，须先迁移引用",
+      "subscribedEvents": [],
+      "triggeredBehaviors": [
+        "FUNC-13"
+      ],
+      "description": "分类停用影响判定：分类存在有效子节点或被有效知识条目引用 → 阻止停用，须先迁移引用"
+    }
+  ]
+}

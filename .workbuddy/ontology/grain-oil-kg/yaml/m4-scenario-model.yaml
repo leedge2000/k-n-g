@@ -1,0 +1,33 @@
+model_type: SCENARIO
+version: '2.1'
+domain: 粮油产业多维知识图谱
+description: 来源作废失效传播与实体融合引用改挂两个跨对象事件协同场景
+event_scenarios:
+- id: SCN-01
+  name: 来源作废失效传播
+  description: 来源文档作废后，定位引用它的四类知识条目与知识关系并标记失效
+  sourceObjectRef: AGG-SOURCE-001
+  targetObjectRefs: [AGG-POLICY-001, AGG-INDVAL-001, AGG-YEARBOOK-001, AGG-INTEL-001, AGG-RELATION-001]
+  triggerEventRef: E-01
+  preconditions: [来源文档已作废且事件载荷包含 docId]
+  postconditions: [所有命中的下游条目已失效并保留失效传播留痕]
+  uiTriggerScreen: SCR-SOURCE-FORM
+  steps:
+  - {stepId: S01, stepType: BEHAVIOR_CALL, behaviorRef: B-04, nextSteps: [S02]}
+  - {stepId: S02, stepType: EVENT_EMIT, eventRef: E-01, nextSteps: [S03]}
+  - {stepId: S03, stepType: RULE_EVALUATE, ruleRef: R-03, nextSteps: [S04]}
+  - {stepId: S04, stepType: BEHAVIOR_CALL, behaviorRef: B-08, nextSteps: [S05]}
+  - {stepId: S05, stepType: EVENT_EMIT, eventRef: E-07, nextSteps: []}
+- id: SCN-02
+  name: 实体融合引用改挂
+  description: 重复实体融合后，将下游知识关系与主数据引用统一改挂到保留实体
+  sourceObjectRef: AGG-QUALITY-001
+  targetObjectRefs: [AGG-COMMODITY-001, AGG-ENTERPRISE-001, AGG-RELATION-001]
+  triggerEventRef: E-05
+  preconditions: [R-04 相似度阈值校验通过]
+  postconditions: [下游引用均指向保留实体，重复实体保留融合追溯标识]
+  uiTriggerScreen: SCR-QUALITY
+  steps:
+  - {stepId: S01, stepType: BEHAVIOR_CALL, behaviorRef: B-05, nextSteps: [S02]}
+  - {stepId: S02, stepType: EVENT_EMIT, eventRef: E-05, nextSteps: [S03]}
+  - {stepId: S03, stepType: BEHAVIOR_CALL, behaviorRef: B-10, nextSteps: []}

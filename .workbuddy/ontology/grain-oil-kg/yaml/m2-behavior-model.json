@@ -1,0 +1,687 @@
+{
+  "model_type": "BEHAVIOR",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "24 个业务行为 + 12 个查询行为；Q-01~Q-07 与 M7 严格一对一，GQ-01~GQ-05 承接图谱服务",
+  "behaviors": [
+    {
+      "id": "FUNC-01",
+      "name": "登记来源文档",
+      "alias": "RegisterSourceDoc",
+      "ownerEntity": "AGG-SOURCE-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "录入来源文档元数据并生成内部主键",
+      "appliedRules": [
+        "R-12"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-SOURCE-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-02",
+      "name": "登记来源文档段落",
+      "alias": "RegisterSegment",
+      "ownerEntity": "AGG-SOURCE-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "按标题与自然段切分并登记段落级定位信息",
+      "appliedRules": [
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-SOURCE-FORM.btnSaveSegments_Click"
+      ]
+    },
+    {
+      "id": "FUNC-03",
+      "name": "登记政策法规及条款",
+      "alias": "RegisterPolicy",
+      "ownerEntity": "AGG-POLICY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "登记政策主体与其可执行条款",
+      "appliedRules": [
+        "R-01",
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-POLICY-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-04",
+      "name": "维护指标定义",
+      "alias": "MaintainIndicator",
+      "ownerEntity": "AGG-INDICATOR-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "新增或修改指标口径、单位与频率",
+      "appliedRules": [
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-01"
+      ],
+      "uiEventRefs": [
+        "SCR-INDICATOR-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-05",
+      "name": "登记指标数据",
+      "alias": "RegisterIndicatorValue",
+      "ownerEntity": "AGG-INDVAL-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "登记指标在地区、品种、期间上的取值并执行重复检测",
+      "appliedRules": [
+        "R-02",
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-INDVAL-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-06",
+      "name": "登记年鉴记录",
+      "alias": "RegisterYearbook",
+      "ownerEntity": "AGG-YEARBOOK-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "登记年鉴条目并对齐指标口径",
+      "appliedRules": [
+        "R-01",
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-YEARBOOK-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-07",
+      "name": "登记全球农业情报",
+      "alias": "RegisterIntel",
+      "ownerEntity": "AGG-INTEL-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "登记全球产能、产量、贸易与市场情报",
+      "appliedRules": [
+        "R-01",
+        "R-14"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-INTEL-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-08",
+      "name": "维护产业主数据",
+      "alias": "MaintainMasterData",
+      "ownerEntity": "AGG-COMMODITY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "维护品种、产品、地区、企业主数据",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-01"
+      ],
+      "uiEventRefs": [
+        "SCR-MASTER-DATA.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-09",
+      "name": "维护本体概念与同义词",
+      "alias": "MaintainConcept",
+      "ownerEntity": "AGG-CONCEPT-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "维护本体概念映射与同义词集合",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-01"
+      ],
+      "uiEventRefs": [
+        "SCR-CONCEPT-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-10",
+      "name": "登记知识关系三元组",
+      "alias": "RegisterRelation",
+      "ownerEntity": "AGG-RELATION-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "登记主体-谓词-客体三元组及置信度与来源",
+      "appliedRules": [
+        "R-05"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-RELATION-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-11",
+      "name": "维护采集源",
+      "alias": "MaintainCrawlSource",
+      "ownerEntity": "AGG-CRAWL-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "新增、修改、启停与删除采集源",
+      "appliedRules": [
+        "R-10",
+        "R-11"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-06"
+      ],
+      "uiEventRefs": [
+        "SCR-CRAWL-SOURCE.btnSave_Click"
+      ]
+    },
+    {
+      "id": "FUNC-12",
+      "name": "执行采集并登记来源文档与段落",
+      "alias": "RunCrawl",
+      "ownerEntity": "AGG-CRAWL-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "EXTERNAL",
+      "description": "由 INT-05 或采集调度器触发，抓取公开页面、留痕、去重并登记来源文档与段落",
+      "appliedRules": [
+        "R-09",
+        "R-11",
+        "R-12",
+        "R-10"
+      ],
+      "producedEvents": [
+        "E-08",
+        "E-09"
+      ],
+      "requiredPermissions": [
+        "PERM-06"
+      ],
+      "uiEventRefs": [
+        "SCR-CRAWL-SOURCE.btnRun_Click"
+      ]
+    },
+    {
+      "id": "FUNC-13",
+      "name": "维护知识分类体系",
+      "alias": "MaintainTaxonomy",
+      "ownerEntity": "AGG-TAXONOMY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "维护分类树、产业环节与要素维度",
+      "appliedRules": [
+        "R-13",
+        "R-15"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-07"
+      ],
+      "uiEventRefs": [
+        "SCR-TAXONOMY-FORM.btnSave_Click"
+      ]
+    },
+    {
+      "id": "B-01",
+      "name": "提交审核",
+      "alias": "SubmitForReview",
+      "ownerEntity": "AGG-POLICY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "将草稿或已退回的知识条目提交审核",
+      "appliedRules": [
+        "R-01",
+        "R-14"
+      ],
+      "producedEvents": [
+        "E-02"
+      ],
+      "requiredPermissions": [
+        "PERM-02"
+      ],
+      "uiEventRefs": [
+        "SCR-REVIEW.btnSubmit_Click"
+      ]
+    },
+    {
+      "id": "B-02",
+      "name": "审核通过并发布",
+      "alias": "ApproveAndPublish",
+      "ownerEntity": "AGG-POLICY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "审核通过并写入图存储、检索索引与增量变更集",
+      "appliedRules": [
+        "R-05",
+        "R-06",
+        "R-14"
+      ],
+      "producedEvents": [
+        "E-03"
+      ],
+      "requiredPermissions": [
+        "PERM-03"
+      ],
+      "uiEventRefs": [
+        "SCR-REVIEW.btnApprove_Click"
+      ]
+    },
+    {
+      "id": "B-03",
+      "name": "审核退回",
+      "alias": "RejectReview",
+      "ownerEntity": "AGG-POLICY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "将待审核条目退回录入员修改",
+      "appliedRules": [
+        "R-06"
+      ],
+      "producedEvents": [
+        "E-04"
+      ],
+      "requiredPermissions": [
+        "PERM-03"
+      ],
+      "uiEventRefs": [
+        "SCR-REVIEW.btnReject_Click"
+      ]
+    },
+    {
+      "id": "B-04",
+      "name": "作废来源文档",
+      "alias": "VoidSourceDoc",
+      "ownerEntity": "AGG-SOURCE-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "作废来源文档并触发下游失效传播",
+      "appliedRules": [
+        "R-03"
+      ],
+      "producedEvents": [
+        "E-01"
+      ],
+      "requiredPermissions": [
+        "PERM-01"
+      ],
+      "uiEventRefs": [
+        "SCR-SOURCE-FORM.btnVoid_Click"
+      ]
+    },
+    {
+      "id": "B-05",
+      "name": "实体融合",
+      "alias": "MergeEntity",
+      "ownerEntity": "AGG-QUALITY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "按相似度阈值融合重复实体并发布引用改挂事件",
+      "appliedRules": [
+        "R-04"
+      ],
+      "producedEvents": [
+        "E-05"
+      ],
+      "requiredPermissions": [
+        "PERM-05"
+      ],
+      "uiEventRefs": [
+        "SCR-QUALITY.btnMerge_Click"
+      ]
+    },
+    {
+      "id": "B-06",
+      "name": "冲突处置",
+      "alias": "ResolveConflict",
+      "ownerEntity": "AGG-QUALITY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "对同实体同属性冲突值进行取舍与留痕",
+      "appliedRules": [
+        "R-07"
+      ],
+      "producedEvents": [
+        "E-06"
+      ],
+      "requiredPermissions": [
+        "PERM-05"
+      ],
+      "uiEventRefs": [
+        "SCR-QUALITY.btnResolve_Click"
+      ]
+    },
+    {
+      "id": "B-07",
+      "name": "增量变更导出",
+      "alias": "ExportIncremental",
+      "ownerEntity": "AGG-QUALITY-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "按更新时间导出增量变更文件，不改变知识实体状态",
+      "appliedRules": [
+        "R-08"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-INCREMENTAL.btnExport_Click"
+      ]
+    },
+    {
+      "id": "B-08",
+      "name": "标记下游条目失效",
+      "alias": "MarkDownstreamInvalid",
+      "ownerEntity": "AGG-INDVAL-001",
+      "behaviorType": "EVENT_HANDLER",
+      "triggerType": "EVENT",
+      "description": "来源文档作废后将引用它的条目置为已失效",
+      "appliedRules": [
+        "R-03"
+      ],
+      "producedEvents": [
+        "E-07"
+      ],
+      "requiredPermissions": []
+    },
+    {
+      "id": "B-09",
+      "name": "启停采集源",
+      "alias": "ToggleCrawlSource",
+      "ownerEntity": "AGG-CRAWL-001",
+      "behaviorType": "COMMAND",
+      "triggerType": "USER_ACTION",
+      "description": "按人工判断启用或停用采集源",
+      "appliedRules": [
+        "R-10"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-06"
+      ],
+      "uiEventRefs": [
+        "SCR-CRAWL-SOURCE.btnToggle_Click"
+      ]
+    },
+    {
+      "id": "B-10",
+      "name": "改挂融合实体下游引用",
+      "alias": "KnowledgeRelation_Reattach",
+      "ownerEntity": "AGG-RELATION-001",
+      "behaviorType": "EVENT_HANDLER",
+      "triggerType": "EVENT",
+      "description": "实体融合后将知识关系与主数据引用统一改挂到保留实体",
+      "appliedRules": [
+        "R-04"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": []
+    },
+    {
+      "id": "B-11",
+      "name": "连续失败后暂停采集源",
+      "alias": "PauseCrawlSourceOnFailure",
+      "ownerEntity": "AGG-CRAWL-001",
+      "behaviorType": "EVENT_HANDLER",
+      "triggerType": "EVENT",
+      "description": "采集连续失败达到 R-10 阈值后自动暂停采集源",
+      "appliedRules": [
+        "R-10"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": []
+    },
+    {
+      "id": "Q-01",
+      "name": "查询四类知识资源目录",
+      "alias": "KnowledgeCatalog_Query",
+      "ownerEntity": "AGG-POLICY-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按类别、状态、时间范围和关键词统计四类知识资源与知识关系",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-01",
+      "uiEventRefs": [
+        "SCR-CATALOG.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "Q-02",
+      "name": "查询指标时序对比",
+      "alias": "IndicatorValue_QuerySeries",
+      "ownerEntity": "AGG-INDVAL-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按指标、地区、品种和期间输出时序、同比及来源文档",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-02",
+      "uiEventRefs": [
+        "SCR-INDICATOR-ANALYSIS.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "Q-03",
+      "name": "抽查来源可追溯性",
+      "alias": "Traceability_Query",
+      "ownerEntity": "AGG-SOURCE-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按知识类别抽样核对条目、来源文档和段落级定位",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-03",
+      "uiEventRefs": [
+        "SCR-TRACE-AUDIT.btnSample_Click"
+      ]
+    },
+    {
+      "id": "Q-04",
+      "name": "查询质量治理看板",
+      "alias": "QualityIssue_QueryBoard",
+      "ownerEntity": "AGG-QUALITY-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按问题类型、处理状态和时间范围统计治理待办与处置结果",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-04",
+      "uiEventRefs": [
+        "SCR-QUALITY.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "Q-05",
+      "name": "统计本体概念覆盖",
+      "alias": "OntologyConcept_QueryCoverage",
+      "ownerEntity": "AGG-CONCEPT-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按本体来源和概念类型统计概念、同义词、关系与平均置信度",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-05",
+      "uiEventRefs": [
+        "SCR-ONTOLOGY-COVERAGE.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "Q-06",
+      "name": "查询采集运行监控",
+      "alias": "CrawlRun_QueryBoard",
+      "ownerEntity": "AGG-CRAWL-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按采集源、时间范围和运行状态监控采集成功率与新增文档",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-06",
+      "uiEventRefs": [
+        "SCR-CRAWL-MONITOR.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "Q-07",
+      "name": "查询知识体系覆盖与缺口",
+      "alias": "KnowledgeCategory_QueryCoverage",
+      "ownerEntity": "AGG-TAXONOMY-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "统计分类直接与含子类条目数、已发布数并识别空白节点",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "queryReportRef": "REP-07",
+      "uiEventRefs": [
+        "SCR-TAXONOMY-COVERAGE.btnQuery_Click"
+      ]
+    },
+    {
+      "id": "GQ-01",
+      "name": "检索业务知识图谱",
+      "alias": "KnowledgeGraph_Search",
+      "ownerEntity": "AGG-RELATION-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按关键词、知识分类、产业环节、要素维度、品种、地区和时间检索真实业务实体",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-KG-EXPLORER.btnSearch_Click"
+      ]
+    },
+    {
+      "id": "GQ-02",
+      "name": "查询图实体详情",
+      "alias": "KnowledgeGraph_EntityDetail",
+      "ownerEntity": "AGG-RELATION-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "返回实体属性、一跳关系和来源引用",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-KG-EXPLORER.grdResults_DoubleClick"
+      ]
+    },
+    {
+      "id": "GQ-03",
+      "name": "展开图实体关系",
+      "alias": "KnowledgeGraph_ExpandRelations",
+      "ownerEntity": "AGG-RELATION-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "按实体、关系谓词、方向和跳数展开已发布关系三元组",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-KG-EXPLORER.graphNode_DoubleClick"
+      ]
+    },
+    {
+      "id": "GQ-04",
+      "name": "回溯图实体来源段落",
+      "alias": "KnowledgeGraph_TraceSource",
+      "ownerEntity": "AGG-SOURCE-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "由任一知识实体反查来源文档、段落原文、页码、章节和字符区间",
+      "appliedRules": [],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-KG-EXPLORER.btnTrace_Click"
+      ]
+    },
+    {
+      "id": "GQ-05",
+      "name": "查询增量变更集",
+      "alias": "Incremental_Query",
+      "ownerEntity": "AGG-QUALITY-001",
+      "behaviorType": "QUERY",
+      "triggerType": "USER_ACTION",
+      "description": "只读查询 CREATED、UPDATED、VOID、INVALIDATE、MERGED 变更及 nextSince",
+      "appliedRules": [
+        "R-08"
+      ],
+      "producedEvents": [],
+      "requiredPermissions": [
+        "PERM-04"
+      ],
+      "uiEventRefs": [
+        "SCR-INCREMENTAL.btnQuery_Click"
+      ]
+    }
+  ]
+}

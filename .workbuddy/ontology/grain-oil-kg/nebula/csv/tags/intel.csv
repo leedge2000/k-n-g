@@ -1,0 +1,2 @@
+:VID,intelId,intelTitle,intelType,regionId,commodityId,publishOrg,publishDate,keyPoints,credibility,sourceDocId,segmentId,knowledgeCategoryId,industryStage,factorDimensions,status,createdBy,createdAt,updatedBy,updatedAt
+INT0001,INT0001,USDA 上调全球稻米产量预估,产量,REG0002,CMD0001,USDA,2025-10-12,全球稻米产量预估上调至5.3亿吨。,高,SOU0001,SOU0001-S002,KTC0003,生产,,已发布,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

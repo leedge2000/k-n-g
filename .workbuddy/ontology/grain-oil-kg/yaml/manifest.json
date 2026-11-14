@@ -1,0 +1,62 @@
+{
+  "domain": "粮油产业多维知识图谱",
+  "version": "2.1",
+  "description": "粮油产业多维知识图谱系统十一模型本体清单",
+  "files": [
+    {
+      "file_name": "m1-object-model.yaml",
+      "model_type": "object",
+      "model_name": "对象模型"
+    },
+    {
+      "file_name": "m2-behavior-model.yaml",
+      "model_type": "behavior",
+      "model_name": "行为模型"
+    },
+    {
+      "file_name": "m3-rule-model.yaml",
+      "model_type": "rule",
+      "model_name": "规则模型"
+    },
+    {
+      "file_name": "me-event-model.yaml",
+      "model_type": "event",
+      "model_name": "事件模型"
+    },
+    {
+      "file_name": "m4-scenario-model.yaml",
+      "model_type": "scenario",
+      "model_name": "场景模型"
+    },
+    {
+      "file_name": "m5-actor-model.yaml",
+      "model_type": "actor",
+      "model_name": "主体模型"
+    },
+    {
+      "file_name": "m6-flow-model.yaml",
+      "model_type": "flow",
+      "model_name": "流程模型"
+    },
+    {
+      "file_name": "m7-report-model.yaml",
+      "model_type": "report",
+      "model_name": "报表模型"
+    },
+    {
+      "file_name": "mu-ui-model.yaml",
+      "model_type": "ui",
+      "model_name": "UI 界面模型"
+    },
+    {
+      "file_name": "m-mapping-model.yaml",
+      "model_type": "mapping",
+      "model_name": "对象-表映射模型"
+    },
+    {
+      "file_name": "mi-interface-model.yaml",
+      "model_type": "interface",
+      "model_name": "接口模型"
+    }
+  ]
+}

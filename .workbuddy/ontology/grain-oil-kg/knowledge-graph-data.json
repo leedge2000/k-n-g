@@ -1,0 +1,4096 @@
+{
+ "nodes": [
+  {
+   "id": "AGG-SOURCE-001",
+   "name": "来源文档",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "承载四类知识的原始文档及其版本、校验与存储信息，是知识可回溯的根"
+  },
+  {
+   "id": "AGG-SOURCE-001.Segment",
+   "name": "文档段落",
+   "type": "entity",
+   "model": "M1",
+   "desc": "文档按标题/自然段切分后的可定位文本单元，是来源回溯的最小粒度"
+  },
+  {
+   "id": "INV-INV-04 段落字符区间有效",
+   "name": "INV-04 段落字符区间有效",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: all(segment.charEnd > segment.charStart for segment in Segment)"
+  },
+  {
+   "id": "INV-INV-05 来源文档至少包含一个段落",
+   "name": "INV-05 来源文档至少包含一个段落",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: len(Segment) >= 1"
+  },
+  {
+   "id": "REFRULE-REF-05",
+   "name": "REF-05",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 0"
+  },
+  {
+   "id": "AGG-POLICY-001",
+   "name": "政策法规",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "政策文件主体，关联发文机关、效力层级、时效与适用区域，下挂可执行条款"
+  },
+  {
+   "id": "AGG-POLICY-001.Clause",
+   "name": "政策条款",
+   "type": "entity",
+   "model": "M1",
+   "desc": "政策文件中的可执行条款单元"
+  },
+  {
+   "id": "INV-INV-01 政策时效区间有效",
+   "name": "INV-01 政策时效区间有效",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: effectiveDate is None or expireDate is None or effectiveDate <= expireDate"
+  },
+  {
+   "id": "AGG-INDICATOR-001",
+   "name": "指标定义",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "粮油经济指标的口径、单位、频率与来源，是指标数据的元数据主数据"
+  },
+  {
+   "id": "AGG-INDVAL-001",
+   "name": "指标数据",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "指标在地区、品种、期间上的取值，是供需用分析的核心事实数据"
+  },
+  {
+   "id": "INV-INV-06 指标四维业务键完整",
+   "name": "INV-06 指标四维业务键完整",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: indicatorId is not None and regionId is not None and period is not None"
+  },
+  {
+   "id": "REFRULE-REF-02",
+   "name": "REF-02",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= -1000000000 and value <= 1000000000"
+  },
+  {
+   "id": "AGG-YEARBOOK-001",
+   "name": "年鉴记录",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "统计年鉴中的条目级记录，按年鉴版本、表名与统计口径对齐"
+  },
+  {
+   "id": "REFRULE-REF-04",
+   "name": "REF-04",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 1900 and value <= 2100"
+  },
+  {
+   "id": "AGG-INTEL-001",
+   "name": "农业情报",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "全球产能、产量、贸易与市场情报的结构化条目"
+  },
+  {
+   "id": "AGG-COMMODITY-001",
+   "name": "品种",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "粮油品种主数据，含外部本体编码映射与父子品种层级"
+  },
+  {
+   "id": "INV-INV-07 品种不得自引用为父品种",
+   "name": "INV-07 品种不得自引用为父品种",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: parentCommodityId is None or parentCommodityId != commodityId"
+  },
+  {
+   "id": "AGG-PRODUCT-001",
+   "name": "产品",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "由品种加工形成的产品，关联执行标准与生产企业"
+  },
+  {
+   "id": "AGG-REGION-001",
+   "name": "地区",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "行政区划与 FAO 区域主数据，支持国家-省-市-区县四级层级"
+  },
+  {
+   "id": "AGG-ENTERPRISE-001",
+   "name": "企业",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "产业链相关企业主数据（加工、贸易、储备、种植、饲料）"
+  },
+  {
+   "id": "REFRULE-REF-06",
+   "name": "REF-06",
+   "type": "rule",
+   "model": "M1",
+   "desc": "LENGTH(value) == 18"
+  },
+  {
+   "id": "AGG-CONCEPT-001",
+   "name": "本体概念",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "FoodOn/AGROVOC/DFC/KGAP 等外部本体的概念映射与本地同义词集合"
+  },
+  {
+   "id": "AGG-CONCEPT-001.Synonym",
+   "name": "同义词",
+   "type": "entity",
+   "model": "M1",
+   "desc": "概念的简称、别名、外文名与常见错拼"
+  },
+  {
+   "id": "INV-INV-03 概念不得自引用为父概念",
+   "name": "INV-03 概念不得自引用为父概念",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: parentConceptId is None or parentConceptId != conceptId"
+  },
+  {
+   "id": "AGG-RELATION-001",
+   "name": "知识关系",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "知识实体间的多态三元组，含来源、置信度与有效期间，是图谱边的事实来源"
+  },
+  {
+   "id": "INV-INV-02 关系主体与客体不能相同",
+   "name": "INV-02 关系主体与客体不能相同",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: subjectEntityType != objectEntityType or subjectEntityId != objectEntityId"
+  },
+  {
+   "id": "REFRULE-REF-01",
+   "name": "REF-01",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 0 and value <= 1"
+  },
+  {
+   "id": "AGG-QUALITY-001",
+   "name": "质量治理记录",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "重复、冲突、缺失与失效来源的检测与处置记录"
+  },
+  {
+   "id": "REFRULE-REF-03",
+   "name": "REF-03",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 0 and value <= 1"
+  },
+  {
+   "id": "AGG-CRAWL-001",
+   "name": "采集源",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "面向公开情报页面的采集配置、调度策略与安全约束"
+  },
+  {
+   "id": "AGG-CRAWL-001.CrawlRun",
+   "name": "采集执行记录",
+   "type": "entity",
+   "model": "M1",
+   "desc": "单次采集运行的起止时间、状态、抓取量与错误信息"
+  },
+  {
+   "id": "REFRULE-REF-10",
+   "name": "REF-10",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 1"
+  },
+  {
+   "id": "AGG-TAXONOMY-001",
+   "name": "知识分类",
+   "type": "aggregate",
+   "model": "M1",
+   "desc": "四类知识的主分类树节点，叠加产业环节与要素维度，构成三轴知识体系"
+  },
+  {
+   "id": "INV-R-13 分类局部层级与路径约束",
+   "name": "R-13 分类局部层级与路径约束",
+   "type": "rule",
+   "model": "M1",
+   "desc": "对象级不变量: ((parentCategoryId is None and level == 1) or (parentCategoryId is not None and parentCategoryId != categoryId and level >= 2)) and categoryPath is not None"
+  },
+  {
+   "id": "REFRULE-REF-11",
+   "name": "REF-11",
+   "type": "rule",
+   "model": "M1",
+   "desc": "value >= 1 and value <= 4"
+  },
+  {
+   "id": "SourceDoc.docType",
+   "name": "SourceDoc.docType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "SourceDoc 对象 文档类别 取值域（不跨对象复用）"
+  },
+  {
+   "id": "SourceDoc.docType.DOCTYPE",
+   "name": "文档类别",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "SourceDoc.fileFormat",
+   "name": "SourceDoc.fileFormat",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "SourceDoc 对象 文件格式 取值域（不跨对象复用）"
+  },
+  {
+   "id": "SourceDoc.fileFormat.FILEFORMAT",
+   "name": "文件格式",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "SourceDoc.language",
+   "name": "SourceDoc.language",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "SourceDoc 对象 语种 取值域（不跨对象复用）"
+  },
+  {
+   "id": "SourceDoc.language.LANGUAGE",
+   "name": "语种",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "SourceDoc.status",
+   "name": "SourceDoc.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "SourceDoc 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "SourceDoc.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Segment.segmentType",
+   "name": "Segment.segmentType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Segment 对象 段落类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Segment.segmentType.SEGMENTTYPE",
+   "name": "段落类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Policy.policyLevel",
+   "name": "Policy.policyLevel",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Policy 对象 效力层级 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Policy.policyLevel.POLICYLEVEL",
+   "name": "效力层级",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Policy.policyStatus",
+   "name": "Policy.policyStatus",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Policy 对象 政策时效状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Policy.policyStatus.POLICYSTATUS",
+   "name": "政策时效状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Policy.industryStage",
+   "name": "Policy.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Policy 对象 产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Policy.industryStage.INDUSTRYSTAGE",
+   "name": "产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Policy.reviewStatus",
+   "name": "Policy.reviewStatus",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Policy 对象 审核状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Policy.reviewStatus.REVIEWSTATUS",
+   "name": "审核状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Clause.measureType",
+   "name": "Clause.measureType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Clause 对象 措施类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Clause.measureType.MEASURETYPE",
+   "name": "措施类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Indicator.indicatorCategory",
+   "name": "Indicator.indicatorCategory",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Indicator 对象 指标类别 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Indicator.indicatorCategory.INDICATORCATEGORY",
+   "name": "指标类别",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Indicator.frequency",
+   "name": "Indicator.frequency",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Indicator 对象 统计频率 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Indicator.frequency.FREQUENCY",
+   "name": "统计频率",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Indicator.industryStage",
+   "name": "Indicator.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Indicator 对象 产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Indicator.industryStage.INDUSTRYSTAGE",
+   "name": "产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Indicator.status",
+   "name": "Indicator.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Indicator 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Indicator.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "IvdData.periodType",
+   "name": "IvdData.periodType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "IvdData 对象 期间类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "IvdData.periodType.PERIODTYPE",
+   "name": "期间类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "IvdData.qualityFlag",
+   "name": "IvdData.qualityFlag",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "IvdData 对象 数据质量标识 取值域（不跨对象复用）"
+  },
+  {
+   "id": "IvdData.qualityFlag.QUALITYFLAG",
+   "name": "数据质量标识",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "IvdData.industryStage",
+   "name": "IvdData.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "IvdData 对象 产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "IvdData.industryStage.INDUSTRYSTAGE",
+   "name": "产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "IvdData.status",
+   "name": "IvdData.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "IvdData 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "IvdData.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Yearbook.industryStage",
+   "name": "Yearbook.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Yearbook 对象 产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Yearbook.industryStage.INDUSTRYSTAGE",
+   "name": "产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Yearbook.status",
+   "name": "Yearbook.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Yearbook 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Yearbook.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Intel.intelType",
+   "name": "Intel.intelType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Intel 对象 情报类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Intel.intelType.INTELTYPE",
+   "name": "情报类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Intel.credibility",
+   "name": "Intel.credibility",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Intel 对象 可信度 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Intel.credibility.CREDIBILITY",
+   "name": "可信度",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Intel.industryStage",
+   "name": "Intel.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Intel 对象 产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Intel.industryStage.INDUSTRYSTAGE",
+   "name": "产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Intel.status",
+   "name": "Intel.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Intel 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Intel.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Commodity.commodityCategory",
+   "name": "Commodity.commodityCategory",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Commodity 对象 品种类别 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Commodity.commodityCategory.COMMODITYCATEGORY",
+   "name": "品种类别",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Commodity.status",
+   "name": "Commodity.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Commodity 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Commodity.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Product.productCategory",
+   "name": "Product.productCategory",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Product 对象 产品类别 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Product.productCategory.PRODUCTCATEGORY",
+   "name": "产品类别",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Product.grade",
+   "name": "Product.grade",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Product 对象 质量等级 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Product.grade.GRADE",
+   "name": "质量等级",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Product.status",
+   "name": "Product.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Product 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Product.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Region.regionLevel",
+   "name": "Region.regionLevel",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Region 对象 层级 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Region.regionLevel.REGIONLEVEL",
+   "name": "层级",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Region.status",
+   "name": "Region.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Region 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Region.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Enterprise.enterpriseType",
+   "name": "Enterprise.enterpriseType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Enterprise 对象 企业类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Enterprise.enterpriseType.ENTERPRISETYPE",
+   "name": "企业类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Enterprise.scale",
+   "name": "Enterprise.scale",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Enterprise 对象 企业规模 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Enterprise.scale.SCALE",
+   "name": "企业规模",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Enterprise.status",
+   "name": "Enterprise.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Enterprise 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Enterprise.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Concept.conceptType",
+   "name": "Concept.conceptType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Concept 对象 概念类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Concept.conceptType.CONCEPTTYPE",
+   "name": "概念类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Concept.sourceOntology",
+   "name": "Concept.sourceOntology",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Concept 对象 来源本体 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Concept.sourceOntology.SOURCEONTOLOGY",
+   "name": "来源本体",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Concept.status",
+   "name": "Concept.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Concept 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Concept.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Synonym.language",
+   "name": "Synonym.language",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Synonym 对象 语种 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Synonym.language.LANGUAGE",
+   "name": "语种",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Synonym.synonymType",
+   "name": "Synonym.synonymType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Synonym 对象 同义词类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Synonym.synonymType.SYNONYMTYPE",
+   "name": "同义词类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Relation.subjectEntityType",
+   "name": "Relation.subjectEntityType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Relation 对象 主体实体类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Relation.subjectEntityType.SUBJECTENTITYTYPE",
+   "name": "主体实体类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Relation.predicate",
+   "name": "Relation.predicate",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Relation 对象 关系谓词 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Relation.predicate.PREDICATE",
+   "name": "关系谓词",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Relation.objectEntityType",
+   "name": "Relation.objectEntityType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Relation 对象 客体实体类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Relation.objectEntityType.OBJECTENTITYTYPE",
+   "name": "客体实体类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Relation.extractedBy",
+   "name": "Relation.extractedBy",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Relation 对象 抽取方式 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Relation.extractedBy.EXTRACTEDBY",
+   "name": "抽取方式",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "Relation.status",
+   "name": "Relation.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "Relation 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "Relation.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "QisRecord.issueType",
+   "name": "QisRecord.issueType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "QisRecord 对象 问题类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "QisRecord.issueType.ISSUETYPE",
+   "name": "问题类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "QisRecord.primaryEntityType",
+   "name": "QisRecord.primaryEntityType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "QisRecord 对象 主实体类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "QisRecord.primaryEntityType.PRIMARYENTITYTYPE",
+   "name": "主实体类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "QisRecord.handleStatus",
+   "name": "QisRecord.handleStatus",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "QisRecord 对象 处置状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "QisRecord.handleStatus.HANDLESTATUS",
+   "name": "处置状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrsSource.sourceType",
+   "name": "CrsSource.sourceType",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrsSource 对象 源类型 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrsSource.sourceType.SOURCETYPE",
+   "name": "源类型",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrsSource.contentCategory",
+   "name": "CrsSource.contentCategory",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrsSource 对象 内容归口 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrsSource.contentCategory.CONTENTCATEGORY",
+   "name": "内容归口",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrsSource.crawlMode",
+   "name": "CrsSource.crawlMode",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrsSource 对象 采集方式 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrsSource.crawlMode.CRAWLMODE",
+   "name": "采集方式",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrsSource.charset",
+   "name": "CrsSource.charset",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrsSource 对象 字符集 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrsSource.charset.CHARSET",
+   "name": "字符集",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrsSource.enabledFlag",
+   "name": "CrsSource.enabledFlag",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrsSource 对象 启停状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrsSource.enabledFlag.ENABLEDFLAG",
+   "name": "启停状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "CrawlRun.runStatus",
+   "name": "CrawlRun.runStatus",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "CrawlRun 对象 执行状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "CrawlRun.runStatus.RUNSTATUS",
+   "name": "执行状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "KtcCategory.rootCategory",
+   "name": "KtcCategory.rootCategory",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "KtcCategory 对象 归属大类 取值域（不跨对象复用）"
+  },
+  {
+   "id": "KtcCategory.rootCategory.ROOTCATEGORY",
+   "name": "归属大类",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "KtcCategory.industryStage",
+   "name": "KtcCategory.industryStage",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "KtcCategory 对象 默认产业环节 取值域（不跨对象复用）"
+  },
+  {
+   "id": "KtcCategory.industryStage.INDUSTRYSTAGE",
+   "name": "默认产业环节",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "KtcCategory.status",
+   "name": "KtcCategory.status",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "KtcCategory 对象 状态 取值域（不跨对象复用）"
+  },
+  {
+   "id": "KtcCategory.status.STATUS",
+   "name": "状态",
+   "type": "dictionary",
+   "model": "M1",
+   "desc": "字典类型"
+  },
+  {
+   "id": "FUNC-01",
+   "name": "登记来源文档",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-02",
+   "name": "登记来源文档段落",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-03",
+   "name": "登记政策法规及条款",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-04",
+   "name": "维护指标定义",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-05",
+   "name": "登记指标数据",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-06",
+   "name": "登记年鉴记录",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-07",
+   "name": "登记全球农业情报",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-08",
+   "name": "维护产业主数据",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-09",
+   "name": "维护本体概念与同义词",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-10",
+   "name": "登记知识关系三元组",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-11",
+   "name": "维护采集源",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-12",
+   "name": "执行采集并登记来源文档与段落",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:EXTERNAL;类型:COMMAND"
+  },
+  {
+   "id": "FUNC-13",
+   "name": "维护知识分类体系",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-01",
+   "name": "提交审核",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-02",
+   "name": "审核通过并发布",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-03",
+   "name": "审核退回",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-04",
+   "name": "作废来源文档",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-05",
+   "name": "实体融合",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-06",
+   "name": "冲突处置",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-07",
+   "name": "增量变更导出",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-08",
+   "name": "标记下游条目失效",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:EVENT;类型:EVENT_HANDLER"
+  },
+  {
+   "id": "B-09",
+   "name": "启停采集源",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:COMMAND"
+  },
+  {
+   "id": "B-10",
+   "name": "改挂融合实体下游引用",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:EVENT;类型:EVENT_HANDLER"
+  },
+  {
+   "id": "B-11",
+   "name": "连续失败后暂停采集源",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:EVENT;类型:EVENT_HANDLER"
+  },
+  {
+   "id": "Q-01",
+   "name": "查询四类知识资源目录",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-02",
+   "name": "查询指标时序对比",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-03",
+   "name": "抽查来源可追溯性",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-04",
+   "name": "查询质量治理看板",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-05",
+   "name": "统计本体概念覆盖",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-06",
+   "name": "查询采集运行监控",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "Q-07",
+   "name": "查询知识体系覆盖与缺口",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "GQ-01",
+   "name": "检索业务知识图谱",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "GQ-02",
+   "name": "查询图实体详情",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "GQ-03",
+   "name": "展开图实体关系",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "GQ-04",
+   "name": "回溯图实体来源段落",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "GQ-05",
+   "name": "查询增量变更集",
+   "type": "behavior",
+   "model": "M2",
+   "desc": "触发:USER_ACTION;类型:QUERY"
+  },
+  {
+   "id": "R-01",
+   "name": "发布前置校验",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;发布前置校验：来源文档状态=有效 且 必填属性完整 且 已挂有效分类 → 阻止提交审核与发布"
+  },
+  {
+   "id": "R-02",
+   "name": "指标四维重复检测",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;指标四维重复检测：同指标+地区+品种+期间已存在有效记录 → 生成质量治理记录（重复）"
+  },
+  {
+   "id": "R-03",
+   "name": "来源失效传播判定",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:EVENT_DRIVEN;来源失效传播判定：订阅 E-01，命中引用该来源文档的下游条目 → 触发 B-08 标记下游条目失效"
+  },
+  {
+   "id": "R-04",
+   "name": "融合相似度阈值",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;融合相似度阈值：相似度 >= 0.85 才允许融合 → 允许或阻止实体融合"
+  },
+  {
+   "id": "R-05",
+   "name": "关系置信度准入",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;关系置信度准入：置信度 < 0.60 不得发布 → 阻止审核通过"
+  },
+  {
+   "id": "R-06",
+   "name": "审核状态迁移合法性",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;审核状态迁移合法性：当前状态必须为待审核 → 允许或阻止审核通过/退回"
+  },
+  {
+   "id": "R-07",
+   "name": "冲突标识判定",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;冲突标识判定：同一实体同一属性存在不同值且来源均有效 → 生成质量治理记录（冲突）"
+  },
+  {
+   "id": "R-08",
+   "name": "增量范围判定",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;增量范围判定：updatedAt > 上次同步时间 → 纳入增量变更集"
+  },
+  {
+   "id": "R-09",
+   "name": "采集快照去重",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;采集快照去重：同一 URL 或同一 checksum 已存在有效来源文档 → 跳过入库并生成治理记录（重复）"
+  },
+  {
+   "id": "R-10",
+   "name": "采集频率与重试上限",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;采集频率与重试上限：单源抓取间隔 >= 配置下限；连续失败达阈值自动暂停 → 允许或阻止执行并触发 B-11 自动暂停"
+  },
+  {
+   "id": "R-11",
+   "name": "采集目标安全校验",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;采集目标安全校验：仅 http/https；解析后 IP 不得属于内网/回环/链路本地/云元数据网段 → 阻止请求并记录失败"
+  },
+  {
+   "id": "R-12",
+   "name": "采集内容有效性",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;采集内容有效性：HTTP 2xx、正文长度 >= 阈值、语种可识别 → 允许或阻止登记来源文档"
+  },
+  {
+   "id": "R-13",
+   "name": "分类层级合法性",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;分类层级合法性：父分类存在且有效；level=父 level+1；编码同级唯一；路径一致；沿父链回溯无环 → 允许或阻止保存"
+  },
+  {
+   "id": "R-14",
+   "name": "分类挂接与发布卡控",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;分类挂接与发布卡控：必须挂有效分类且分类层级 >= 2，产业环节必填 → 阻止提交审核与发布"
+  },
+  {
+   "id": "R-15",
+   "name": "分类停用影响判定",
+   "type": "rule",
+   "model": "M3",
+   "desc": "类型:VALIDATION;分类停用影响判定：分类存在有效子节点或被有效知识条目引用 → 阻止停用，须先迁移引用"
+  },
+  {
+   "id": "E-01",
+   "name": "来源文档已作废",
+   "type": "event",
+   "model": "ME",
+   "desc": "来源文档被知识管理员作废，触发下游失效传播"
+  },
+  {
+   "id": "E-02",
+   "name": "知识条目已提交审核",
+   "type": "event",
+   "model": "ME",
+   "desc": "四类知识条目或知识关系进入待审核，后续由审核员人工处理"
+  },
+  {
+   "id": "E-03",
+   "name": "知识条目已发布",
+   "type": "event",
+   "model": "ME",
+   "desc": "审核通过且图存储、检索索引与增量变更集已写入"
+  },
+  {
+   "id": "E-04",
+   "name": "知识条目已退回",
+   "type": "event",
+   "model": "ME",
+   "desc": "审核退回至录入员，由用户修改后重新提交"
+  },
+  {
+   "id": "E-05",
+   "name": "实体已融合",
+   "type": "event",
+   "model": "ME",
+   "desc": "重复实体已融合，等待下游引用统一改挂到保留实体"
+  },
+  {
+   "id": "E-06",
+   "name": "冲突已处置",
+   "type": "event",
+   "model": "ME",
+   "desc": "冲突记录已完成取值与留痕"
+  },
+  {
+   "id": "E-07",
+   "name": "下游条目已失效",
+   "type": "event",
+   "model": "ME",
+   "desc": "引用已作废来源的知识条目或关系已标记失效"
+  },
+  {
+   "id": "E-08",
+   "name": "采集任务已完成",
+   "type": "event",
+   "model": "ME",
+   "desc": "单次采集成功，来源文档与段落已在同一采集行为中登记"
+  },
+  {
+   "id": "E-09",
+   "name": "采集任务失败",
+   "type": "event",
+   "model": "ME",
+   "desc": "单次采集失败，按连续失败阈值决定是否自动暂停采集源"
+  },
+  {
+   "id": "SCN-01",
+   "name": "来源作废失效传播",
+   "type": "scenario",
+   "model": "M4",
+   "desc": "来源文档作废后，定位引用它的四类知识条目与知识关系并标记失效"
+  },
+  {
+   "id": "SCN-02",
+   "name": "实体融合引用改挂",
+   "type": "scenario",
+   "model": "M4",
+   "desc": "重复实体融合后，将下游知识关系与主数据引用统一改挂到保留实体"
+  },
+  {
+   "id": "ACTOR-KG-ADMIN",
+   "name": "知识管理员",
+   "type": "external",
+   "model": "M5",
+   "desc": "主数据、本体、知识体系、质量治理、审核规则、采集源配置与全量业务管理;类型:HUMAN"
+  },
+  {
+   "id": "ACTOR-DATA-ENTRY",
+   "name": "数据录入员",
+   "type": "external",
+   "model": "M5",
+   "desc": "来源文档、四类知识条目和知识关系登记，提交审核及执行授权采集;类型:HUMAN"
+  },
+  {
+   "id": "ACTOR-REVIEWER",
+   "name": "审核员",
+   "type": "external",
+   "model": "M5",
+   "desc": "知识条目一级审核通过与退回;类型:HUMAN"
+  },
+  {
+   "id": "ACTOR-ANALYST",
+   "name": "分析师",
+   "type": "external",
+   "model": "M5",
+   "desc": "图谱探索、固定报表、来源回溯、增量导出与接口消费;类型:HUMAN"
+  },
+  {
+   "id": "ACTOR-INDUSTRY-PLATFORM",
+   "name": "全产业链平台与AI模型",
+   "type": "external",
+   "model": "M5",
+   "desc": "调用图谱检索、实体详情、来源回溯和增量同步接口的外部消费方;类型:EXTERNAL"
+  },
+  {
+   "id": "ACTOR-CRAWL-SCHEDULER",
+   "name": "采集调度器",
+   "type": "external",
+   "model": "M5",
+   "desc": "按调度计划调用采集触发接口的外部运维主体;类型:EXTERNAL"
+  },
+  {
+   "id": "ROLE-01",
+   "name": "知识管理员",
+   "type": "role",
+   "model": "M5",
+   "desc": "全量业务权限"
+  },
+  {
+   "id": "ROLE-02",
+   "name": "数据录入员",
+   "type": "role",
+   "model": "M5",
+   "desc": "录入、提交审核与授权采集，不含审核和质量治理权限"
+  },
+  {
+   "id": "ROLE-03",
+   "name": "审核员",
+   "type": "role",
+   "model": "M5",
+   "desc": "一级审核发布与退回权限"
+  },
+  {
+   "id": "ROLE-04",
+   "name": "分析师",
+   "type": "role",
+   "model": "M5",
+   "desc": "图谱与报表查询、来源回溯、增量同步和接口消费权限"
+  },
+  {
+   "id": "PERM-01",
+   "name": "PERM-01",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:FUNC-08"
+  },
+  {
+   "id": "PERM-02",
+   "name": "PERM-02",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:FUNC-01"
+  },
+  {
+   "id": "PERM-03",
+   "name": "PERM-03",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:B-02"
+  },
+  {
+   "id": "PERM-04",
+   "name": "PERM-04",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:GQ-01"
+  },
+  {
+   "id": "PERM-05",
+   "name": "PERM-05",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:B-05"
+  },
+  {
+   "id": "PERM-06",
+   "name": "PERM-06",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:FUNC-12"
+  },
+  {
+   "id": "PERM-07",
+   "name": "PERM-07",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:AGG-TAXONOMY-001"
+  },
+  {
+   "id": "PERM-08",
+   "name": "PERM-08",
+   "type": "permission",
+   "model": "M5",
+   "desc": "授权目标:GQ-01"
+  },
+  {
+   "id": "PROC-01",
+   "name": "知识入库到发布协同流",
+   "type": "flow",
+   "model": "M6",
+   "desc": "类型:COLLABORATION"
+  },
+  {
+   "id": "PROC-APP-01",
+   "name": "知识发布一级审核流",
+   "type": "flow",
+   "model": "M6",
+   "desc": "类型:APPROVAL"
+  },
+  {
+   "id": "REP-01",
+   "name": "四类知识资源目录",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:STATISTICAL_QUERY;汇总政策法规、农业经济指标数据、行业年鉴、全球农业情报与知识关系，按知识类别和状态统计资源量及最近更新时间"
+  },
+  {
+   "id": "REP-02",
+   "name": "指标时序对比",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:LIST_QUERY;按指标、地区、品种与期间输出已发布指标值；同比仅在同指标、同地区、同品种、同期间类型且上年同期存在时计算，否则为空"
+  },
+  {
+   "id": "REP-03",
+   "name": "来源可追溯抽查",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:LIST_QUERY;从政策法规中按知识类别随机抽取条目，核对来源文档、段落页码、章节、字符区间和段落摘要"
+  },
+  {
+   "id": "REP-04",
+   "name": "质量治理看板",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:STATISTICAL_QUERY;按问题类型统计待处理、已融合与冲突问题数量及平均相似度，支持按处理状态和时间过滤明细范围"
+  },
+  {
+   "id": "REP-05",
+   "name": "本体概念覆盖统计",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:STATISTICAL_QUERY;按本体来源与概念类型统计概念数、同义词数、已发布关系数和按已发布关系数加权的平均置信度"
+  },
+  {
+   "id": "REP-06",
+   "name": "采集运行监控",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:STATISTICAL_QUERY;按采集源统计最近执行时间、成功失败次数、新增文档数、去重跳过数与平均耗时"
+  },
+  {
+   "id": "REP-07",
+   "name": "知识体系覆盖与缺口",
+   "type": "report",
+   "model": "M7",
+   "desc": "类型:STATISTICAL_QUERY;按分类节点统计四类知识条目的直接与含子类数量、已发布数量及空白节点标识；四类条目按 UNION 语义合并，递归分类闭包由参考 SQL 实现，时间范围按条目更新时间过滤"
+  }
+ ],
+ "edges": [
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "AGG-SOURCE-001.Segment",
+   "type": "contains",
+   "label": "包含子实体",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "AGG-CRAWL-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "INV-INV-04 段落字符区间有效",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "INV-INV-05 来源文档至少包含一个段落",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "REFRULE-REF-05",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-POLICY-001.Clause",
+   "type": "contains",
+   "label": "包含子实体",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-REGION-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-SOURCE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "INV-INV-01 政策时效区间有效",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDICATOR-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-INDICATOR-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-REGION-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-SOURCE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "INV-INV-06 指标四维业务键完整",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "REFRULE-REF-02",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-INDICATOR-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-REGION-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-SOURCE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "REFRULE-REF-04",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-REGION-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-SOURCE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-COMMODITY-001",
+   "target": "AGG-CONCEPT-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-COMMODITY-001",
+   "target": "INV-INV-07 品种不得自引用为父品种",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-PRODUCT-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-PRODUCT-001",
+   "target": "AGG-ENTERPRISE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-ENTERPRISE-001",
+   "target": "AGG-REGION-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-ENTERPRISE-001",
+   "target": "REFRULE-REF-06",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CONCEPT-001",
+   "target": "AGG-CONCEPT-001.Synonym",
+   "type": "contains",
+   "label": "包含子实体",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CONCEPT-001",
+   "target": "INV-INV-03 概念不得自引用为父概念",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-RELATION-001",
+   "target": "AGG-SOURCE-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-RELATION-001",
+   "target": "INV-INV-02 关系主体与客体不能相同",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-RELATION-001",
+   "target": "REFRULE-REF-01",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-QUALITY-001",
+   "target": "REFRULE-REF-03",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "AGG-CRAWL-001.CrawlRun",
+   "type": "contains",
+   "label": "包含子实体",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "refers",
+   "label": "引用",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "REFRULE-REF-10",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-TAXONOMY-001",
+   "target": "INV-R-13 分类局部层级与路径约束",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-TAXONOMY-001",
+   "target": "REFRULE-REF-11",
+   "type": "owned",
+   "label": "约束",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "AGG-CRAWL-001",
+   "type": "assoc",
+   "label": "采集产生",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-SOURCE-001",
+   "type": "assoc",
+   "label": "来源于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-REGION-001",
+   "type": "assoc",
+   "label": "适用于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-INDICATOR-001",
+   "type": "assoc",
+   "label": "计量",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-REGION-001",
+   "type": "assoc",
+   "label": "分布于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "assoc",
+   "label": "计量品种",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-SOURCE-001",
+   "type": "assoc",
+   "label": "来源于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-INDICATOR-001",
+   "type": "assoc",
+   "label": "对齐",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-REGION-001",
+   "type": "assoc",
+   "label": "统计范围",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "assoc",
+   "label": "统计品种",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-SOURCE-001",
+   "type": "assoc",
+   "label": "来源于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-REGION-001",
+   "type": "assoc",
+   "label": "涉及",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "assoc",
+   "label": "涉及",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-SOURCE-001",
+   "type": "assoc",
+   "label": "来源于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-COMMODITY-001",
+   "target": "AGG-CONCEPT-001",
+   "type": "assoc",
+   "label": "语义映射",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-PRODUCT-001",
+   "target": "AGG-COMMODITY-001",
+   "type": "assoc",
+   "label": "原料",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-PRODUCT-001",
+   "target": "AGG-ENTERPRISE-001",
+   "type": "assoc",
+   "label": "生产",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-ENTERPRISE-001",
+   "target": "AGG-REGION-001",
+   "type": "assoc",
+   "label": "坐落于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-RELATION-001",
+   "target": "AGG-SOURCE-001",
+   "type": "assoc",
+   "label": "来源于",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDICATOR-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INTEL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-YEARBOOK-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "AGG-TAXONOMY-001",
+   "type": "assoc",
+   "label": "归入分类",
+   "model": "M1"
+  },
+  {
+   "source": "FUNC-01",
+   "target": "AGG-SOURCE-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-01",
+   "target": "R-12",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-01",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-02",
+   "target": "AGG-SOURCE-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-02",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-02",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-03",
+   "target": "AGG-POLICY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-03",
+   "target": "R-01",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-03",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-03",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-04",
+   "target": "AGG-INDICATOR-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-04",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-04",
+   "target": "PERM-01",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-05",
+   "target": "AGG-INDVAL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-05",
+   "target": "R-02",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-05",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-05",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-06",
+   "target": "AGG-YEARBOOK-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-06",
+   "target": "R-01",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-06",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-06",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-07",
+   "target": "AGG-INTEL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-07",
+   "target": "R-01",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-07",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-07",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-08",
+   "target": "AGG-COMMODITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-08",
+   "target": "PERM-01",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-09",
+   "target": "AGG-CONCEPT-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-09",
+   "target": "PERM-01",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-10",
+   "target": "AGG-RELATION-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-10",
+   "target": "R-05",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-10",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-11",
+   "target": "AGG-CRAWL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-11",
+   "target": "R-10",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-11",
+   "target": "R-11",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-11",
+   "target": "PERM-06",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "AGG-CRAWL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "R-09",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "R-11",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "R-12",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "R-10",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "E-08",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "E-09",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-12",
+   "target": "PERM-06",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-13",
+   "target": "AGG-TAXONOMY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-13",
+   "target": "R-13",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-13",
+   "target": "R-15",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "FUNC-13",
+   "target": "PERM-07",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-01",
+   "target": "AGG-POLICY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-01",
+   "target": "R-01",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-01",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-01",
+   "target": "E-02",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-01",
+   "target": "PERM-02",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "AGG-POLICY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "R-05",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "R-06",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "R-14",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "E-03",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-02",
+   "target": "PERM-03",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-03",
+   "target": "AGG-POLICY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-03",
+   "target": "R-06",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-03",
+   "target": "E-04",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-03",
+   "target": "PERM-03",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-04",
+   "target": "AGG-SOURCE-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-04",
+   "target": "R-03",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-04",
+   "target": "E-01",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-04",
+   "target": "PERM-01",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-05",
+   "target": "AGG-QUALITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-05",
+   "target": "R-04",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-05",
+   "target": "E-05",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-05",
+   "target": "PERM-05",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-06",
+   "target": "AGG-QUALITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-06",
+   "target": "R-07",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-06",
+   "target": "E-06",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-06",
+   "target": "PERM-05",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-07",
+   "target": "AGG-QUALITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-07",
+   "target": "R-08",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-07",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-08",
+   "target": "AGG-INDVAL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-08",
+   "target": "R-03",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-08",
+   "target": "E-07",
+   "type": "produces",
+   "label": "产生事件",
+   "model": "M2"
+  },
+  {
+   "source": "B-09",
+   "target": "AGG-CRAWL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-09",
+   "target": "R-10",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-09",
+   "target": "PERM-06",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "B-10",
+   "target": "AGG-RELATION-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-10",
+   "target": "R-04",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "B-11",
+   "target": "AGG-CRAWL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "B-11",
+   "target": "R-10",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "Q-01",
+   "target": "AGG-POLICY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-01",
+   "target": "REP-01",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-01",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-02",
+   "target": "AGG-INDVAL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-02",
+   "target": "REP-02",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-02",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-03",
+   "target": "AGG-SOURCE-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-03",
+   "target": "REP-03",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-03",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-04",
+   "target": "AGG-QUALITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-04",
+   "target": "REP-04",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-04",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-05",
+   "target": "AGG-CONCEPT-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-05",
+   "target": "REP-05",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-05",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-06",
+   "target": "AGG-CRAWL-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-06",
+   "target": "REP-06",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-06",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "Q-07",
+   "target": "AGG-TAXONOMY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "Q-07",
+   "target": "REP-07",
+   "type": "binds",
+   "label": "查询绑定",
+   "model": "M2"
+  },
+  {
+   "source": "Q-07",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-01",
+   "target": "AGG-RELATION-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-01",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-02",
+   "target": "AGG-RELATION-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-02",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-03",
+   "target": "AGG-RELATION-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-03",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-04",
+   "target": "AGG-SOURCE-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-04",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-05",
+   "target": "AGG-QUALITY-001",
+   "type": "operates",
+   "label": "操作对象",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-05",
+   "target": "R-08",
+   "type": "applies",
+   "label": "引用规则",
+   "model": "M2"
+  },
+  {
+   "source": "GQ-05",
+   "target": "PERM-04",
+   "type": "requires",
+   "label": "需要权限",
+   "model": "M2"
+  },
+  {
+   "source": "R-01",
+   "target": "B-01",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-01",
+   "target": "B-02",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-02",
+   "target": "FUNC-05",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "E-01",
+   "target": "R-03",
+   "type": "consumed_by",
+   "label": "规则订阅",
+   "model": "M3"
+  },
+  {
+   "source": "R-03",
+   "target": "B-08",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-04",
+   "target": "B-05",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-05",
+   "target": "B-02",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-06",
+   "target": "B-02",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-06",
+   "target": "B-03",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-07",
+   "target": "B-06",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-08",
+   "target": "B-07",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-09",
+   "target": "FUNC-12",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "E-09",
+   "target": "R-10",
+   "type": "consumed_by",
+   "label": "规则订阅",
+   "model": "M3"
+  },
+  {
+   "source": "R-10",
+   "target": "FUNC-12",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-10",
+   "target": "B-11",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-11",
+   "target": "FUNC-12",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-12",
+   "target": "FUNC-12",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-13",
+   "target": "FUNC-13",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-14",
+   "target": "B-01",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-14",
+   "target": "B-02",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "R-15",
+   "target": "FUNC-13",
+   "type": "triggers",
+   "label": "触发行为",
+   "model": "M3"
+  },
+  {
+   "source": "AGG-SOURCE-001",
+   "target": "E-01",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "E-01",
+   "target": "B-08",
+   "type": "consumed_by",
+   "label": "事件消费",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "E-02",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "E-03",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-POLICY-001",
+   "target": "E-04",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-QUALITY-001",
+   "target": "E-05",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "E-05",
+   "target": "B-10",
+   "type": "consumed_by",
+   "label": "事件消费",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-QUALITY-001",
+   "target": "E-06",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-INDVAL-001",
+   "target": "E-07",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "E-08",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "AGG-CRAWL-001",
+   "target": "E-09",
+   "type": "event_entity",
+   "label": "事件所属",
+   "model": "ME"
+  },
+  {
+   "source": "E-09",
+   "target": "B-11",
+   "type": "consumed_by",
+   "label": "事件消费",
+   "model": "ME"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-SOURCE-001",
+   "type": "source",
+   "label": "源对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-POLICY-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-INDVAL-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-YEARBOOK-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-INTEL-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "AGG-RELATION-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "E-01",
+   "type": "trigger",
+   "label": "触发事件",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "B-04",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "E-01",
+   "type": "calls",
+   "label": "发布事件",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "R-03",
+   "type": "calls",
+   "label": "评估规则",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "B-08",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-01",
+   "target": "E-07",
+   "type": "calls",
+   "label": "发布事件",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "AGG-QUALITY-001",
+   "type": "source",
+   "label": "源对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "AGG-COMMODITY-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "AGG-ENTERPRISE-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "AGG-RELATION-001",
+   "type": "target",
+   "label": "目标对象",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "E-05",
+   "type": "trigger",
+   "label": "触发事件",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "B-05",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "E-05",
+   "type": "calls",
+   "label": "发布事件",
+   "model": "M4"
+  },
+  {
+   "source": "SCN-02",
+   "target": "B-10",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M4"
+  },
+  {
+   "source": "ACTOR-KG-ADMIN",
+   "target": "ROLE-01",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ACTOR-DATA-ENTRY",
+   "target": "ROLE-02",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ACTOR-REVIEWER",
+   "target": "ROLE-03",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ACTOR-ANALYST",
+   "target": "ROLE-04",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ACTOR-INDUSTRY-PLATFORM",
+   "target": "ROLE-04",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ACTOR-CRAWL-SCHEDULER",
+   "target": "ROLE-02",
+   "type": "role_of",
+   "label": "拥有角色",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-01",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-02",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-03",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-04",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-05",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-06",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-07",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-01",
+   "target": "PERM-08",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-02",
+   "target": "PERM-02",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-02",
+   "target": "PERM-06",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-03",
+   "target": "PERM-03",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-03",
+   "target": "PERM-04",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-04",
+   "target": "PERM-04",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "ROLE-04",
+   "target": "PERM-08",
+   "type": "role_perm",
+   "label": "拥有权限",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-01",
+   "target": "FUNC-08",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-02",
+   "target": "FUNC-01",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-03",
+   "target": "B-02",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-04",
+   "target": "GQ-01",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-05",
+   "target": "B-05",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-06",
+   "target": "FUNC-12",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-07",
+   "target": "AGG-TAXONOMY-001",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PERM-08",
+   "target": "GQ-01",
+   "type": "perm_behavior",
+   "label": "授权行为",
+   "model": "M5"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-SOURCE-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-CRAWL-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-POLICY-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-INDVAL-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-YEARBOOK-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-INTEL-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-RELATION-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "AGG-QUALITY-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "ROLE-01",
+   "type": "flow_role",
+   "label": "执行角色",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "ROLE-02",
+   "type": "flow_role",
+   "label": "执行角色",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "ROLE-03",
+   "type": "flow_role",
+   "label": "执行角色",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-01",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-02",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-12",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-03",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-05",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-06",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-07",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-01",
+   "target": "FUNC-10",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "AGG-POLICY-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "AGG-INDVAL-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "AGG-YEARBOOK-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "AGG-INTEL-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "AGG-RELATION-001",
+   "type": "flow_object",
+   "label": "业务对象",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "ROLE-02",
+   "type": "flow_role",
+   "label": "执行角色",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "ROLE-03",
+   "type": "flow_role",
+   "label": "执行角色",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "B-01",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "B-02",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "PROC-APP-01",
+   "target": "B-03",
+   "type": "calls",
+   "label": "调用行为",
+   "model": "M6"
+  },
+  {
+   "source": "REP-01",
+   "target": "Q-01",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-01",
+   "target": "AGG-POLICY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-01",
+   "target": "AGG-INDVAL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-01",
+   "target": "AGG-YEARBOOK-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-01",
+   "target": "AGG-INTEL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-01",
+   "target": "AGG-RELATION-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "Q-02",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "AGG-INDVAL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "AGG-INDICATOR-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "AGG-REGION-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "AGG-COMMODITY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-02",
+   "target": "AGG-SOURCE-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-03",
+   "target": "Q-03",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-03",
+   "target": "AGG-POLICY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-03",
+   "target": "AGG-SOURCE-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-03",
+   "target": "AGG-TAXONOMY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-04",
+   "target": "Q-04",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-04",
+   "target": "AGG-QUALITY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-05",
+   "target": "Q-05",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-05",
+   "target": "AGG-CONCEPT-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-05",
+   "target": "AGG-RELATION-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-06",
+   "target": "Q-06",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-06",
+   "target": "AGG-CRAWL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "Q-07",
+   "type": "binds",
+   "label": "查询行为",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "AGG-TAXONOMY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "AGG-POLICY-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "AGG-INDVAL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "AGG-YEARBOOK-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  },
+  {
+   "source": "REP-07",
+   "target": "AGG-INTEL-001",
+   "type": "sources",
+   "label": "数据来源",
+   "model": "M7"
+  }
+ ],
+ "categories": [
+  {
+   "type": "aggregate",
+   "name": "聚合根",
+   "color": "#5470c6"
+  },
+  {
+   "type": "entity",
+   "name": "子实体",
+   "color": "#91cc75"
+  },
+  {
+   "type": "value_object",
+   "name": "值对象",
+   "color": "#fac858"
+  },
+  {
+   "type": "dictionary",
+   "name": "数据字典",
+   "color": "#a0a0a0"
+  },
+  {
+   "type": "behavior",
+   "name": "行为",
+   "color": "#ee6666"
+  },
+  {
+   "type": "rule",
+   "name": "规则",
+   "color": "#ff8c00"
+  },
+  {
+   "type": "event",
+   "name": "事件",
+   "color": "#9a60b4"
+  },
+  {
+   "type": "scenario",
+   "name": "场景",
+   "color": "#3ba272"
+  },
+  {
+   "type": "flow",
+   "name": "流程",
+   "color": "#fc8452"
+  },
+  {
+   "type": "role",
+   "name": "角色",
+   "color": "#36a3f7"
+  },
+  {
+   "type": "permission",
+   "name": "权限",
+   "color": "#e06343"
+  },
+  {
+   "type": "external",
+   "name": "外部参与方",
+   "color": "#b8b8d8"
+  },
+  {
+   "type": "report",
+   "name": "查询报表",
+   "color": "#2f9688"
+  }
+ ],
+ "edgeColors": {
+  "contains": "#ccc",
+  "operates": "#ee6666",
+  "applies": "#ff8c00",
+  "produces": "#9a60b4",
+  "consumed_by": "#9a60b4",
+  "triggers": "#ff8c00",
+  "calls": "#3ba272",
+  "emits": "#9a60b4",
+  "source": "#91cc75",
+  "target": "#fc8452",
+  "trigger": "#9a60b4",
+  "flow_role": "#36a3f7",
+  "role_perm": "#36a3f7",
+  "perm_behavior": "#e06343",
+  "perm_ui": "#e06343",
+  "binds": "#2f9688",
+  "sources": "#2f9688",
+  "assoc": "#5470c6",
+  "navigates": "#5d6b7a",
+  "owned": "#ff8c00",
+  "refers": "#5470c6",
+  "requires": "#e06343",
+  "role_of": "#36a3f7",
+  "event_entity": "#9a60b4",
+  "flow_object": "#5470c6"
+ },
+ "edgeLabels": {
+  "contains": "包含",
+  "operates": "操作对象",
+  "applies": "引用规则",
+  "produces": "产生事件",
+  "consumed_by": "消费",
+  "triggers": "触发行为",
+  "calls": "调用",
+  "emits": "发布事件",
+  "source": "源对象",
+  "target": "目标对象",
+  "trigger": "触发事件",
+  "flow_role": "执行角色",
+  "role_perm": "拥有权限",
+  "perm_behavior": "授权行为",
+  "perm_ui": "控制界面",
+  "binds": "查询绑定",
+  "sources": "数据来源",
+  "assoc": "关联",
+  "navigates": "跳转",
+  "owned": "约束",
+  "refers": "引用",
+  "requires": "需要权限",
+  "role_of": "拥有角色",
+  "event_entity": "事件所属",
+  "flow_object": "业务对象"
+ }
+}

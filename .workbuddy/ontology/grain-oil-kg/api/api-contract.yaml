@@ -1,0 +1,496 @@
+openapi: 3.0.3
+info:
+  title: 粮油产业多维知识图谱 · 接口契约
+  version: 1.0.0
+  description: |
+    依据《需求文档 V1.5》第七部分接口需求编制。
+    - 对外接口：INT-01 图谱检索、INT-02 实体详情、INT-03 来源回溯、INT-04 增量同步、INT-05 采集触发。
+    - 内部接口：本体运行引擎（engine/server.py）提供的对象 CRUD、模式元数据、只读 SQL 与自然语言查询支撑端点。
+    统一鉴权：Bearer JWT（内置 RBAC，角色 ROLE-01~ROLE-04）。
+    统一响应包裹：内部接口返回 `{"ok": boolean, ...}`；对外接口直接返回业务对象。
+    性能基线：INT-01~INT-03 常用查询 P95 ≤ 3 秒。
+servers:
+  - url: http://127.0.0.1:8765
+    description: 本地单体运行实例（引擎 + 领域表单）
+tags:
+  - name: 对外-知识服务
+    description: 面向全产业链平台与 AI 模型的知识服务接口
+  - name: 对外-运维
+    description: 采集调度类命令接口
+  - name: 内部-引擎
+    description: 本体运行引擎内部接口，供领域表单与查询层调用
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/kg/search:
+    get:
+      tags: [对外-知识服务]
+      operationId: INT-01
+      summary: 图谱检索接口
+      description: |
+        按关键词与多维过滤条件检索四类知识条目，返回相关度降序的分页结果与分面聚合。
+        categoryCode 过滤自动展开子分类（含全部后代节点）。
+        P95 ≤ 3 秒。
+      parameters:
+        - name: keyword
+          in: query
+          schema: { type: string, maxLength: 100 }
+          description: 检索关键词；为空时按过滤条件浏览
+        - name: knowledgeType
+          in: query
+          schema:
+            type: string
+            enum: [政策法规, 农业经济, 行业年鉴, 全球农业情报]
+          description: 四类知识范围
+        - name: categoryCode
+          in: query
+          schema: { type: string }
+          description: 知识分类树节点编码，自动包含子分类
+        - name: industryStage
+          in: query
+          schema:
+            type: string
+            enum: [生产, 收储, 加工, 物流, 贸易, 消费]
+          description: 产业环节（单值）
+        - name: factorDimension
+          in: query
+          schema:
+            type: string
+            enum: [供给, 需求, 库存, 贸易, 价格, 成本, 收益]
+          description: 要素维度（多值以逗号分隔）
+        - name: commodityCode
+          in: query
+          schema: { type: string }
+        - name: regionCode
+          in: query
+          schema: { type: string }
+        - name: dateFrom
+          in: query
+          schema: { type: string, format: date }
+        - name: dateTo
+          in: query
+          schema: { type: string, format: date }
+        - name: pageNo
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: pageSize
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: 检索成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total, facets, items]
+                properties:
+                  total: { type: integer }
+                  facets:
+                    type: object
+                    properties:
+                      category: { type: array, items: { $ref: '#/components/schemas/FacetBucket' } }
+                      industryStage: { type: array, items: { $ref: '#/components/schemas/FacetBucket' } }
+                      factorDimension: { type: array, items: { $ref: '#/components/schemas/FacetBucket' } }
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/SearchItem' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/kg/entities/{entityType}/{entityId}:
+    get:
+      tags: [对外-知识服务]
+      operationId: INT-02
+      summary: 实体详情接口
+      description: 返回实体属性、一跳关系列表与来源引用；实体不存在返回 404，无权限返回 403。
+      parameters:
+        - name: entityType
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [政策法规, 指标数据, 年鉴记录, 农业情报, 知识关系, 品种, 产品, 地区, 企业, 本体概念]
+        - name: entityId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 详情成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entityId, entityType, properties, relations, sources]
+                properties:
+                  entityId: { type: string }
+                  entityType: { type: string }
+                  title: { type: string }
+                  status: { type: string }
+                  properties:
+                    type: object
+                    additionalProperties: true
+                  relations:
+                    type: array
+                    items: { $ref: '#/components/schemas/RelationItem' }
+                  sources:
+                    type: array
+                    items: { $ref: '#/components/schemas/SourceRef' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/kg/traceability/{entityType}/{entityId}:
+    get:
+      tags: [对外-知识服务]
+      operationId: INT-03
+      summary: 来源回溯接口
+      description: 回溯实体到原始文档的段落级定位，必须给出 charStart/charEnd 与段落原文，供审计复核。
+      parameters:
+        - name: entityType
+          in: path
+          required: true
+          schema: { type: string }
+        - name: entityId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 回溯成功
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sourceDocId, docTitle, pageNo, chapterPath, charStart, charEnd, segmentText]
+                properties:
+                  sourceDocId: { type: string }
+                  docTitle: { type: string }
+                  pageNo: { type: integer, nullable: true }
+                  chapterPath: { type: string }
+                  charStart: { type: integer }
+                  charEnd: { type: integer }
+                  segmentText: { type: string }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/kg/changes:
+    get:
+      tags: [对外-知识服务]
+      operationId: INT-04
+      summary: 增量同步接口
+      description: |
+        只读变更集拉取，不改变任何对象状态。
+        changeType 取 CREATED / UPDATED / VOID / INVALIDATE / MERGED；
+        后三类必须出现在变更集中，payload 携带最新 status 与融合场景的 mergedIntoId；
+        nextSince 取本次返回集最大 updatedAt，无变更时原样返回入参。
+      parameters:
+        - name: since
+          in: query
+          required: true
+          schema: { type: string, format: date-time }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 1000, default: 200 }
+      responses:
+        '200':
+          description: 变更集
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [changes, nextSince]
+                properties:
+                  changes:
+                    type: array
+                    items: { $ref: '#/components/schemas/ChangeItem' }
+                  nextSince: { type: string, format: date-time }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/crawl/trigger:
+    post:
+      tags: [对外-运维]
+      operationId: INT-05
+      summary: 采集触发接口
+      description: |
+        触发指定采集源执行。同一采集源并发触发返回 409；执行结果通过 REP-06 报表与 E-08/E-09 事件回传。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [crawlSourceId, mode]
+              properties:
+                crawlSourceId: { type: string }
+                mode:
+                  type: string
+                  enum: [now, dryRun]
+                  description: now 立即执行并入库；dryRun 只抓取不入库
+      responses:
+        '202':
+          description: 已受理
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [runId, accepted, estimatedPages]
+                properties:
+                  runId: { type: string }
+                  accepted: { type: boolean }
+                  estimatedPages: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: 同一采集源已有运行中的任务
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/schema:
+    get:
+      tags: [内部-引擎]
+      operationId: ENGINE-schema
+      summary: 模型元数据
+      description: 返回全部聚合、属性、字典与关联定义，供领域表单渲染与自然语言查询层使用。
+      responses:
+        '200':
+          description: 模型元数据
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+  /api/objects/{alias}:
+    get:
+      tags: [内部-引擎]
+      operationId: ENGINE-list
+      summary: 对象列表（外键已回填名称）
+      parameters:
+        - name: alias
+          in: path
+          required: true
+          schema: { type: string }
+          description: 聚合别名，如 SourceDoc / Policy / Intel
+      responses:
+        '200':
+          description: 列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  rows: { type: array, items: { type: object, additionalProperties: true } }
+    post:
+      tags: [内部-引擎]
+      operationId: ENGINE-create
+      summary: 新建对象
+      parameters:
+        - name: alias
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: 属性名到值的映射；子实体以别名数组提交；主键省略时按「前缀+4 位流水」自动生成。
+      responses:
+        '200':
+          description: 创建结果（ok=false 时 error 说明规则拦截原因）
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  id: { type: string }
+                  error: { type: string }
+
+  /api/objects/{alias}/{id}:
+    put:
+      tags: [内部-引擎]
+      operationId: ENGINE-update
+      summary: 更新对象
+      parameters:
+        - name: alias
+          in: path
+          required: true
+          schema: { type: string }
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: 更新结果
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  error: { type: string }
+    delete:
+      tags: [内部-引擎]
+      operationId: ENGINE-delete
+      summary: 删除对象
+      description: 受引用规则保护，存在下游引用时拒绝删除。
+      parameters:
+        - name: alias
+          in: path
+          required: true
+          schema: { type: string }
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 删除结果
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  error: { type: string }
+
+  /api/sql:
+    post:
+      tags: [内部-引擎]
+      operationId: ENGINE-sql
+      summary: 只读 SQL 查询
+      description: 仅允许 SELECT，供查询层与自然语言查询落库执行。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sql]
+              properties:
+                sql: { type: string }
+      responses:
+        '200':
+          description: 查询结果
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  columns: { type: array, items: { type: string } }
+                  rows: { type: array, items: { type: array, items: {} } }
+                  error: { type: string }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    FacetBucket:
+      type: object
+      properties:
+        key: { type: string }
+        label: { type: string }
+        count: { type: integer }
+    SearchItem:
+      type: object
+      required: [entityId, entityType, title, score]
+      properties:
+        entityId: { type: string }
+        entityType:
+          type: string
+          enum: [政策法规, 指标数据, 年鉴记录, 农业情报, 知识关系, 品种, 产品, 地区, 企业, 本体概念]
+        title: { type: string }
+        summary: { type: string }
+        score: { type: number, format: float }
+        categoryPath: { type: string, description: 知识分类树路径，形如「农业经济/粮食市场/小麦」 }
+        sourceDocId: { type: string }
+        status: { type: string }
+    RelationItem:
+      type: object
+      properties:
+        relationId: { type: string }
+        predicate: { type: string }
+        direction: { type: string, enum: [out, in] }
+        targetEntityType: { type: string }
+        targetEntityId: { type: string }
+        targetTitle: { type: string }
+        confidence: { type: number, format: float }
+        validFrom: { type: string, format: date }
+        validTo: { type: string, format: date, nullable: true }
+    SourceRef:
+      type: object
+      properties:
+        sourceDocId: { type: string }
+        docTitle: { type: string }
+        segmentId: { type: string }
+        pageNo: { type: integer, nullable: true }
+        charStart: { type: integer }
+        charEnd: { type: integer }
+    ChangeItem:
+      type: object
+      required: [entityType, entityId, changeType, updatedAt]
+      properties:
+        entityType: { type: string }
+        entityId: { type: string }
+        changeType:
+          type: string
+          enum: [CREATED, UPDATED, VOID, INVALIDATE, MERGED]
+        updatedAt: { type: string, format: date-time }
+        payload:
+          type: object
+          additionalProperties: true
+          description: 最新属性快照；VOID/INVALIDATE 必含 status，MERGED 必含 mergedIntoId
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        traceId: { type: string }
+
+  responses:
+    BadRequest:
+      description: 参数校验失败
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: 未认证或令牌失效
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: 无访问权限
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: 实体不存在
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

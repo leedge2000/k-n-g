@@ -1,0 +1,188 @@
+{
+  "model_type": "ACTOR",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "四类内部业务角色、八类共享权限与两类外部调用主体；生产接口统一采用 OAuth2 Bearer JWT 与 RBAC",
+  "actors": [
+    {
+      "actorId": "ACTOR-KG-ADMIN",
+      "name": "知识管理员",
+      "actorType": "HUMAN",
+      "description": "主数据、本体、知识体系、质量治理、审核规则、采集源配置与全量业务管理",
+      "roles": [
+        "ROLE-01"
+      ],
+      "attributes": {
+        "department": "知识管理部"
+      }
+    },
+    {
+      "actorId": "ACTOR-DATA-ENTRY",
+      "name": "数据录入员",
+      "actorType": "HUMAN",
+      "description": "来源文档、四类知识条目和知识关系登记，提交审核及执行授权采集",
+      "roles": [
+        "ROLE-02"
+      ],
+      "attributes": {
+        "department": "数据运营部"
+      }
+    },
+    {
+      "actorId": "ACTOR-REVIEWER",
+      "name": "审核员",
+      "actorType": "HUMAN",
+      "description": "知识条目一级审核通过与退回",
+      "roles": [
+        "ROLE-03"
+      ],
+      "attributes": {
+        "department": "知识审核部"
+      }
+    },
+    {
+      "actorId": "ACTOR-ANALYST",
+      "name": "分析师",
+      "actorType": "HUMAN",
+      "description": "图谱探索、固定报表、来源回溯、增量导出与接口消费",
+      "roles": [
+        "ROLE-04"
+      ],
+      "attributes": {
+        "department": "产业研究部"
+      }
+    },
+    {
+      "actorId": "ACTOR-INDUSTRY-PLATFORM",
+      "name": "全产业链平台与AI模型",
+      "actorType": "EXTERNAL",
+      "description": "调用图谱检索、实体详情、来源回溯和增量同步接口的外部消费方",
+      "roles": [
+        "ROLE-04"
+      ],
+      "externalContract": {
+        "protocol": "REST",
+        "dataFormat": "JSON",
+        "authMethod": "OAuth2",
+        "timeoutMs": 5000
+      }
+    },
+    {
+      "actorId": "ACTOR-CRAWL-SCHEDULER",
+      "name": "采集调度器",
+      "actorType": "EXTERNAL",
+      "description": "按调度计划调用采集触发接口的外部运维主体",
+      "roles": [
+        "ROLE-02"
+      ],
+      "externalContract": {
+        "protocol": "REST",
+        "dataFormat": "JSON",
+        "authMethod": "OAuth2",
+        "timeoutMs": 5000
+      }
+    }
+  ],
+  "roles": [
+    {
+      "roleId": "ROLE-01",
+      "name": "知识管理员",
+      "description": "全量业务权限",
+      "permissions": [
+        "PERM-01",
+        "PERM-02",
+        "PERM-03",
+        "PERM-04",
+        "PERM-05",
+        "PERM-06",
+        "PERM-07",
+        "PERM-08"
+      ]
+    },
+    {
+      "roleId": "ROLE-02",
+      "name": "数据录入员",
+      "description": "录入、提交审核与授权采集，不含审核和质量治理权限",
+      "permissions": [
+        "PERM-02",
+        "PERM-06"
+      ]
+    },
+    {
+      "roleId": "ROLE-03",
+      "name": "审核员",
+      "description": "一级审核发布与退回权限",
+      "permissions": [
+        "PERM-03",
+        "PERM-04"
+      ]
+    },
+    {
+      "roleId": "ROLE-04",
+      "name": "分析师",
+      "description": "图谱与报表查询、来源回溯、增量同步和接口消费权限",
+      "permissions": [
+        "PERM-04",
+        "PERM-08"
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "permissionId": "PERM-01",
+      "name": "主数据与本体维护",
+      "targetType": "BEHAVIOR",
+      "targetRef": "FUNC-08",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-02",
+      "name": "知识登记与提交",
+      "targetType": "BEHAVIOR",
+      "targetRef": "FUNC-01",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-03",
+      "name": "审核发布",
+      "targetType": "BEHAVIOR",
+      "targetRef": "B-02",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-04",
+      "name": "图谱与查询报表",
+      "targetType": "BEHAVIOR",
+      "targetRef": "GQ-01",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-05",
+      "name": "质量治理",
+      "targetType": "BEHAVIOR",
+      "targetRef": "B-05",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-06",
+      "name": "采集管理",
+      "targetType": "BEHAVIOR",
+      "targetRef": "FUNC-12",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-07",
+      "name": "知识体系维护",
+      "targetType": "ENTITY",
+      "targetRef": "AGG-TAXONOMY-001",
+      "dataScope": "ALL"
+    },
+    {
+      "permissionId": "PERM-08",
+      "name": "对外接口调用",
+      "targetType": "BEHAVIOR",
+      "targetRef": "GQ-01",
+      "dataScope": "ALL"
+    }
+  ]
+}

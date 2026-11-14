@@ -1,0 +1,2 @@
+:VID,relationId,subjectEntityType,subjectEntityId,predicate,objectEntityType,objectEntityId,confidence,sourceDocId,segmentId,extractedBy,validFrom,validTo,status,createdBy,createdAt,updatedBy,updatedAt
+REL0001,REL0001,品种,CMD0001,产于,地区,REG0001,0.95,SOU0001,SOU0001-S002,人工,,,已发布,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

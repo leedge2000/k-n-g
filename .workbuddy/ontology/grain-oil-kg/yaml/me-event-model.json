@@ -1,0 +1,152 @@
+{
+  "model_type": "EVENT",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "跨对象事实事件；人工审核、重新提交和增量导出不作为自动事件订阅者",
+  "ui_events": [],
+  "events": [
+    {
+      "eventId": "E-01",
+      "eventName": "来源文档已作废",
+      "description": "来源文档被知识管理员作废，触发下游失效传播",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-04",
+      "producerEntityRef": "AGG-SOURCE-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "来源文档状态已变为已作废",
+      "subscribers": [
+        {
+          "subscriberType": "RULE",
+          "subscriberRuleRef": "R-03"
+        },
+        {
+          "subscriberType": "BEHAVIOR",
+          "subscriberBehaviorRef": "B-08"
+        }
+      ],
+      "uiEventPath": [
+        "SCR-SOURCE-FORM.btnVoid_Click"
+      ]
+    },
+    {
+      "eventId": "E-02",
+      "eventName": "知识条目已提交审核",
+      "description": "四类知识条目或知识关系进入待审核，后续由审核员人工处理",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-01",
+      "producerEntityRef": "AGG-POLICY-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "条目状态已变为待审核",
+      "subscribers": [],
+      "uiEventPath": [
+        "SCR-REVIEW.btnSubmit_Click"
+      ]
+    },
+    {
+      "eventId": "E-03",
+      "eventName": "知识条目已发布",
+      "description": "审核通过且图存储、检索索引与增量变更集已写入",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-02",
+      "producerEntityRef": "AGG-POLICY-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "条目状态已变为已发布且入图成功",
+      "subscribers": [],
+      "uiEventPath": [
+        "SCR-REVIEW.btnApprove_Click"
+      ]
+    },
+    {
+      "eventId": "E-04",
+      "eventName": "知识条目已退回",
+      "description": "审核退回至录入员，由用户修改后重新提交",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-03",
+      "producerEntityRef": "AGG-POLICY-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "条目状态已变为已退回",
+      "subscribers": [],
+      "uiEventPath": [
+        "SCR-REVIEW.btnReject_Click"
+      ]
+    },
+    {
+      "eventId": "E-05",
+      "eventName": "实体已融合",
+      "description": "重复实体已融合，等待下游引用统一改挂到保留实体",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-05",
+      "producerEntityRef": "AGG-QUALITY-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "保留实体与重复实体融合成功",
+      "subscribers": [
+        {
+          "subscriberType": "BEHAVIOR",
+          "subscriberBehaviorRef": "B-10"
+        }
+      ],
+      "uiEventPath": [
+        "SCR-QUALITY.btnMerge_Click"
+      ]
+    },
+    {
+      "eventId": "E-06",
+      "eventName": "冲突已处置",
+      "description": "冲突记录已完成取值与留痕",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-06",
+      "producerEntityRef": "AGG-QUALITY-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "冲突处置结果已保存",
+      "subscribers": [],
+      "uiEventPath": [
+        "SCR-QUALITY.btnResolve_Click"
+      ]
+    },
+    {
+      "eventId": "E-07",
+      "eventName": "下游条目已失效",
+      "description": "引用已作废来源的知识条目或关系已标记失效",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "B-08",
+      "producerEntityRef": "AGG-INDVAL-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "下游条目状态已变为已失效",
+      "subscribers": []
+    },
+    {
+      "eventId": "E-08",
+      "eventName": "采集任务已完成",
+      "description": "单次采集成功，来源文档与段落已在同一采集行为中登记",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "FUNC-12",
+      "producerEntityRef": "AGG-CRAWL-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "采集执行状态为成功或部分成功",
+      "subscribers": [],
+      "uiEventPath": [
+        "SCR-CRAWL-SOURCE.btnRun_Click"
+      ]
+    },
+    {
+      "eventId": "E-09",
+      "eventName": "采集任务失败",
+      "description": "单次采集失败，按连续失败阈值决定是否自动暂停采集源",
+      "producerType": "BEHAVIOR",
+      "producerBehaviorRef": "FUNC-12",
+      "producerEntityRef": "AGG-CRAWL-001",
+      "eventType": "DOMAIN_EVENT",
+      "triggerCondition": "采集执行状态为失败",
+      "subscribers": [
+        {
+          "subscriberType": "RULE",
+          "subscriberRuleRef": "R-10"
+        },
+        {
+          "subscriberType": "BEHAVIOR",
+          "subscriberBehaviorRef": "B-11"
+        }
+      ]
+    }
+  ]
+}

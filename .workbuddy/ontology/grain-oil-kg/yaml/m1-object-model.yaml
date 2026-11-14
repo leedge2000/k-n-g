@@ -1,0 +1,3026 @@
+model_type: OBJECT
+version: '2.1'
+domain: 粮油产业多维知识图谱
+description: 粮油产业多维知识图谱对象模型：15 个聚合根、4 个子实体、19 类数据字典；内部主键用于表主键与图 VID，业务编码独立用于检索
+aggregates:
+- id: AGG-SOURCE-001
+  name: 来源文档
+  alias: SourceDoc
+  aggregateType: AGGREGATE_ROOT
+  description: 承载四类知识的原始文档及其版本、校验与存储信息，是知识可回溯的根
+  lifecycle:
+  - 草稿
+  - 有效
+  - 已失效
+  - 已作废
+  tags:
+  - 核心域
+  attributes:
+  - name: docId
+    label: 文档编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 SOU+4 位流水，作为内部主键与图节点 VID，不作为独立业务编码
+  - name: title
+    label: 文档标题
+    type: String
+    required: true
+    description: 文档原标题
+  - name: docType
+    label: 文档类别
+    type: DictionaryRef
+    required: true
+    dictionaryRef: SourceDoc.docType
+  - name: issuer
+    label: 发布机构
+    type: String
+    description: 发布或编制单位
+  - name: publishDate
+    label: 发布日期
+    type: Date
+  - name: docVersion
+    label: 文档版本
+    type: String
+  - name: fileFormat
+    label: 文件格式
+    type: DictionaryRef
+    dictionaryRef: SourceDoc.fileFormat
+  - name: storageUri
+    label: 存储地址
+    type: String
+    description: MinIO/对象存储 URI
+  - name: checksum
+    label: 校验码
+    type: String
+    description: 正文 SHA-256，用于 R-09 快照去重
+  - name: language
+    label: 语种
+    type: DictionaryRef
+    dictionaryRef: SourceDoc.language
+  - name: pageCount
+    label: 页数
+    type: Integer
+    refRules:
+    - name: REF-05
+      expression: value >= 0
+      violationMessage: 页数不能为负
+  - name: sourceUrl
+    label: 来源链接
+    type: String
+    description: 采集或登记的原始 URL
+  - name: crawlSourceId
+    label: 采集源
+    type: AggregateRootRef
+    description: 由采集任务产生时回指采集源
+    targetAggregate: AGG-CRAWL-001
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    description: R-14：必须挂接有效分类且层级>=2
+    targetAggregate: AGG-TAXONOMY-001
+  - name: summary
+    label: 摘要
+    type: Text
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: SourceDoc.status
+  entities:
+  - name: 文档段落
+    alias: Segment
+    localId: segmentId
+    description: 文档按标题/自然段切分后的可定位文本单元，是来源回溯的最小粒度
+    cardinality: ONE_OR_MORE
+    cascadeDelete: true
+    attributes:
+    - name: segmentId
+      label: 段落编号
+      type: String
+      required: true
+      unique: true
+      description: 聚合内唯一，格式 SOU0001-S001
+    - name: segmentNo
+      label: 段落序号
+      type: Integer
+      required: true
+    - name: pageNo
+      label: 页码
+      type: Integer
+      refRules:
+      - name: REF-07
+        expression: value >= 0
+        violationMessage: 页码不能为负
+    - name: chapterPath
+      label: 章节路径
+      type: String
+      description: 如 第三章/第一节
+    - name: charStart
+      label: 起始字符位置
+      type: Integer
+      required: true
+      refRules:
+      - name: REF-08
+        expression: value >= 0
+        violationMessage: 起始字符位置不能为负
+    - name: charEnd
+      label: 结束字符位置
+      type: Integer
+      required: true
+      refRules:
+      - name: REF-09
+        expression: value > 0
+        violationMessage: 结束字符位置必须大于 0
+    - name: segmentText
+      label: 段落文本
+      type: Text
+      required: true
+    - name: segmentType
+      label: 段落类型
+      type: DictionaryRef
+      dictionaryRef: Segment.segmentType
+    - name: vectorId
+      label: 向量索引标识
+      type: String
+      description: 向量库中的块 ID
+  invariants:
+  - name: INV-04 段落字符区间有效
+    expression: all(segment.charEnd > segment.charStart for segment in Segment)
+    violationMessage: 每个段落的结束位置必须大于起始位置
+    enforcedAt: ON_CREATE
+  - name: INV-05 来源文档至少包含一个段落
+    expression: len(Segment) >= 1
+    violationMessage: 有效来源文档必须至少切分出一个段落
+    enforcedAt: ON_CREATE
+- id: AGG-POLICY-001
+  name: 政策法规
+  alias: Policy
+  aggregateType: AGGREGATE_ROOT
+  description: 政策文件主体，关联发文机关、效力层级、时效与适用区域，下挂可执行条款
+  lifecycle:
+  - 草稿
+  - 待审核
+  - 已发布
+  - 已退回
+  - 已失效
+  tags:
+  - 核心域
+  attributes:
+  - name: policyId
+    label: 政策编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 POL+4 位流水
+  - name: policyTitle
+    label: 政策标题
+    type: String
+    required: true
+  - name: docNumber
+    label: 发文字号
+    type: String
+    description: 如 国办发〔2025〕1 号
+  - name: policyLevel
+    label: 效力层级
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Policy.policyLevel
+  - name: issuer
+    label: 发文机关
+    type: String
+    required: true
+  - name: effectiveDate
+    label: 生效日期
+    type: Date
+  - name: expireDate
+    label: 失效日期
+    type: Date
+  - name: policyStatus
+    label: 政策时效状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Policy.policyStatus
+  - name: regionId
+    label: 适用地区
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-REGION-001
+  - name: sourceDocId
+    label: 来源文档
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-SOURCE-001
+  - name: segmentId
+    label: 来源段落
+    type: String
+    description: 来源文档段落编号
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: industryStage
+    label: 产业环节
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Policy.industryStage
+  - name: factorDimensions
+    label: 要素维度
+    type: String
+    description: 多值逗号分隔：供给,需求,库存,贸易,价格,成本,收益
+  - name: reviewStatus
+    label: 审核状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Policy.reviewStatus
+  - name: summary
+    label: 政策要点摘要
+    type: Text
+  entities:
+  - name: 政策条款
+    alias: Clause
+    localId: clauseId
+    description: 政策文件中的可执行条款单元
+    cardinality: ONE_OR_MORE
+    cascadeDelete: true
+    attributes:
+    - name: clauseId
+      label: 条款编号
+      type: String
+      required: true
+      unique: true
+      description: 格式 POL0001-C001
+    - name: clauseNo
+      label: 条款序号
+      type: Integer
+      required: true
+    - name: clauseTitle
+      label: 条款标题
+      type: String
+    - name: clauseText
+      label: 条款正文
+      type: Text
+      required: true
+    - name: measureType
+      label: 措施类型
+      type: DictionaryRef
+      dictionaryRef: Clause.measureType
+    - name: targetObject
+      label: 作用对象
+      type: String
+      description: 品种/地区/企业等
+    - name: clauseEffectiveDate
+      label: 条款生效日期
+      type: Date
+  invariants:
+  - name: INV-01 政策时效区间有效
+    expression: effectiveDate is None or expireDate is None or effectiveDate <= expireDate
+    violationMessage: 生效日期不得晚于失效日期
+    enforcedAt: ALWAYS
+- id: AGG-INDICATOR-001
+  name: 指标定义
+  alias: Indicator
+  aggregateType: AGGREGATE_ROOT
+  description: 粮油经济指标的口径、单位、频率与来源，是指标数据的元数据主数据
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: indicatorId
+    label: 指标内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 IND+4 位流水
+  - name: indicatorCode
+    label: 指标编码
+    type: String
+    required: true
+    unique: true
+    description: 人工录入业务编码，如 AE-YIELD-001
+  - name: indicatorName
+    label: 指标名称
+    type: String
+    required: true
+  - name: indicatorCategory
+    label: 指标类别
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Indicator.indicatorCategory
+  - name: unit
+    label: 计量单位
+    type: String
+    required: true
+    description: 万吨/元每吨/公顷等
+  - name: frequency
+    label: 统计频率
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Indicator.frequency
+  - name: caliber
+    label: 统计口径说明
+    type: Text
+  - name: sourceOrg
+    label: 口径来源机构
+    type: String
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: industryStage
+    label: 产业环节
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Indicator.industryStage
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Indicator.status
+- id: AGG-INDVAL-001
+  name: 指标数据
+  alias: IvdData
+  aggregateType: AGGREGATE_ROOT
+  description: 指标在地区、品种、期间上的取值，是供需用分析的核心事实数据
+  lifecycle:
+  - 草稿
+  - 待审核
+  - 已发布
+  - 已退回
+  - 已失效
+  tags:
+  - 核心域
+  attributes:
+  - name: valueId
+    label: 数据编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 IVD+4 位流水
+  - name: indicatorId
+    label: 指标定义
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-INDICATOR-001
+  - name: regionId
+    label: 地区
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-REGION-001
+  - name: commodityId
+    label: 品种
+    type: AggregateRootRef
+    targetAggregate: AGG-COMMODITY-001
+  - name: periodType
+    label: 期间类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: IvdData.periodType
+  - name: period
+    label: 期间
+    type: String
+    required: true
+    description: 2025 / 2025Q1 / 2025-06 / 2025-06-30
+  - name: value
+    label: 数值
+    type: Decimal
+    required: true
+    refRules:
+    - name: REF-02
+      expression: value >= -1000000000 and value <= 1000000000
+      violationMessage: 指标数值超出允许范围
+  - name: unit
+    label: 计量单位
+    type: String
+  - name: qualityFlag
+    label: 数据质量标识
+    type: DictionaryRef
+    required: true
+    dictionaryRef: IvdData.qualityFlag
+  - name: sourceDocId
+    label: 来源文档
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-SOURCE-001
+  - name: segmentId
+    label: 来源段落
+    type: String
+    required: true
+    description: 来源文档段落编号，支撑段落级回溯
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: industryStage
+    label: 产业环节
+    type: DictionaryRef
+    required: true
+    dictionaryRef: IvdData.industryStage
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: IvdData.status
+  - name: remark
+    label: 备注
+    type: String
+  invariants:
+  - name: INV-06 指标四维业务键完整
+    expression: indicatorId is not None and regionId is not None and period is not None
+    violationMessage: 指标、地区与期间必须完整；四维唯一性由 R-02 跨记录检测
+    enforcedAt: ON_CREATE
+- id: AGG-YEARBOOK-001
+  name: 年鉴记录
+  alias: YrbYearbook
+  aggregateType: AGGREGATE_ROOT
+  description: 统计年鉴中的条目级记录，按年鉴版本、表名与统计口径对齐
+  lifecycle:
+  - 草稿
+  - 待审核
+  - 已发布
+  - 已退回
+  - 已失效
+  tags:
+  - 核心域
+  attributes:
+  - name: recordId
+    label: 记录编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 YRB+4 位流水
+  - name: yearbookName
+    label: 年鉴名称
+    type: String
+    required: true
+  - name: edition
+    label: 年鉴版本
+    type: String
+    description: 如 2025 卷
+  - name: statYear
+    label: 统计年份
+    type: Integer
+    required: true
+    refRules:
+    - name: REF-04
+      expression: value >= 1900 and value <= 2100
+      violationMessage: 年份必须在 1900~2100 之间
+  - name: tableName
+    label: 统计表名
+    type: String
+  - name: indicatorId
+    label: 对应指标
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-INDICATOR-001
+  - name: regionId
+    label: 地区
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-REGION-001
+  - name: commodityId
+    label: 品种
+    type: AggregateRootRef
+    targetAggregate: AGG-COMMODITY-001
+  - name: value
+    label: 数值
+    type: Decimal
+    required: true
+  - name: unit
+    label: 计量单位
+    type: String
+  - name: caliberNote
+    label: 口径差异说明
+    type: Text
+  - name: sourceDocId
+    label: 来源文档
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-SOURCE-001
+  - name: segmentId
+    label: 来源段落
+    type: String
+    required: true
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: industryStage
+    label: 产业环节
+    type: DictionaryRef
+    dictionaryRef: Yearbook.industryStage
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Yearbook.status
+- id: AGG-INTEL-001
+  name: 农业情报
+  alias: Intel
+  aggregateType: AGGREGATE_ROOT
+  description: 全球产能、产量、贸易与市场情报的结构化条目
+  lifecycle:
+  - 草稿
+  - 待审核
+  - 已发布
+  - 已退回
+  - 已失效
+  tags:
+  - 核心域
+  attributes:
+  - name: intelId
+    label: 情报编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 INT+4 位流水
+  - name: intelTitle
+    label: 情报标题
+    type: String
+    required: true
+  - name: intelType
+    label: 情报类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Intel.intelType
+  - name: regionId
+    label: 涉及地区
+    type: AggregateRootRef
+    targetAggregate: AGG-REGION-001
+  - name: commodityId
+    label: 涉及品种
+    type: AggregateRootRef
+    targetAggregate: AGG-COMMODITY-001
+  - name: publishOrg
+    label: 发布机构
+    type: String
+  - name: publishDate
+    label: 发布日期
+    type: Date
+  - name: keyPoints
+    label: 核心要点
+    type: Text
+  - name: credibility
+    label: 可信度
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Intel.credibility
+  - name: sourceDocId
+    label: 来源文档
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-SOURCE-001
+  - name: segmentId
+    label: 来源段落
+    type: String
+    required: true
+  - name: knowledgeCategoryId
+    label: 知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: industryStage
+    label: 产业环节
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Intel.industryStage
+  - name: factorDimensions
+    label: 要素维度
+    type: String
+    description: 多值逗号分隔
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Intel.status
+- id: AGG-COMMODITY-001
+  name: 品种
+  alias: CmdCommodity
+  aggregateType: AGGREGATE_ROOT
+  description: 粮油品种主数据，含外部本体编码映射与父子品种层级
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: commodityId
+    label: 品种内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 CMD+4 位流水
+  - name: commodityCode
+    label: 品种编码
+    type: String
+    required: true
+    unique: true
+    description: 人工录入业务编码，如 CMD-RICE
+  - name: commodityName
+    label: 品种名称
+    type: String
+    required: true
+  - name: commodityCategory
+    label: 品种类别
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Commodity.commodityCategory
+  - name: scientificName
+    label: 学名
+    type: String
+  - name: parentCommodityId
+    label: 父品种
+    type: AggregateRootRef
+    targetAggregate: AGG-COMMODITY-001
+  - name: conceptId
+    label: 本体概念
+    type: AggregateRootRef
+    targetAggregate: AGG-CONCEPT-001
+  - name: description
+    label: 品种说明
+    type: Text
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Commodity.status
+  invariants:
+  - name: INV-07 品种不得自引用为父品种
+    expression: parentCommodityId is None or parentCommodityId != commodityId
+    violationMessage: 父品种不能是自身
+    enforcedAt: ALWAYS
+- id: AGG-PRODUCT-001
+  name: 产品
+  alias: Product
+  aggregateType: AGGREGATE_ROOT
+  description: 由品种加工形成的产品，关联执行标准与生产企业
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: productId
+    label: 产品内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 PRD+4 位流水
+  - name: productCode
+    label: 产品编码
+    type: String
+    unique: true
+    description: 人工录入业务编码，可空
+  - name: productName
+    label: 产品名称
+    type: String
+    required: true
+  - name: commodityId
+    label: 原料品种
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-COMMODITY-001
+  - name: productCategory
+    label: 产品类别
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Product.productCategory
+  - name: grade
+    label: 质量等级
+    type: DictionaryRef
+    dictionaryRef: Product.grade
+  - name: standardCode
+    label: 执行标准号
+    type: String
+  - name: enterpriseId
+    label: 生产企业
+    type: AggregateRootRef
+    targetAggregate: AGG-ENTERPRISE-001
+  - name: description
+    label: 产品说明
+    type: Text
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Product.status
+- id: AGG-REGION-001
+  name: 地区
+  alias: Region
+  aggregateType: AGGREGATE_ROOT
+  description: 行政区划与 FAO 区域主数据，支持国家-省-市-区县四级层级
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: regionId
+    label: 地区内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 REG+4 位流水
+  - name: regionCode
+    label: 地区编码
+    type: String
+    required: true
+    unique: true
+    description: 行政区划代码或自定义编码
+  - name: regionName
+    label: 地区名称
+    type: String
+    required: true
+  - name: regionLevel
+    label: 层级
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Region.regionLevel
+  - name: parentRegionId
+    label: 上级地区
+    type: AggregateRootRef
+    targetAggregate: AGG-REGION-001
+  - name: adminCode
+    label: 行政区划代码
+    type: String
+  - name: faoRegion
+    label: FAO 区域
+    type: String
+  - name: isChongqing
+    label: 是否重庆相关
+    type: Boolean
+    defaultValue: false
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Region.status
+- id: AGG-ENTERPRISE-001
+  name: 企业
+  alias: Enterprise
+  aggregateType: AGGREGATE_ROOT
+  description: 产业链相关企业主数据（加工、贸易、储备、种植、饲料）
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: enterpriseId
+    label: 企业内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 ENT+4 位流水
+  - name: enterpriseCode
+    label: 企业编码
+    type: String
+    required: true
+    unique: true
+    description: 人工录入业务编码
+  - name: enterpriseName
+    label: 企业名称
+    type: String
+    required: true
+  - name: creditCode
+    label: 统一社会信用代码
+    type: String
+    required: true
+    unique: true
+    refRules:
+    - name: REF-06
+      expression: LENGTH(value) == 18
+      violationMessage: 统一社会信用代码必须为 18 位
+  - name: enterpriseType
+    label: 企业类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Enterprise.enterpriseType
+  - name: regionId
+    label: 所在地区
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-REGION-001
+  - name: scale
+    label: 企业规模
+    type: DictionaryRef
+    dictionaryRef: Enterprise.scale
+  - name: legalPerson
+    label: 法定代表人
+    type: String
+  - name: address
+    label: 注册地址
+    type: String
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Enterprise.status
+- id: AGG-CONCEPT-001
+  name: 本体概念
+  alias: Concept
+  aggregateType: AGGREGATE_ROOT
+  description: FoodOn/AGROVOC/DFC/KGAP 等外部本体的概念映射与本地同义词集合
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: conceptId
+    label: 概念内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 CON+4 位流水
+  - name: conceptCode
+    label: 概念编码
+    type: String
+    required: true
+    unique: true
+    description: 人工录入，如 FOODON-00001234
+  - name: conceptName
+    label: 概念名称
+    type: String
+    required: true
+  - name: conceptType
+    label: 概念类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Concept.conceptType
+  - name: sourceOntology
+    label: 来源本体
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Concept.sourceOntology
+  - name: externalUri
+    label: 外部概念 URI
+    type: String
+  - name: parentConceptId
+    label: 父概念
+    type: AggregateRootRef
+    targetAggregate: AGG-CONCEPT-001
+  - name: definition
+    label: 概念定义
+    type: Text
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Concept.status
+  entities:
+  - name: 同义词
+    alias: Synonym
+    localId: synonymId
+    description: 概念的简称、别名、外文名与常见错拼
+    cardinality: ZERO_OR_MORE
+    cascadeDelete: true
+    attributes:
+    - name: synonymId
+      label: 同义词编号
+      type: String
+      required: true
+      unique: true
+    - name: synonymName
+      label: 同义词
+      type: String
+      required: true
+    - name: language
+      label: 语种
+      type: DictionaryRef
+      dictionaryRef: Synonym.language
+    - name: synonymType
+      label: 同义词类型
+      type: DictionaryRef
+      required: true
+      dictionaryRef: Synonym.synonymType
+  invariants:
+  - name: INV-03 概念不得自引用为父概念
+    expression: parentConceptId is None or parentConceptId != conceptId
+    violationMessage: 父概念不能是自身
+    enforcedAt: ALWAYS
+- id: AGG-RELATION-001
+  name: 知识关系
+  alias: Relation
+  aggregateType: AGGREGATE_ROOT
+  description: 知识实体间的多态三元组，含来源、置信度与有效期间，是图谱边的事实来源
+  lifecycle:
+  - 草稿
+  - 待审核
+  - 已发布
+  - 已退回
+  - 已失效
+  tags:
+  - 核心域
+  attributes:
+  - name: relationId
+    label: 关系编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 REL+4 位流水
+  - name: subjectEntityType
+    label: 主体实体类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Relation.subjectEntityType
+  - name: subjectEntityId
+    label: 主体实体编号
+    type: String
+    required: true
+  - name: predicate
+    label: 关系谓词
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Relation.predicate
+  - name: objectEntityType
+    label: 客体实体类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Relation.objectEntityType
+  - name: objectEntityId
+    label: 客体实体编号
+    type: String
+    required: true
+  - name: confidence
+    label: 置信度
+    type: Decimal
+    required: true
+    refRules:
+    - name: REF-01
+      expression: value >= 0 and value <= 1
+      violationMessage: 置信度必须在 0~1 之间
+  - name: sourceDocId
+    label: 来源文档
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-SOURCE-001
+  - name: segmentId
+    label: 来源段落
+    type: String
+    required: true
+  - name: extractedBy
+    label: 抽取方式
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Relation.extractedBy
+  - name: validFrom
+    label: 生效日期
+    type: Date
+  - name: validTo
+    label: 失效日期
+    type: Date
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: Relation.status
+  invariants:
+  - name: INV-02 关系主体与客体不能相同
+    expression: subjectEntityType != objectEntityType or subjectEntityId != objectEntityId
+    violationMessage: 关系主体与客体不能是同一实体
+    enforcedAt: ALWAYS
+- id: AGG-QUALITY-001
+  name: 质量治理记录
+  alias: QisRecord
+  aggregateType: AGGREGATE_ROOT
+  description: 重复、冲突、缺失与失效来源的检测与处置记录
+  lifecycle:
+  - 待处理
+  - 已融合
+  - 已保留
+  - 已忽略
+  - 已作废
+  tags:
+  - 核心域
+  attributes:
+  - name: issueId
+    label: 治理记录编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 QIS+4 位流水
+  - name: issueType
+    label: 问题类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: QisRecord.issueType
+  - name: primaryEntityType
+    label: 主实体类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: QisRecord.primaryEntityType
+  - name: primaryEntityId
+    label: 主实体编号
+    type: String
+    required: true
+  - name: duplicateEntityId
+    label: 重复/对照实体编号
+    type: String
+  - name: similarity
+    label: 相似度
+    type: Decimal
+    refRules:
+    - name: REF-03
+      expression: value >= 0 and value <= 1
+      violationMessage: 相似度必须在 0~1 之间
+  - name: conflictField
+    label: 冲突字段
+    type: String
+  - name: conflictValueA
+    label: 冲突值A
+    type: String
+  - name: conflictValueB
+    label: 冲突值B
+    type: String
+  - name: handleStatus
+    label: 处置状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: QisRecord.handleStatus
+  - name: handleRemark
+    label: 处置说明
+    type: Text
+  - name: handler
+    label: 处置人
+    type: String
+  - name: handledAt
+    label: 处置时间
+    type: DateTime
+- id: AGG-CRAWL-001
+  name: 采集源
+  alias: CrsSource
+  aggregateType: AGGREGATE_ROOT
+  description: 面向公开情报页面的采集配置、调度策略与安全约束
+  lifecycle:
+  - 启用
+  - 暂停
+  - 已作废
+  tags:
+  - 核心域
+  attributes:
+  - name: crawlSourceId
+    label: 采集源编号
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 CRS+4 位流水
+  - name: sourceName
+    label: 采集源名称
+    type: String
+    required: true
+  - name: sourceUrl
+    label: 入口地址
+    type: String
+    required: true
+    description: 仅允许 http/https，R-11 校验
+  - name: sourceType
+    label: 源类型
+    type: DictionaryRef
+    required: true
+    dictionaryRef: CrsSource.sourceType
+  - name: contentCategory
+    label: 内容归口
+    type: DictionaryRef
+    required: true
+    dictionaryRef: CrsSource.contentCategory
+  - name: crawlMode
+    label: 采集方式
+    type: DictionaryRef
+    required: true
+    dictionaryRef: CrsSource.crawlMode
+  - name: cronExpr
+    label: 调度表达式
+    type: String
+    description: 定时采集的 cron 表达式
+  - name: charset
+    label: 字符集
+    type: DictionaryRef
+    dictionaryRef: CrsSource.charset
+  - name: requestHeaders
+    label: 请求头
+    type: String
+    description: UA 等，JSON 字符串
+  - name: minIntervalMinutes
+    label: 最小抓取间隔(分钟)
+    type: Integer
+    required: true
+    defaultValue: 60
+    refRules:
+    - name: REF-10
+      expression: value >= 1
+      violationMessage: 抓取间隔不得小于 1 分钟
+  - name: maxRetry
+    label: 最大重试次数
+    type: Integer
+    defaultValue: 3
+  - name: knowledgeCategoryId
+    label: 默认知识分类
+    type: AggregateRootRef
+    required: true
+    targetAggregate: AGG-TAXONOMY-001
+  - name: enabledFlag
+    label: 启停状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: CrsSource.enabledFlag
+  - name: lastRunAt
+    label: 最近执行时间
+    type: DateTime
+  entities:
+  - name: 采集执行记录
+    alias: CrawlRun
+    localId: runId
+    description: 单次采集运行的起止时间、状态、抓取量与错误信息
+    cardinality: ZERO_OR_MORE
+    cascadeDelete: true
+    attributes:
+    - name: runId
+      label: 执行编号
+      type: String
+      required: true
+      unique: true
+    - name: startedAt
+      label: 开始时间
+      type: DateTime
+      required: true
+    - name: finishedAt
+      label: 结束时间
+      type: DateTime
+    - name: runStatus
+      label: 执行状态
+      type: DictionaryRef
+      required: true
+      dictionaryRef: CrawlRun.runStatus
+    - name: httpStatus
+      label: HTTP 状态码
+      type: Integer
+    - name: fetchedCount
+      label: 抓取条数
+      type: Integer
+    - name: savedCount
+      label: 入库条数
+      type: Integer
+    - name: newDocCount
+      label: 新增文档数
+      type: Integer
+      required: true
+      defaultValue: 0
+    - name: duplicateCount
+      label: 去重跳过数
+      type: Integer
+      required: true
+      defaultValue: 0
+    - name: durationMs
+      label: 执行耗时毫秒
+      type: Integer
+      description: 由 finishedAt-startedAt 计算，未完成时为空
+    - name: errorMessage
+      label: 错误信息
+      type: Text
+- id: AGG-TAXONOMY-001
+  name: 知识分类
+  alias: KtcCategory
+  aggregateType: AGGREGATE_ROOT
+  description: 四类知识的主分类树节点，叠加产业环节与要素维度，构成三轴知识体系
+  lifecycle:
+  - 有效
+  - 停用
+  tags:
+  - 支撑域
+  attributes:
+  - name: categoryId
+    label: 分类内部标识
+    type: String
+    required: true
+    unique: true
+    description: 系统生成 KTC+4 位流水
+  - name: categoryCode
+    label: 分类编码
+    type: String
+    required: true
+    unique: true
+    description: 层级编码，如 AE-01-01
+  - name: categoryName
+    label: 分类名称
+    type: String
+    required: true
+  - name: parentCategoryId
+    label: 父分类
+    type: AggregateRootRef
+    targetAggregate: AGG-TAXONOMY-001
+  - name: level
+    label: 层级
+    type: Integer
+    required: true
+    refRules:
+    - name: REF-11
+      expression: value >= 1 and value <= 4
+      violationMessage: 分类层级必须在 1~4 之间
+  - name: categoryPath
+    label: 分类路径
+    type: String
+    description: 农业经济/粮食生产经济/粮食播种面积
+  - name: rootCategory
+    label: 归属大类
+    type: DictionaryRef
+    required: true
+    dictionaryRef: KtcCategory.rootCategory
+  - name: industryStage
+    label: 默认产业环节
+    type: DictionaryRef
+    required: true
+    dictionaryRef: KtcCategory.industryStage
+  - name: factorDimensions
+    label: 默认要素维度
+    type: String
+    description: 多值逗号分隔：供给,需求,库存,贸易,价格,成本,收益
+  - name: definition
+    label: 分类定义
+    type: Text
+  - name: keywords
+    label: 关键词
+    type: String
+    description: 分号分隔
+  - name: sortNo
+    label: 排序号
+    type: Integer
+  - name: status
+    label: 状态
+    type: DictionaryRef
+    required: true
+    dictionaryRef: KtcCategory.status
+  invariants:
+  - name: R-13 分类局部层级与路径约束
+    expression: ((parentCategoryId is None and level == 1) or (parentCategoryId is not None and parentCategoryId != categoryId and level >= 2)) and categoryPath is not None
+    violationMessage: 根节点必须为一级；非根节点不得自引用且层级至少为二级；完整父链与无环校验由 R-13 执行
+    enforcedAt: ALWAYS
+data_dictionaries:
+- id: SourceDoc.docType
+  name: SourceDoc.docType
+  description: SourceDoc 对象 文档类别 取值域（不跨对象复用）
+  types:
+  - typeCode: DOCTYPE
+    typeName: 文档类别
+    items:
+    - code: 政策法规
+      label: 政策法规
+      enabled: true
+      sortOrder: 10
+    - code: 行业年鉴
+      label: 行业年鉴
+      enabled: true
+      sortOrder: 20
+    - code: 农业经济
+      label: 农业经济
+      enabled: true
+      sortOrder: 30
+    - code: 全球农业情报
+      label: 全球农业情报
+      enabled: true
+      sortOrder: 40
+    - code: 统计公报
+      label: 统计公报
+      enabled: true
+      sortOrder: 50
+- id: SourceDoc.fileFormat
+  name: SourceDoc.fileFormat
+  description: SourceDoc 对象 文件格式 取值域（不跨对象复用）
+  types:
+  - typeCode: FILEFORMAT
+    typeName: 文件格式
+    items:
+    - code: PDF
+      label: PDF
+      enabled: true
+      sortOrder: 10
+    - code: DOCX
+      label: DOCX
+      enabled: true
+      sortOrder: 20
+    - code: HTML
+      label: HTML
+      enabled: true
+      sortOrder: 30
+    - code: XLSX
+      label: XLSX
+      enabled: true
+      sortOrder: 40
+    - code: CSV
+      label: CSV
+      enabled: true
+      sortOrder: 50
+    - code: JSON
+      label: JSON
+      enabled: true
+      sortOrder: 60
+- id: SourceDoc.language
+  name: SourceDoc.language
+  description: SourceDoc 对象 语种 取值域（不跨对象复用）
+  types:
+  - typeCode: LANGUAGE
+    typeName: 语种
+    items:
+    - code: 中文
+      label: 中文
+      enabled: true
+      sortOrder: 10
+    - code: 英文
+      label: 英文
+      enabled: true
+      sortOrder: 20
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 30
+- id: SourceDoc.status
+  name: SourceDoc.status
+  description: SourceDoc 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 20
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 30
+    - code: 已作废
+      label: 已作废
+      enabled: true
+      sortOrder: 40
+- id: Segment.segmentType
+  name: Segment.segmentType
+  description: Segment 对象 段落类型 取值域（不跨对象复用）
+  types:
+  - typeCode: SEGMENTTYPE
+    typeName: 段落类型
+    items:
+    - code: 标题
+      label: 标题
+      enabled: true
+      sortOrder: 10
+    - code: 正文
+      label: 正文
+      enabled: true
+      sortOrder: 20
+    - code: 表格
+      label: 表格
+      enabled: true
+      sortOrder: 30
+    - code: 条款
+      label: 条款
+      enabled: true
+      sortOrder: 40
+    - code: 注释
+      label: 注释
+      enabled: true
+      sortOrder: 50
+- id: Policy.policyLevel
+  name: Policy.policyLevel
+  description: Policy 对象 效力层级 取值域（不跨对象复用）
+  types:
+  - typeCode: POLICYLEVEL
+    typeName: 效力层级
+    items:
+    - code: 国家级
+      label: 国家级
+      enabled: true
+      sortOrder: 10
+    - code: 省级
+      label: 省级
+      enabled: true
+      sortOrder: 20
+    - code: 市级
+      label: 市级
+      enabled: true
+      sortOrder: 30
+    - code: 区县级
+      label: 区县级
+      enabled: true
+      sortOrder: 40
+- id: Policy.policyStatus
+  name: Policy.policyStatus
+  description: Policy 对象 政策时效状态 取值域（不跨对象复用）
+  types:
+  - typeCode: POLICYSTATUS
+    typeName: 政策时效状态
+    items:
+    - code: 现行有效
+      label: 现行有效
+      enabled: true
+      sortOrder: 10
+    - code: 已废止
+      label: 已废止
+      enabled: true
+      sortOrder: 20
+    - code: 已修订
+      label: 已修订
+      enabled: true
+      sortOrder: 30
+- id: Policy.industryStage
+  name: Policy.industryStage
+  description: Policy 对象 产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: Policy.reviewStatus
+  name: Policy.reviewStatus
+  description: Policy 对象 审核状态 取值域（不跨对象复用）
+  types:
+  - typeCode: REVIEWSTATUS
+    typeName: 审核状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 待审核
+      label: 待审核
+      enabled: true
+      sortOrder: 20
+    - code: 已发布
+      label: 已发布
+      enabled: true
+      sortOrder: 30
+    - code: 已退回
+      label: 已退回
+      enabled: true
+      sortOrder: 40
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 50
+- id: Clause.measureType
+  name: Clause.measureType
+  description: Clause 对象 措施类型 取值域（不跨对象复用）
+  types:
+  - typeCode: MEASURETYPE
+    typeName: 措施类型
+    items:
+    - code: 补贴
+      label: 补贴
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 价格
+      label: 价格
+      enabled: true
+      sortOrder: 30
+    - code: 税收
+      label: 税收
+      enabled: true
+      sortOrder: 40
+    - code: 金融
+      label: 金融
+      enabled: true
+      sortOrder: 50
+    - code: 监管
+      label: 监管
+      enabled: true
+      sortOrder: 60
+    - code: 规划
+      label: 规划
+      enabled: true
+      sortOrder: 70
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 80
+- id: Indicator.indicatorCategory
+  name: Indicator.indicatorCategory
+  description: Indicator 对象 指标类别 取值域（不跨对象复用）
+  types:
+  - typeCode: INDICATORCATEGORY
+    typeName: 指标类别
+    items:
+    - code: 产量
+      label: 产量
+      enabled: true
+      sortOrder: 10
+    - code: 面积
+      label: 面积
+      enabled: true
+      sortOrder: 20
+    - code: 价格
+      label: 价格
+      enabled: true
+      sortOrder: 30
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 40
+    - code: 库存
+      label: 库存
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+    - code: 成本收益
+      label: 成本收益
+      enabled: true
+      sortOrder: 70
+    - code: 产能
+      label: 产能
+      enabled: true
+      sortOrder: 80
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 90
+- id: Indicator.frequency
+  name: Indicator.frequency
+  description: Indicator 对象 统计频率 取值域（不跨对象复用）
+  types:
+  - typeCode: FREQUENCY
+    typeName: 统计频率
+    items:
+    - code: 年度
+      label: 年度
+      enabled: true
+      sortOrder: 10
+    - code: 季度
+      label: 季度
+      enabled: true
+      sortOrder: 20
+    - code: 月度
+      label: 月度
+      enabled: true
+      sortOrder: 30
+    - code: 日度
+      label: 日度
+      enabled: true
+      sortOrder: 40
+- id: Indicator.industryStage
+  name: Indicator.industryStage
+  description: Indicator 对象 产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: Indicator.status
+  name: Indicator.status
+  description: Indicator 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: IvdData.periodType
+  name: IvdData.periodType
+  description: IvdData 对象 期间类型 取值域（不跨对象复用）
+  types:
+  - typeCode: PERIODTYPE
+    typeName: 期间类型
+    items:
+    - code: 年度
+      label: 年度
+      enabled: true
+      sortOrder: 10
+    - code: 季度
+      label: 季度
+      enabled: true
+      sortOrder: 20
+    - code: 月度
+      label: 月度
+      enabled: true
+      sortOrder: 30
+    - code: 日度
+      label: 日度
+      enabled: true
+      sortOrder: 40
+- id: IvdData.qualityFlag
+  name: IvdData.qualityFlag
+  description: IvdData 对象 数据质量标识 取值域（不跨对象复用）
+  types:
+  - typeCode: QUALITYFLAG
+    typeName: 数据质量标识
+    items:
+    - code: 正常
+      label: 正常
+      enabled: true
+      sortOrder: 10
+    - code: 预估
+      label: 预估
+      enabled: true
+      sortOrder: 20
+    - code: 修订
+      label: 修订
+      enabled: true
+      sortOrder: 30
+    - code: 缺失
+      label: 缺失
+      enabled: true
+      sortOrder: 40
+- id: IvdData.industryStage
+  name: IvdData.industryStage
+  description: IvdData 对象 产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: IvdData.status
+  name: IvdData.status
+  description: IvdData 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 待审核
+      label: 待审核
+      enabled: true
+      sortOrder: 20
+    - code: 已发布
+      label: 已发布
+      enabled: true
+      sortOrder: 30
+    - code: 已退回
+      label: 已退回
+      enabled: true
+      sortOrder: 40
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 50
+- id: Yearbook.industryStage
+  name: Yearbook.industryStage
+  description: Yearbook 对象 产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: Yearbook.status
+  name: Yearbook.status
+  description: Yearbook 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 待审核
+      label: 待审核
+      enabled: true
+      sortOrder: 20
+    - code: 已发布
+      label: 已发布
+      enabled: true
+      sortOrder: 30
+    - code: 已退回
+      label: 已退回
+      enabled: true
+      sortOrder: 40
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 50
+- id: Intel.intelType
+  name: Intel.intelType
+  description: Intel 对象 情报类型 取值域（不跨对象复用）
+  types:
+  - typeCode: INTELTYPE
+    typeName: 情报类型
+    items:
+    - code: 产能
+      label: 产能
+      enabled: true
+      sortOrder: 10
+    - code: 产量
+      label: 产量
+      enabled: true
+      sortOrder: 20
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 30
+    - code: 市场
+      label: 市场
+      enabled: true
+      sortOrder: 40
+    - code: 政策
+      label: 政策
+      enabled: true
+      sortOrder: 50
+    - code: 天气
+      label: 天气
+      enabled: true
+      sortOrder: 60
+    - code: 库存
+      label: 库存
+      enabled: true
+      sortOrder: 70
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 80
+- id: Intel.credibility
+  name: Intel.credibility
+  description: Intel 对象 可信度 取值域（不跨对象复用）
+  types:
+  - typeCode: CREDIBILITY
+    typeName: 可信度
+    items:
+    - code: 高
+      label: 高
+      enabled: true
+      sortOrder: 10
+    - code: 中
+      label: 中
+      enabled: true
+      sortOrder: 20
+    - code: 低
+      label: 低
+      enabled: true
+      sortOrder: 30
+- id: Intel.industryStage
+  name: Intel.industryStage
+  description: Intel 对象 产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: Intel.status
+  name: Intel.status
+  description: Intel 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 待审核
+      label: 待审核
+      enabled: true
+      sortOrder: 20
+    - code: 已发布
+      label: 已发布
+      enabled: true
+      sortOrder: 30
+    - code: 已退回
+      label: 已退回
+      enabled: true
+      sortOrder: 40
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 50
+- id: Commodity.commodityCategory
+  name: Commodity.commodityCategory
+  description: Commodity 对象 品种类别 取值域（不跨对象复用）
+  types:
+  - typeCode: COMMODITYCATEGORY
+    typeName: 品种类别
+    items:
+    - code: 谷物
+      label: 谷物
+      enabled: true
+      sortOrder: 10
+    - code: 油料
+      label: 油料
+      enabled: true
+      sortOrder: 20
+    - code: 油脂
+      label: 油脂
+      enabled: true
+      sortOrder: 30
+    - code: 薯类
+      label: 薯类
+      enabled: true
+      sortOrder: 40
+    - code: 杂粮
+      label: 杂粮
+      enabled: true
+      sortOrder: 50
+    - code: 豆类
+      label: 豆类
+      enabled: true
+      sortOrder: 60
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 70
+- id: Commodity.status
+  name: Commodity.status
+  description: Commodity 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: Product.productCategory
+  name: Product.productCategory
+  description: Product 对象 产品类别 取值域（不跨对象复用）
+  types:
+  - typeCode: PRODUCTCATEGORY
+    typeName: 产品类别
+    items:
+    - code: 大米
+      label: 大米
+      enabled: true
+      sortOrder: 10
+    - code: 面粉
+      label: 面粉
+      enabled: true
+      sortOrder: 20
+    - code: 食用植物油
+      label: 食用植物油
+      enabled: true
+      sortOrder: 30
+    - code: 饲料
+      label: 饲料
+      enabled: true
+      sortOrder: 40
+    - code: 淀粉
+      label: 淀粉
+      enabled: true
+      sortOrder: 50
+    - code: 杂粮制品
+      label: 杂粮制品
+      enabled: true
+      sortOrder: 60
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 70
+- id: Product.grade
+  name: Product.grade
+  description: Product 对象 质量等级 取值域（不跨对象复用）
+  types:
+  - typeCode: GRADE
+    typeName: 质量等级
+    items:
+    - code: 一级
+      label: 一级
+      enabled: true
+      sortOrder: 10
+    - code: 二级
+      label: 二级
+      enabled: true
+      sortOrder: 20
+    - code: 三级
+      label: 三级
+      enabled: true
+      sortOrder: 30
+    - code: 四级
+      label: 四级
+      enabled: true
+      sortOrder: 40
+    - code: 未分级
+      label: 未分级
+      enabled: true
+      sortOrder: 50
+- id: Product.status
+  name: Product.status
+  description: Product 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: Region.regionLevel
+  name: Region.regionLevel
+  description: Region 对象 层级 取值域（不跨对象复用）
+  types:
+  - typeCode: REGIONLEVEL
+    typeName: 层级
+    items:
+    - code: 国家
+      label: 国家
+      enabled: true
+      sortOrder: 10
+    - code: 省级
+      label: 省级
+      enabled: true
+      sortOrder: 20
+    - code: 市级
+      label: 市级
+      enabled: true
+      sortOrder: 30
+    - code: 区县级
+      label: 区县级
+      enabled: true
+      sortOrder: 40
+- id: Region.status
+  name: Region.status
+  description: Region 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: Enterprise.enterpriseType
+  name: Enterprise.enterpriseType
+  description: Enterprise 对象 企业类型 取值域（不跨对象复用）
+  types:
+  - typeCode: ENTERPRISETYPE
+    typeName: 企业类型
+    items:
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 10
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 20
+    - code: 储备
+      label: 储备
+      enabled: true
+      sortOrder: 30
+    - code: 种植
+      label: 种植
+      enabled: true
+      sortOrder: 40
+    - code: 饲料
+      label: 饲料
+      enabled: true
+      sortOrder: 50
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 60
+- id: Enterprise.scale
+  name: Enterprise.scale
+  description: Enterprise 对象 企业规模 取值域（不跨对象复用）
+  types:
+  - typeCode: SCALE
+    typeName: 企业规模
+    items:
+    - code: 大型
+      label: 大型
+      enabled: true
+      sortOrder: 10
+    - code: 中型
+      label: 中型
+      enabled: true
+      sortOrder: 20
+    - code: 小型
+      label: 小型
+      enabled: true
+      sortOrder: 30
+    - code: 微型
+      label: 微型
+      enabled: true
+      sortOrder: 40
+- id: Enterprise.status
+  name: Enterprise.status
+  description: Enterprise 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: Concept.conceptType
+  name: Concept.conceptType
+  description: Concept 对象 概念类型 取值域（不跨对象复用）
+  types:
+  - typeCode: CONCEPTTYPE
+    typeName: 概念类型
+    items:
+    - code: 品种
+      label: 品种
+      enabled: true
+      sortOrder: 10
+    - code: 产品
+      label: 产品
+      enabled: true
+      sortOrder: 20
+    - code: 地区
+      label: 地区
+      enabled: true
+      sortOrder: 30
+    - code: 指标
+      label: 指标
+      enabled: true
+      sortOrder: 40
+    - code: 工艺
+      label: 工艺
+      enabled: true
+      sortOrder: 50
+    - code: 组织机构
+      label: 组织机构
+      enabled: true
+      sortOrder: 60
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 70
+- id: Concept.sourceOntology
+  name: Concept.sourceOntology
+  description: Concept 对象 来源本体 取值域（不跨对象复用）
+  types:
+  - typeCode: SOURCEONTOLOGY
+    typeName: 来源本体
+    items:
+    - code: FoodOn
+      label: FoodOn
+      enabled: true
+      sortOrder: 10
+    - code: AGROVOC
+      label: AGROVOC
+      enabled: true
+      sortOrder: 20
+    - code: DFC
+      label: DFC
+      enabled: true
+      sortOrder: 30
+    - code: KGAP
+      label: KGAP
+      enabled: true
+      sortOrder: 40
+    - code: 自定义
+      label: 自定义
+      enabled: true
+      sortOrder: 50
+- id: Concept.status
+  name: Concept.status
+  description: Concept 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+- id: Synonym.language
+  name: Synonym.language
+  description: Synonym 对象 语种 取值域（不跨对象复用）
+  types:
+  - typeCode: LANGUAGE
+    typeName: 语种
+    items:
+    - code: 中文
+      label: 中文
+      enabled: true
+      sortOrder: 10
+    - code: 英文
+      label: 英文
+      enabled: true
+      sortOrder: 20
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 30
+- id: Synonym.synonymType
+  name: Synonym.synonymType
+  description: Synonym 对象 同义词类型 取值域（不跨对象复用）
+  types:
+  - typeCode: SYNONYMTYPE
+    typeName: 同义词类型
+    items:
+    - code: 简称
+      label: 简称
+      enabled: true
+      sortOrder: 10
+    - code: 别名
+      label: 别名
+      enabled: true
+      sortOrder: 20
+    - code: 外文
+      label: 外文
+      enabled: true
+      sortOrder: 30
+    - code: 错拼
+      label: 错拼
+      enabled: true
+      sortOrder: 40
+- id: Relation.subjectEntityType
+  name: Relation.subjectEntityType
+  description: Relation 对象 主体实体类型 取值域（不跨对象复用）
+  types:
+  - typeCode: SUBJECTENTITYTYPE
+    typeName: 主体实体类型
+    items:
+    - code: 品种
+      label: 品种
+      enabled: true
+      sortOrder: 10
+    - code: 产品
+      label: 产品
+      enabled: true
+      sortOrder: 20
+    - code: 地区
+      label: 地区
+      enabled: true
+      sortOrder: 30
+    - code: 企业
+      label: 企业
+      enabled: true
+      sortOrder: 40
+    - code: 政策法规
+      label: 政策法规
+      enabled: true
+      sortOrder: 50
+    - code: 指标定义
+      label: 指标定义
+      enabled: true
+      sortOrder: 60
+    - code: 年鉴记录
+      label: 年鉴记录
+      enabled: true
+      sortOrder: 70
+    - code: 农业情报
+      label: 农业情报
+      enabled: true
+      sortOrder: 80
+    - code: 本体概念
+      label: 本体概念
+      enabled: true
+      sortOrder: 90
+    - code: 知识分类
+      label: 知识分类
+      enabled: true
+      sortOrder: 100
+- id: Relation.predicate
+  name: Relation.predicate
+  description: Relation 对象 关系谓词 取值域（不跨对象复用）
+  types:
+  - typeCode: PREDICATE
+    typeName: 关系谓词
+    items:
+    - code: 属于
+      label: 属于
+      enabled: true
+      sortOrder: 10
+    - code: 包含
+      label: 包含
+      enabled: true
+      sortOrder: 20
+    - code: 产于
+      label: 产于
+      enabled: true
+      sortOrder: 30
+    - code: 加工为
+      label: 加工为
+      enabled: true
+      sortOrder: 40
+    - code: 进口自
+      label: 进口自
+      enabled: true
+      sortOrder: 50
+    - code: 出口至
+      label: 出口至
+      enabled: true
+      sortOrder: 60
+    - code: 受政策影响
+      label: 受政策影响
+      enabled: true
+      sortOrder: 70
+    - code: 替代
+      label: 替代
+      enabled: true
+      sortOrder: 80
+    - code: 供应
+      label: 供应
+      enabled: true
+      sortOrder: 90
+    - code: 需求于
+      label: 需求于
+      enabled: true
+      sortOrder: 100
+    - code: 相关于
+      label: 相关于
+      enabled: true
+      sortOrder: 110
+    - code: 引用于
+      label: 引用于
+      enabled: true
+      sortOrder: 120
+- id: Relation.objectEntityType
+  name: Relation.objectEntityType
+  description: Relation 对象 客体实体类型 取值域（不跨对象复用）
+  types:
+  - typeCode: OBJECTENTITYTYPE
+    typeName: 客体实体类型
+    items:
+    - code: 品种
+      label: 品种
+      enabled: true
+      sortOrder: 10
+    - code: 产品
+      label: 产品
+      enabled: true
+      sortOrder: 20
+    - code: 地区
+      label: 地区
+      enabled: true
+      sortOrder: 30
+    - code: 企业
+      label: 企业
+      enabled: true
+      sortOrder: 40
+    - code: 政策法规
+      label: 政策法规
+      enabled: true
+      sortOrder: 50
+    - code: 指标定义
+      label: 指标定义
+      enabled: true
+      sortOrder: 60
+    - code: 年鉴记录
+      label: 年鉴记录
+      enabled: true
+      sortOrder: 70
+    - code: 农业情报
+      label: 农业情报
+      enabled: true
+      sortOrder: 80
+    - code: 本体概念
+      label: 本体概念
+      enabled: true
+      sortOrder: 90
+    - code: 知识分类
+      label: 知识分类
+      enabled: true
+      sortOrder: 100
+- id: Relation.extractedBy
+  name: Relation.extractedBy
+  description: Relation 对象 抽取方式 取值域（不跨对象复用）
+  types:
+  - typeCode: EXTRACTEDBY
+    typeName: 抽取方式
+    items:
+    - code: 人工
+      label: 人工
+      enabled: true
+      sortOrder: 10
+    - code: 规则
+      label: 规则
+      enabled: true
+      sortOrder: 20
+    - code: 模型
+      label: 模型
+      enabled: true
+      sortOrder: 30
+- id: Relation.status
+  name: Relation.status
+  description: Relation 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 草稿
+      label: 草稿
+      enabled: true
+      sortOrder: 10
+    - code: 待审核
+      label: 待审核
+      enabled: true
+      sortOrder: 20
+    - code: 已发布
+      label: 已发布
+      enabled: true
+      sortOrder: 30
+    - code: 已退回
+      label: 已退回
+      enabled: true
+      sortOrder: 40
+    - code: 已失效
+      label: 已失效
+      enabled: true
+      sortOrder: 50
+- id: QisRecord.issueType
+  name: QisRecord.issueType
+  description: QisRecord 对象 问题类型 取值域（不跨对象复用）
+  types:
+  - typeCode: ISSUETYPE
+    typeName: 问题类型
+    items:
+    - code: 重复
+      label: 重复
+      enabled: true
+      sortOrder: 10
+    - code: 冲突
+      label: 冲突
+      enabled: true
+      sortOrder: 20
+    - code: 缺失
+      label: 缺失
+      enabled: true
+      sortOrder: 30
+    - code: 失效来源
+      label: 失效来源
+      enabled: true
+      sortOrder: 40
+- id: QisRecord.primaryEntityType
+  name: QisRecord.primaryEntityType
+  description: QisRecord 对象 主实体类型 取值域（不跨对象复用）
+  types:
+  - typeCode: PRIMARYENTITYTYPE
+    typeName: 主实体类型
+    items:
+    - code: 来源文档
+      label: 来源文档
+      enabled: true
+      sortOrder: 10
+    - code: 指标数据
+      label: 指标数据
+      enabled: true
+      sortOrder: 20
+    - code: 年鉴记录
+      label: 年鉴记录
+      enabled: true
+      sortOrder: 30
+    - code: 农业情报
+      label: 农业情报
+      enabled: true
+      sortOrder: 40
+    - code: 品种
+      label: 品种
+      enabled: true
+      sortOrder: 50
+    - code: 产品
+      label: 产品
+      enabled: true
+      sortOrder: 60
+    - code: 地区
+      label: 地区
+      enabled: true
+      sortOrder: 70
+    - code: 企业
+      label: 企业
+      enabled: true
+      sortOrder: 80
+    - code: 本体概念
+      label: 本体概念
+      enabled: true
+      sortOrder: 90
+    - code: 采集源
+      label: 采集源
+      enabled: true
+      sortOrder: 100
+    - code: 知识关系
+      label: 知识关系
+      enabled: true
+      sortOrder: 110
+- id: QisRecord.handleStatus
+  name: QisRecord.handleStatus
+  description: QisRecord 对象 处置状态 取值域（不跨对象复用）
+  types:
+  - typeCode: HANDLESTATUS
+    typeName: 处置状态
+    items:
+    - code: 待处理
+      label: 待处理
+      enabled: true
+      sortOrder: 10
+    - code: 已融合
+      label: 已融合
+      enabled: true
+      sortOrder: 20
+    - code: 已保留
+      label: 已保留
+      enabled: true
+      sortOrder: 30
+    - code: 已忽略
+      label: 已忽略
+      enabled: true
+      sortOrder: 40
+    - code: 已作废
+      label: 已作废
+      enabled: true
+      sortOrder: 50
+- id: CrsSource.sourceType
+  name: CrsSource.sourceType
+  description: CrsSource 对象 源类型 取值域（不跨对象复用）
+  types:
+  - typeCode: SOURCETYPE
+    typeName: 源类型
+    items:
+    - code: 政府网站
+      label: 政府网站
+      enabled: true
+      sortOrder: 10
+    - code: 统计机构
+      label: 统计机构
+      enabled: true
+      sortOrder: 20
+    - code: 行业媒体
+      label: 行业媒体
+      enabled: true
+      sortOrder: 30
+    - code: 国际组织
+      label: 国际组织
+      enabled: true
+      sortOrder: 40
+    - code: 其他
+      label: 其他
+      enabled: true
+      sortOrder: 50
+- id: CrsSource.contentCategory
+  name: CrsSource.contentCategory
+  description: CrsSource 对象 内容归口 取值域（不跨对象复用）
+  types:
+  - typeCode: CONTENTCATEGORY
+    typeName: 内容归口
+    items:
+    - code: 政策法规
+      label: 政策法规
+      enabled: true
+      sortOrder: 10
+    - code: 农业经济
+      label: 农业经济
+      enabled: true
+      sortOrder: 20
+    - code: 行业年鉴
+      label: 行业年鉴
+      enabled: true
+      sortOrder: 30
+    - code: 全球农业情报
+      label: 全球农业情报
+      enabled: true
+      sortOrder: 40
+- id: CrsSource.crawlMode
+  name: CrsSource.crawlMode
+  description: CrsSource 对象 采集方式 取值域（不跨对象复用）
+  types:
+  - typeCode: CRAWLMODE
+    typeName: 采集方式
+    items:
+    - code: 单页
+      label: 单页
+      enabled: true
+      sortOrder: 10
+    - code: 列表翻页
+      label: 列表翻页
+      enabled: true
+      sortOrder: 20
+    - code: RSS
+      label: RSS
+      enabled: true
+      sortOrder: 30
+- id: CrsSource.charset
+  name: CrsSource.charset
+  description: CrsSource 对象 字符集 取值域（不跨对象复用）
+  types:
+  - typeCode: CHARSET
+    typeName: 字符集
+    items:
+    - code: UTF-8
+      label: UTF-8
+      enabled: true
+      sortOrder: 10
+    - code: GB18030
+      label: GB18030
+      enabled: true
+      sortOrder: 20
+    - code: 自动探测
+      label: 自动探测
+      enabled: true
+      sortOrder: 30
+- id: CrsSource.enabledFlag
+  name: CrsSource.enabledFlag
+  description: CrsSource 对象 启停状态 取值域（不跨对象复用）
+  types:
+  - typeCode: ENABLEDFLAG
+    typeName: 启停状态
+    items:
+    - code: 启用
+      label: 启用
+      enabled: true
+      sortOrder: 10
+    - code: 暂停
+      label: 暂停
+      enabled: true
+      sortOrder: 20
+    - code: 已作废
+      label: 已作废
+      enabled: true
+      sortOrder: 30
+- id: CrawlRun.runStatus
+  name: CrawlRun.runStatus
+  description: CrawlRun 对象 执行状态 取值域（不跨对象复用）
+  types:
+  - typeCode: RUNSTATUS
+    typeName: 执行状态
+    items:
+    - code: 成功
+      label: 成功
+      enabled: true
+      sortOrder: 10
+    - code: 部分成功
+      label: 部分成功
+      enabled: true
+      sortOrder: 20
+    - code: 失败
+      label: 失败
+      enabled: true
+      sortOrder: 30
+- id: KtcCategory.rootCategory
+  name: KtcCategory.rootCategory
+  description: KtcCategory 对象 归属大类 取值域（不跨对象复用）
+  types:
+  - typeCode: ROOTCATEGORY
+    typeName: 归属大类
+    items:
+    - code: 农业经济
+      label: 农业经济
+      enabled: true
+      sortOrder: 10
+    - code: 政策法规
+      label: 政策法规
+      enabled: true
+      sortOrder: 20
+    - code: 行业年鉴
+      label: 行业年鉴
+      enabled: true
+      sortOrder: 30
+    - code: 全球农业情报
+      label: 全球农业情报
+      enabled: true
+      sortOrder: 40
+- id: KtcCategory.industryStage
+  name: KtcCategory.industryStage
+  description: KtcCategory 对象 默认产业环节 取值域（不跨对象复用）
+  types:
+  - typeCode: INDUSTRYSTAGE
+    typeName: 默认产业环节
+    items:
+    - code: 生产
+      label: 生产
+      enabled: true
+      sortOrder: 10
+    - code: 收储
+      label: 收储
+      enabled: true
+      sortOrder: 20
+    - code: 加工
+      label: 加工
+      enabled: true
+      sortOrder: 30
+    - code: 物流
+      label: 物流
+      enabled: true
+      sortOrder: 40
+    - code: 贸易
+      label: 贸易
+      enabled: true
+      sortOrder: 50
+    - code: 消费
+      label: 消费
+      enabled: true
+      sortOrder: 60
+- id: KtcCategory.status
+  name: KtcCategory.status
+  description: KtcCategory 对象 状态 取值域（不跨对象复用）
+  types:
+  - typeCode: STATUS
+    typeName: 状态
+    items:
+    - code: 有效
+      label: 有效
+      enabled: true
+      sortOrder: 10
+    - code: 停用
+      label: 停用
+      enabled: true
+      sortOrder: 20
+aggregate_associations:
+- id: ASSOC-001
+  sourceAggregate: AGG-SOURCE-001
+  targetAggregate: AGG-CRAWL-001
+  associationType: REFERENCE
+  sourceRole: 采集产生
+  targetRole: 采集文档
+  cardinality: MANY_TO_ONE
+  referenceField: crawlSourceId
+  description: 采集任务产出来源文档
+- id: ASSOC-002
+  sourceAggregate: AGG-SOURCE-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类文档
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 来源文档挂接知识分类
+- id: ASSOC-003
+  sourceAggregate: AGG-POLICY-001
+  targetAggregate: AGG-SOURCE-001
+  associationType: REFERENCE
+  sourceRole: 来源于
+  targetRole: 政策文档
+  cardinality: MANY_TO_ONE
+  referenceField: sourceDocId
+  description: 政策法规回溯到来源文档
+- id: ASSOC-004
+  sourceAggregate: AGG-POLICY-001
+  targetAggregate: AGG-REGION-001
+  associationType: REFERENCE
+  sourceRole: 适用于
+  targetRole: 地区政策
+  cardinality: MANY_TO_ONE
+  referenceField: regionId
+  description: 政策适用地区
+- id: ASSOC-005
+  sourceAggregate: AGG-POLICY-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类政策
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 政策挂接知识分类
+- id: ASSOC-006
+  sourceAggregate: AGG-INDVAL-001
+  targetAggregate: AGG-INDICATOR-001
+  associationType: REFERENCE
+  sourceRole: 计量
+  targetRole: 指标取值
+  cardinality: MANY_TO_ONE
+  referenceField: indicatorId
+  description: 指标数据归属指标定义
+- id: ASSOC-007
+  sourceAggregate: AGG-INDVAL-001
+  targetAggregate: AGG-REGION-001
+  associationType: REFERENCE
+  sourceRole: 分布于
+  targetRole: 地区指标
+  cardinality: MANY_TO_ONE
+  referenceField: regionId
+  description: 指标数据的地区维度
+- id: ASSOC-008
+  sourceAggregate: AGG-INDVAL-001
+  targetAggregate: AGG-COMMODITY-001
+  associationType: REFERENCE
+  sourceRole: 计量品种
+  targetRole: 品种指标
+  cardinality: MANY_TO_ONE
+  referenceField: commodityId
+  description: 指标数据的品种维度
+- id: ASSOC-009
+  sourceAggregate: AGG-INDVAL-001
+  targetAggregate: AGG-SOURCE-001
+  associationType: REFERENCE
+  sourceRole: 来源于
+  targetRole: 数据来源文档
+  cardinality: MANY_TO_ONE
+  referenceField: sourceDocId
+  description: 指标数据回溯来源文档
+- id: ASSOC-010
+  sourceAggregate: AGG-YEARBOOK-001
+  targetAggregate: AGG-INDICATOR-001
+  associationType: REFERENCE
+  sourceRole: 对齐
+  targetRole: 年鉴指标
+  cardinality: MANY_TO_ONE
+  referenceField: indicatorId
+  description: 年鉴条目对齐指标口径
+- id: ASSOC-011
+  sourceAggregate: AGG-YEARBOOK-001
+  targetAggregate: AGG-REGION-001
+  associationType: REFERENCE
+  sourceRole: 统计范围
+  targetRole: 地区年鉴
+  cardinality: MANY_TO_ONE
+  referenceField: regionId
+  description: 年鉴记录的地区范围
+- id: ASSOC-012
+  sourceAggregate: AGG-YEARBOOK-001
+  targetAggregate: AGG-COMMODITY-001
+  associationType: REFERENCE
+  sourceRole: 统计品种
+  targetRole: 品种年鉴
+  cardinality: MANY_TO_ONE
+  referenceField: commodityId
+  description: 年鉴记录的品种
+- id: ASSOC-013
+  sourceAggregate: AGG-YEARBOOK-001
+  targetAggregate: AGG-SOURCE-001
+  associationType: REFERENCE
+  sourceRole: 来源于
+  targetRole: 年鉴文档
+  cardinality: MANY_TO_ONE
+  referenceField: sourceDocId
+  description: 年鉴记录回溯来源文档
+- id: ASSOC-014
+  sourceAggregate: AGG-INTEL-001
+  targetAggregate: AGG-REGION-001
+  associationType: REFERENCE
+  sourceRole: 涉及
+  targetRole: 地区情报
+  cardinality: MANY_TO_ONE
+  referenceField: regionId
+  description: 情报涉及地区
+- id: ASSOC-015
+  sourceAggregate: AGG-INTEL-001
+  targetAggregate: AGG-COMMODITY-001
+  associationType: REFERENCE
+  sourceRole: 涉及
+  targetRole: 品种情报
+  cardinality: MANY_TO_ONE
+  referenceField: commodityId
+  description: 情报涉及品种
+- id: ASSOC-016
+  sourceAggregate: AGG-INTEL-001
+  targetAggregate: AGG-SOURCE-001
+  associationType: REFERENCE
+  sourceRole: 来源于
+  targetRole: 情报文档
+  cardinality: MANY_TO_ONE
+  referenceField: sourceDocId
+  description: 情报回溯来源文档
+- id: ASSOC-017
+  sourceAggregate: AGG-COMMODITY-001
+  targetAggregate: AGG-COMMODITY-001
+  associationType: HIERARCHY
+  sourceRole: 子品种
+  targetRole: 父品种
+  cardinality: MANY_TO_ONE
+  referenceField: parentCommodityId
+  description: 品种父子层级
+- id: ASSOC-018
+  sourceAggregate: AGG-COMMODITY-001
+  targetAggregate: AGG-CONCEPT-001
+  associationType: REFERENCE
+  sourceRole: 语义映射
+  targetRole: 概念品种
+  cardinality: MANY_TO_ONE
+  referenceField: conceptId
+  description: 品种映射外部本体概念
+- id: ASSOC-019
+  sourceAggregate: AGG-PRODUCT-001
+  targetAggregate: AGG-COMMODITY-001
+  associationType: REFERENCE
+  sourceRole: 原料
+  targetRole: 加工产品
+  cardinality: MANY_TO_ONE
+  referenceField: commodityId
+  description: 产品由品种加工形成
+- id: ASSOC-020
+  sourceAggregate: AGG-PRODUCT-001
+  targetAggregate: AGG-ENTERPRISE-001
+  associationType: REFERENCE
+  sourceRole: 生产
+  targetRole: 企业产品
+  cardinality: MANY_TO_ONE
+  referenceField: enterpriseId
+  description: 产品生产企业
+- id: ASSOC-021
+  sourceAggregate: AGG-REGION-001
+  targetAggregate: AGG-REGION-001
+  associationType: HIERARCHY
+  sourceRole: 下级地区
+  targetRole: 上级地区
+  cardinality: MANY_TO_ONE
+  referenceField: parentRegionId
+  description: 地区层级
+- id: ASSOC-022
+  sourceAggregate: AGG-ENTERPRISE-001
+  targetAggregate: AGG-REGION-001
+  associationType: REFERENCE
+  sourceRole: 坐落于
+  targetRole: 地区企业
+  cardinality: MANY_TO_ONE
+  referenceField: regionId
+  description: 企业所属地区
+- id: ASSOC-023
+  sourceAggregate: AGG-CONCEPT-001
+  targetAggregate: AGG-CONCEPT-001
+  associationType: HIERARCHY
+  sourceRole: 子概念
+  targetRole: 父概念
+  cardinality: MANY_TO_ONE
+  referenceField: parentConceptId
+  description: 概念层级
+- id: ASSOC-024
+  sourceAggregate: AGG-RELATION-001
+  targetAggregate: AGG-SOURCE-001
+  associationType: REFERENCE
+  sourceRole: 来源于
+  targetRole: 关系文档
+  cardinality: MANY_TO_ONE
+  referenceField: sourceDocId
+  description: 关系三元组回溯来源文档
+- id: ASSOC-025
+  sourceAggregate: AGG-CRAWL-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类采集源
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 采集源默认知识分类
+- id: ASSOC-026
+  sourceAggregate: AGG-INDICATOR-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类指标
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 指标定义挂接知识分类
+- id: ASSOC-027
+  sourceAggregate: AGG-INTEL-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类情报
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 情报挂接知识分类
+- id: ASSOC-028
+  sourceAggregate: AGG-YEARBOOK-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类年鉴
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 年鉴记录挂接知识分类
+- id: ASSOC-029
+  sourceAggregate: AGG-INDVAL-001
+  targetAggregate: AGG-TAXONOMY-001
+  associationType: REFERENCE
+  sourceRole: 归入分类
+  targetRole: 分类指标数据
+  cardinality: MANY_TO_ONE
+  referenceField: knowledgeCategoryId
+  description: 指标数据挂接知识分类

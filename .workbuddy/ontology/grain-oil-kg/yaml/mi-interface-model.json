@@ -1,0 +1,617 @@
+{
+  "model_type": "INTERFACE",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "五个生产级对外接口；INT-01~INT-04 只读，INT-05 为采集命令，统一使用 REST/JSON 与 Bearer JWT/RBAC",
+  "interfaces": [
+    {
+      "interfaceId": "INT-01",
+      "name": "图谱检索",
+      "interfaceType": "PROVIDED",
+      "providerSystem": "粮油产业多维知识图谱系统",
+      "consumerSystem": "全产业链平台与AI模型",
+      "interfaceCategory": "QUERY",
+      "businessPurpose": "按关键词和三轴体系过滤真实业务实体，返回分页结果与分面聚合",
+      "invokeScenario": "调用方需要跨四类知识检索政策、指标、年鉴、情报及其关联实体时",
+      "inputParameters": [
+        {
+          "name": "keyword",
+          "label": "检索关键词",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "Policy.policyTitle",
+          "description": "最长100字符，为空时按过滤条件浏览"
+        },
+        {
+          "name": "knowledgeType",
+          "label": "知识类别",
+          "dataType": "Enum",
+          "required": false,
+          "allowedValues": [
+            "政策法规",
+            "农业经济",
+            "行业年鉴",
+            "全球农业情报"
+          ],
+          "description": "四类知识范围"
+        },
+        {
+          "name": "categoryCode",
+          "label": "分类编码",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "KtcCategory.categoryCode",
+          "description": "自动包含全部后代分类"
+        },
+        {
+          "name": "industryStage",
+          "label": "产业环节",
+          "dataType": "Enum",
+          "required": false,
+          "allowedValues": [
+            "生产",
+            "收储",
+            "加工",
+            "物流",
+            "贸易",
+            "消费"
+          ],
+          "sourceField": "Policy.industryStage"
+        },
+        {
+          "name": "factorDimension",
+          "label": "要素维度",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "Policy.factorDimensions",
+          "description": "多值以逗号分隔"
+        },
+        {
+          "name": "commodityCode",
+          "label": "品种编码",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "CmdCommodity.commodityCode"
+        },
+        {
+          "name": "regionCode",
+          "label": "地区编码",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "Region.regionCode"
+        },
+        {
+          "name": "dateFrom",
+          "label": "开始日期",
+          "dataType": "Date",
+          "required": false,
+          "sourceField": "Policy.effectiveDate"
+        },
+        {
+          "name": "dateTo",
+          "label": "结束日期",
+          "dataType": "Date",
+          "required": false,
+          "sourceField": "Policy.expireDate"
+        },
+        {
+          "name": "pageNo",
+          "label": "页码",
+          "dataType": "Integer",
+          "required": false,
+          "description": "默认1"
+        },
+        {
+          "name": "pageSize",
+          "label": "每页条数",
+          "dataType": "Integer",
+          "required": false,
+          "description": "默认20，最大100"
+        }
+      ],
+      "outputResult": [
+        {
+          "name": "total",
+          "label": "总条数",
+          "dataType": "Integer",
+          "required": true
+        },
+        {
+          "name": "facets",
+          "label": "分面聚合",
+          "dataType": "ObjectRef",
+          "required": true,
+          "description": "分类、产业环节与要素维度分面"
+        },
+        {
+          "name": "items",
+          "label": "检索结果",
+          "dataType": "List",
+          "required": true,
+          "fields": [
+            {
+              "name": "entityType",
+              "label": "实体类型",
+              "dataType": "String",
+              "required": true
+            },
+            {
+              "name": "entityId",
+              "label": "实体内部标识",
+              "dataType": "String",
+              "required": true,
+              "sourceField": "Policy.policyId"
+            },
+            {
+              "name": "title",
+              "label": "标题",
+              "dataType": "String",
+              "required": true,
+              "sourceField": "Policy.policyTitle"
+            },
+            {
+              "name": "knowledgeType",
+              "label": "知识类别",
+              "dataType": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "label": "状态",
+              "dataType": "String",
+              "required": true,
+              "sourceField": "Policy.reviewStatus"
+            },
+            {
+              "name": "score",
+              "label": "相关度",
+              "dataType": "Decimal",
+              "required": false
+            }
+          ]
+        }
+      ],
+      "returnRule": [
+        "无匹配时 total=0 且 items 为空数组",
+        "参数错误返回400",
+        "未认证返回401",
+        "无权限返回403"
+      ],
+      "relatedBehaviorRef": [
+        "GQ-01"
+      ],
+      "relatedEntityRef": [
+        "AGG-POLICY-001",
+        "AGG-INDVAL-001",
+        "AGG-YEARBOOK-001",
+        "AGG-INTEL-001",
+        "AGG-RELATION-001",
+        "AGG-TAXONOMY-001"
+      ],
+      "relatedReportRef": [],
+      "relatedEventRef": [],
+      "relatedExternalEntityRef": [],
+      "protocol": "REST",
+      "dataFormat": "JSON",
+      "authMethod": "OAuth2",
+      "timeoutMs": 5000,
+      "idempotency": "IDEMPOTENT",
+      "contractNote": "GET /api/kg/search；Bearer JWT；常用查询 P95 不超过3秒；只读且不改变业务状态"
+    },
+    {
+      "interfaceId": "INT-02",
+      "name": "实体详情",
+      "interfaceType": "PROVIDED",
+      "providerSystem": "粮油产业多维知识图谱系统",
+      "consumerSystem": "全产业链平台与AI模型",
+      "interfaceCategory": "QUERY",
+      "businessPurpose": "返回指定实体的属性、一跳关系和来源引用",
+      "invokeScenario": "调用方已获得实体类型与内部标识，需要查看实体详情时",
+      "inputParameters": [
+        {
+          "name": "entityType",
+          "label": "实体类型",
+          "dataType": "Enum",
+          "required": true,
+          "allowedValues": [
+            "政策法规",
+            "指标数据",
+            "年鉴记录",
+            "农业情报",
+            "知识关系",
+            "品种",
+            "产品",
+            "地区",
+            "企业",
+            "本体概念"
+          ]
+        },
+        {
+          "name": "entityId",
+          "label": "实体内部标识",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "Relation.subjectEntityId",
+          "description": "使用内部主键而非业务编码"
+        }
+      ],
+      "outputResult": [
+        {
+          "name": "entityId",
+          "label": "实体内部标识",
+          "dataType": "String",
+          "required": true
+        },
+        {
+          "name": "entityType",
+          "label": "实体类型",
+          "dataType": "String",
+          "required": true
+        },
+        {
+          "name": "title",
+          "label": "标题",
+          "dataType": "String",
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "状态",
+          "dataType": "String",
+          "required": false
+        },
+        {
+          "name": "properties",
+          "label": "实体属性",
+          "dataType": "ObjectRef",
+          "required": true,
+          "sourceField": "Relation.*"
+        },
+        {
+          "name": "relations",
+          "label": "一跳关系",
+          "dataType": "List",
+          "required": true,
+          "sourceField": "Relation.*"
+        },
+        {
+          "name": "sources",
+          "label": "来源引用",
+          "dataType": "List",
+          "required": true,
+          "sourceField": "SourceDoc.*"
+        }
+      ],
+      "returnRule": [
+        "实体不存在返回404",
+        "未认证返回401",
+        "无权限返回403",
+        "relations 与 sources 无数据时返回空数组"
+      ],
+      "relatedBehaviorRef": [
+        "GQ-02"
+      ],
+      "relatedEntityRef": [
+        "AGG-RELATION-001",
+        "AGG-SOURCE-001"
+      ],
+      "relatedReportRef": [],
+      "relatedEventRef": [],
+      "relatedExternalEntityRef": [],
+      "protocol": "REST",
+      "dataFormat": "JSON",
+      "authMethod": "OAuth2",
+      "timeoutMs": 5000,
+      "idempotency": "IDEMPOTENT",
+      "contractNote": "GET /api/kg/entities/{entityType}/{entityId}；Bearer JWT；P95 不超过3秒；只读"
+    },
+    {
+      "interfaceId": "INT-03",
+      "name": "来源回溯",
+      "interfaceType": "PROVIDED",
+      "providerSystem": "粮油产业多维知识图谱系统",
+      "consumerSystem": "全产业链平台与AI模型",
+      "interfaceCategory": "QUERY",
+      "businessPurpose": "将知识实体回溯到原始文档及段落级字符区间和原文",
+      "invokeScenario": "审计、复核或模型回答需要展示可验证来源证据时",
+      "inputParameters": [
+        {
+          "name": "entityType",
+          "label": "实体类型",
+          "dataType": "String",
+          "required": true
+        },
+        {
+          "name": "entityId",
+          "label": "实体内部标识",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "IvdData.valueId"
+        }
+      ],
+      "outputResult": [
+        {
+          "name": "docId",
+          "label": "文档内部标识",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "SourceDoc.docId"
+        },
+        {
+          "name": "title",
+          "label": "文档标题",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "SourceDoc.title"
+        },
+        {
+          "name": "storageUri",
+          "label": "存储地址",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "SourceDoc.storageUri"
+        },
+        {
+          "name": "sourceUrl",
+          "label": "来源链接",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "SourceDoc.sourceUrl"
+        },
+        {
+          "name": "segmentId",
+          "label": "段落编号",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "SourceDoc.Segment.segmentId"
+        },
+        {
+          "name": "pageNo",
+          "label": "页码",
+          "dataType": "Integer",
+          "required": false,
+          "sourceField": "SourceDoc.Segment.pageNo"
+        },
+        {
+          "name": "chapterPath",
+          "label": "章节路径",
+          "dataType": "String",
+          "required": false,
+          "sourceField": "SourceDoc.Segment.chapterPath"
+        },
+        {
+          "name": "charStart",
+          "label": "起始字符位置",
+          "dataType": "Integer",
+          "required": true,
+          "sourceField": "SourceDoc.Segment.charStart"
+        },
+        {
+          "name": "charEnd",
+          "label": "结束字符位置",
+          "dataType": "Integer",
+          "required": true,
+          "sourceField": "SourceDoc.Segment.charEnd"
+        },
+        {
+          "name": "segmentText",
+          "label": "段落原文",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "SourceDoc.Segment.segmentText"
+        }
+      ],
+      "returnRule": [
+        "实体或来源不存在返回404",
+        "字符区间必须与段落原文一致",
+        "未认证返回401",
+        "无权限返回403"
+      ],
+      "relatedBehaviorRef": [
+        "GQ-04"
+      ],
+      "relatedEntityRef": [
+        "AGG-SOURCE-001",
+        "AGG-POLICY-001",
+        "AGG-INDVAL-001",
+        "AGG-YEARBOOK-001",
+        "AGG-INTEL-001",
+        "AGG-RELATION-001"
+      ],
+      "relatedReportRef": [],
+      "relatedEventRef": [],
+      "relatedExternalEntityRef": [],
+      "protocol": "REST",
+      "dataFormat": "JSON",
+      "authMethod": "OAuth2",
+      "timeoutMs": 5000,
+      "idempotency": "IDEMPOTENT",
+      "contractNote": "GET /api/kg/traceability/{entityType}/{entityId}；Bearer JWT；P95 不超过3秒；段落级只读回溯"
+    },
+    {
+      "interfaceId": "INT-04",
+      "name": "增量同步",
+      "interfaceType": "PROVIDED",
+      "providerSystem": "粮油产业多维知识图谱系统",
+      "consumerSystem": "全产业链平台与AI模型",
+      "interfaceCategory": "QUERY",
+      "businessPurpose": "按游标只读拉取创建、更新、作废、失效和融合变更，并返回下一同步游标",
+      "invokeScenario": "外部平台或模型周期性同步知识图谱变化时",
+      "inputParameters": [
+        {
+          "name": "since",
+          "label": "上次同步时间",
+          "dataType": "DateTime",
+          "required": true,
+          "description": "ISO 8601 时间游标"
+        },
+        {
+          "name": "limit",
+          "label": "返回上限",
+          "dataType": "Integer",
+          "required": false,
+          "description": "默认200，范围1~1000"
+        }
+      ],
+      "outputResult": [
+        {
+          "name": "changes",
+          "label": "变更集",
+          "dataType": "List",
+          "required": true,
+          "fields": [
+            {
+              "name": "entityType",
+              "label": "实体类型",
+              "dataType": "String",
+              "required": true
+            },
+            {
+              "name": "entityId",
+              "label": "实体内部标识",
+              "dataType": "String",
+              "required": true
+            },
+            {
+              "name": "changeType",
+              "label": "变更类型",
+              "dataType": "Enum",
+              "required": true,
+              "allowedValues": [
+                "CREATED",
+                "UPDATED",
+                "VOID",
+                "INVALIDATE",
+                "MERGED"
+              ]
+            },
+            {
+              "name": "updatedAt",
+              "label": "更新时间",
+              "dataType": "DateTime",
+              "required": true
+            },
+            {
+              "name": "payload",
+              "label": "最新属性快照",
+              "dataType": "ObjectRef",
+              "required": false,
+              "description": "VOID/INVALIDATE 必含 status；MERGED 必含 mergedIntoId"
+            }
+          ]
+        },
+        {
+          "name": "nextSince",
+          "label": "下一同步游标",
+          "dataType": "DateTime",
+          "required": true,
+          "description": "取返回集最大 updatedAt；无变更时原样返回 since"
+        }
+      ],
+      "returnRule": [
+        "无变更时 changes 为空数组且 nextSince=since",
+        "参数错误返回400",
+        "未认证返回401",
+        "接口不确认收货也不改变同步状态"
+      ],
+      "relatedBehaviorRef": [
+        "GQ-05"
+      ],
+      "relatedEntityRef": [
+        "AGG-POLICY-001",
+        "AGG-INDVAL-001",
+        "AGG-YEARBOOK-001",
+        "AGG-INTEL-001",
+        "AGG-RELATION-001"
+      ],
+      "relatedReportRef": [],
+      "relatedEventRef": [],
+      "relatedExternalEntityRef": [],
+      "protocol": "REST",
+      "dataFormat": "JSON",
+      "authMethod": "OAuth2",
+      "timeoutMs": 5000,
+      "idempotency": "IDEMPOTENT",
+      "contractNote": "GET /api/kg/changes；Bearer JWT；只读；不得绑定增量导出命令 B-07"
+    },
+    {
+      "interfaceId": "INT-05",
+      "name": "采集触发",
+      "interfaceType": "PROVIDED",
+      "providerSystem": "粮油产业多维知识图谱系统",
+      "consumerSystem": "采集调度器",
+      "interfaceCategory": "COMMAND",
+      "businessPurpose": "触发指定公开采集源立即执行或试抓取，并返回受理结果",
+      "invokeScenario": "调度器到达计划时间或授权用户需要立即采集时",
+      "inputParameters": [
+        {
+          "name": "crawlSourceId",
+          "label": "采集源内部标识",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "CrsSource.crawlSourceId"
+        },
+        {
+          "name": "mode",
+          "label": "执行模式",
+          "dataType": "Enum",
+          "required": true,
+          "allowedValues": [
+            "now",
+            "dryRun"
+          ],
+          "description": "now 执行并入库；dryRun 只抓取不入库"
+        }
+      ],
+      "outputResult": [
+        {
+          "name": "runId",
+          "label": "执行编号",
+          "dataType": "String",
+          "required": true,
+          "sourceField": "CrsSource.CrawlRun.runId"
+        },
+        {
+          "name": "accepted",
+          "label": "是否受理",
+          "dataType": "Boolean",
+          "required": true
+        },
+        {
+          "name": "estimatedPages",
+          "label": "预计页数",
+          "dataType": "Integer",
+          "required": true
+        }
+      ],
+      "returnRule": [
+        "受理成功返回202",
+        "同一采集源已有运行中任务返回409",
+        "未认证返回401",
+        "无权限返回403",
+        "目标安全校验失败不发起外部请求"
+      ],
+      "relatedBehaviorRef": [
+        "FUNC-12"
+      ],
+      "relatedEntityRef": [
+        "AGG-CRAWL-001",
+        "AGG-SOURCE-001"
+      ],
+      "relatedReportRef": [
+        "REP-06"
+      ],
+      "relatedEventRef": [
+        "E-08",
+        "E-09"
+      ],
+      "relatedExternalEntityRef": [],
+      "protocol": "REST",
+      "dataFormat": "JSON",
+      "authMethod": "OAuth2",
+      "timeoutMs": 5000,
+      "idempotency": "NON_IDEMPOTENT",
+      "contractNote": "POST /api/crawl/trigger；Bearer JWT；异步受理；运行结果通过 REP-06 与 E-08/E-09 追踪"
+    }
+  ]
+}

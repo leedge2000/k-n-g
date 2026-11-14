@@ -1,0 +1,2 @@
+:VID,conceptId,conceptCode,conceptName,conceptType,sourceOntology,externalUri,parentConceptId,definition,status,createdBy,createdAt,updatedBy,updatedAt
+CON0001,CON0001,FOODON-00001234,稻谷,品种,FoodOn,,,Oryza sativa 的籽粒,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

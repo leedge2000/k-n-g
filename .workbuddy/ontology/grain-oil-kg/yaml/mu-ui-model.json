@@ -1,0 +1,1789 @@
+{
+  "model_type": "UI",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "知识图谱工作台、七张固定报表、审核治理与维护界面的入口模型；全部 USER_ACTION 行为均可由事件 callChain 追溯",
+  "screens": [
+    {
+      "screenId": "SCR-SOURCE-FORM",
+      "name": "来源文档与段落维护",
+      "screenRef": "需求文档.md#FUNC-01-FUNC-02-B-04",
+      "layout": "[frmSource] [grdSegments] [btnSave] [btnSaveSegments] [btnVoid]",
+      "elements": [
+        {
+          "id": "frmSource",
+          "type": "FRAME",
+          "label": "来源文档",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "SourceDoc.title",
+          "dataSource": null
+        },
+        {
+          "id": "grdSegments",
+          "type": "GRID",
+          "label": "文档段落",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "SourceDoc.Segment.segmentText",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存文档",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnSaveSegments",
+          "type": "BUTTON",
+          "label": "保存段落",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnVoid",
+          "type": "BUTTON",
+          "label": "作废文档",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "来源回溯完成",
+          "condition": null
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-SOURCE-FORM.btnSave_Click",
+          "name": "保存来源文档",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "文档标题与类别已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-12"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-01"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-SOURCE-FORM.btnSaveSegments_Click",
+          "name": "保存文档段落",
+          "source": "btnSaveSegments.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "来源文档已保存"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-02"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-SOURCE-FORM.btnVoid_Click",
+          "name": "作废来源文档并传播失效",
+          "source": "btnVoid.Click",
+          "permissions": [
+            "PERM-01"
+          ],
+          "preConditions": [
+            "用户已确认作废影响"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-04"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-01"
+            },
+            {
+              "step": "SCENARIO_CALL",
+              "scenarioRef": "SCN-01"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-POLICY-FORM",
+      "name": "政策法规与条款维护",
+      "screenRef": "需求文档.md#FUNC-03",
+      "layout": "[frmPolicy] [grdClauses] [btnSave]",
+      "elements": [
+        {
+          "id": "frmPolicy",
+          "type": "FRAME",
+          "label": "政策法规",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Policy.policyTitle",
+          "dataSource": null
+        },
+        {
+          "id": "grdClauses",
+          "type": "GRID",
+          "label": "政策条款",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Policy.Clause.clauseText",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存政策",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-REVIEW",
+          "trigger": "保存成功",
+          "condition": "提交审核时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-POLICY-FORM.btnSave_Click",
+          "name": "保存政策法规及条款",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "来源文档和有效分类已选择"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-01",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-03"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-INDICATOR-FORM",
+      "name": "指标定义维护",
+      "screenRef": "需求文档.md#FUNC-04",
+      "layout": "[frmIndicator] [btnSave]",
+      "elements": [
+        {
+          "id": "frmIndicator",
+          "type": "FRAME",
+          "label": "指标定义",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Indicator.indicatorName",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存指标",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-INDVAL-FORM",
+          "trigger": "保存成功",
+          "condition": "继续登记指标数据时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-INDICATOR-FORM.btnSave_Click",
+          "name": "保存指标定义",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-01"
+          ],
+          "preConditions": [
+            "指标编码、单位、频率和分类已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-04"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-INDVAL-FORM",
+      "name": "指标数据维护",
+      "screenRef": "需求文档.md#FUNC-05",
+      "layout": "[frmIndicatorValue] [btnSave]",
+      "elements": [
+        {
+          "id": "frmIndicatorValue",
+          "type": "FRAME",
+          "label": "指标数据",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "IvdData.value",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存指标数据",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-INDICATOR-ANALYSIS",
+          "trigger": "保存成功",
+          "condition": "查看时序时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-INDVAL-FORM.btnSave_Click",
+          "name": "保存指标数据并检测重复",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "指标、地区、期间和来源段落已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-02",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-05"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-YEARBOOK-FORM",
+      "name": "年鉴记录维护",
+      "screenRef": "需求文档.md#FUNC-06",
+      "layout": "[frmYearbook] [btnSave]",
+      "elements": [
+        {
+          "id": "frmYearbook",
+          "type": "FRAME",
+          "label": "年鉴记录",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "YrbYearbook.yearbookName",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存年鉴记录",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-REVIEW",
+          "trigger": "保存成功",
+          "condition": "提交审核时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-YEARBOOK-FORM.btnSave_Click",
+          "name": "保存年鉴记录",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "统计年份、指标和来源段落已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-01",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-06"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-INTEL-FORM",
+      "name": "全球农业情报维护",
+      "screenRef": "需求文档.md#FUNC-07",
+      "layout": "[frmIntel] [btnSave]",
+      "elements": [
+        {
+          "id": "frmIntel",
+          "type": "FRAME",
+          "label": "农业情报",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Intel.intelTitle",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存农业情报",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-REVIEW",
+          "trigger": "保存成功",
+          "condition": "提交审核时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-INTEL-FORM.btnSave_Click",
+          "name": "保存全球农业情报",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "情报类型、发布机构和来源段落已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-01",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-MASTER-DATA",
+      "name": "产业主数据维护",
+      "screenRef": "需求文档.md#FUNC-08",
+      "layout": "[tabMasterData] [frmMasterData] [btnSave]",
+      "elements": [
+        {
+          "id": "tabMasterData",
+          "type": "TAB",
+          "label": "品种产品地区企业",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "CmdCommodity.commodityName",
+          "dataSource": null
+        },
+        {
+          "id": "frmMasterData",
+          "type": "FRAME",
+          "label": "主数据属性",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "CmdCommodity.commodityCode",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存主数据",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-QUALITY",
+          "trigger": "重复检测命中",
+          "condition": "需要实体融合时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-MASTER-DATA.btnSave_Click",
+          "name": "保存产业主数据",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-01"
+          ],
+          "preConditions": [
+            "主数据类型与业务编码已选择或填写"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-08"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-CONCEPT-FORM",
+      "name": "本体概念与同义词维护",
+      "screenRef": "需求文档.md#FUNC-09",
+      "layout": "[frmConcept] [grdSynonyms] [btnSave]",
+      "elements": [
+        {
+          "id": "frmConcept",
+          "type": "FRAME",
+          "label": "本体概念",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Concept.conceptName",
+          "dataSource": null
+        },
+        {
+          "id": "grdSynonyms",
+          "type": "GRID",
+          "label": "同义词",
+          "io": "I_O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Concept.Synonym.synonymName",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存概念",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-ONTOLOGY-COVERAGE",
+          "trigger": "保存成功",
+          "condition": "查看覆盖统计时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-CONCEPT-FORM.btnSave_Click",
+          "name": "保存本体概念与同义词",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-01"
+          ],
+          "preConditions": [
+            "概念编码、名称、类型和本体来源已填写"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-09"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-RELATION-FORM",
+      "name": "知识关系三元组维护",
+      "screenRef": "需求文档.md#FUNC-10",
+      "layout": "[frmRelation] [btnSave]",
+      "elements": [
+        {
+          "id": "frmRelation",
+          "type": "FRAME",
+          "label": "知识关系",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Relation.predicate",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存关系",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "关系发布完成",
+          "condition": "查看图谱时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-RELATION-FORM.btnSave_Click",
+          "name": "保存知识关系三元组",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "主体、谓词、客体、置信度和来源段落已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-05"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-CRAWL-SOURCE",
+      "name": "采集源与执行维护",
+      "screenRef": "需求文档.md#FUNC-11-FUNC-12-B-09",
+      "layout": "[frmCrawlSource] [grdRuns] [btnSave] [btnRun] [btnToggle]",
+      "elements": [
+        {
+          "id": "frmCrawlSource",
+          "type": "FRAME",
+          "label": "采集源",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "CrsSource.sourceName",
+          "dataSource": null
+        },
+        {
+          "id": "grdRuns",
+          "type": "GRID",
+          "label": "采集执行记录",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "CrsSource.CrawlRun.runStatus",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存采集源",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnRun",
+          "type": "BUTTON",
+          "label": "立即采集",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnToggle",
+          "type": "BUTTON",
+          "label": "启停采集源",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-CRAWL-MONITOR",
+          "trigger": "采集完成",
+          "condition": "查看运行监控时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-CRAWL-SOURCE.btnSave_Click",
+          "name": "保存采集源",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-06"
+          ],
+          "preConditions": [
+            "公开 HTTP 或 HTTPS 地址已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-10",
+                "R-11"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-11"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-CRAWL-SOURCE.btnRun_Click",
+          "name": "执行采集并登记来源",
+          "source": "btnRun.Click",
+          "permissions": [
+            "PERM-06"
+          ],
+          "preConditions": [
+            "采集源已启用且目标安全校验通过"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-09",
+                "R-10",
+                "R-11",
+                "R-12"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-12"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-08"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-CRAWL-SOURCE.btnToggle_Click",
+          "name": "人工启停采集源",
+          "source": "btnToggle.Click",
+          "permissions": [
+            "PERM-06"
+          ],
+          "preConditions": [
+            "用户已确认启停影响"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-10"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-09"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-TAXONOMY-FORM",
+      "name": "知识分类体系维护",
+      "screenRef": "需求文档.md#FUNC-13",
+      "layout": "[treeCategory] [frmCategory] [btnSave]",
+      "elements": [
+        {
+          "id": "treeCategory",
+          "type": "TREEVIEW",
+          "label": "分类树",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "KtcCategory.categoryPath",
+          "dataSource": null
+        },
+        {
+          "id": "frmCategory",
+          "type": "FRAME",
+          "label": "分类属性",
+          "io": "I_O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "KtcCategory.categoryName",
+          "dataSource": null
+        },
+        {
+          "id": "btnSave",
+          "type": "BUTTON",
+          "label": "保存分类",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-TAXONOMY-COVERAGE",
+          "trigger": "保存成功",
+          "condition": "查看覆盖与缺口时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-TAXONOMY-FORM.btnSave_Click",
+          "name": "保存知识分类",
+          "source": "btnSave.Click",
+          "permissions": [
+            "PERM-07"
+          ],
+          "preConditions": [
+            "父分类、分类编码与名称已填写"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-13",
+                "R-15"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "FUNC-13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-REVIEW",
+      "name": "知识审核发布",
+      "screenRef": "需求文档.md#B-01-B-03",
+      "layout": "[grdPending] [frmReview] [btnSubmit] [btnApprove] [btnReject]",
+      "elements": [
+        {
+          "id": "grdPending",
+          "type": "GRID",
+          "label": "审核条目",
+          "io": "O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "Policy.reviewStatus",
+          "dataSource": null
+        },
+        {
+          "id": "frmReview",
+          "type": "FRAME",
+          "label": "审核意见",
+          "io": "I_O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Policy.summary",
+          "dataSource": null
+        },
+        {
+          "id": "btnSubmit",
+          "type": "BUTTON",
+          "label": "提交审核",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnApprove",
+          "type": "BUTTON",
+          "label": "审核通过并发布",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnReject",
+          "type": "BUTTON",
+          "label": "审核退回",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "发布完成",
+          "condition": "查看业务图谱时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-REVIEW.btnSubmit_Click",
+          "name": "提交知识条目审核",
+          "source": "btnSubmit.Click",
+          "permissions": [
+            "PERM-02"
+          ],
+          "preConditions": [
+            "条目为草稿或已退回"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-01",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-01"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-02"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-REVIEW.btnApprove_Click",
+          "name": "审核通过并发布入图",
+          "source": "btnApprove.Click",
+          "permissions": [
+            "PERM-03"
+          ],
+          "preConditions": [
+            "条目为待审核且发布校验通过"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-01",
+                "R-05",
+                "R-06",
+                "R-14"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-02"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-03"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-REVIEW.btnReject_Click",
+          "name": "退回知识条目",
+          "source": "btnReject.Click",
+          "permissions": [
+            "PERM-03"
+          ],
+          "preConditions": [
+            "条目为待审核且已填写退回意见"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-06"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-03"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-04"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-QUALITY",
+      "name": "质量治理看板",
+      "screenRef": "需求文档.md#REP-04-B-05-B-06",
+      "layout": "[grdIssues] [btnQuery] [btnMerge] [btnResolve]",
+      "elements": [
+        {
+          "id": "grdIssues",
+          "type": "GRID",
+          "label": "质量治理记录",
+          "io": "O",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "QisRecord.issueId",
+          "dataSource": "REP-04"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询看板",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnMerge",
+          "type": "BUTTON",
+          "label": "实体融合",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnResolve",
+          "type": "BUTTON",
+          "label": "冲突处置",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "融合改挂完成",
+          "condition": "查看保留实体时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-QUALITY.btnQuery_Click",
+          "name": "查询质量治理看板",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-04"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-04"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-QUALITY.btnMerge_Click",
+          "name": "融合重复实体并改挂引用",
+          "source": "btnMerge.Click",
+          "permissions": [
+            "PERM-05"
+          ],
+          "preConditions": [
+            "已选择保留实体和重复实体"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-04"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-05"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-05"
+            },
+            {
+              "step": "SCENARIO_CALL",
+              "scenarioRef": "SCN-02"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-QUALITY.btnResolve_Click",
+          "name": "处置属性冲突",
+          "source": "btnResolve.Click",
+          "permissions": [
+            "PERM-05"
+          ],
+          "preConditions": [
+            "已选择冲突取值并填写处置说明"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-07"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-06"
+            },
+            {
+              "step": "EVENT_EMIT",
+              "eventRef": "E-06"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-INCREMENTAL",
+      "name": "增量变更查询与导出",
+      "screenRef": "需求文档.md#GQ-05-B-07",
+      "layout": "[dtpSince] [grdChanges] [btnQuery] [btnExport]",
+      "elements": [
+        {
+          "id": "dtpSince",
+          "type": "DATEPICKER",
+          "label": "同步游标",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "grdChanges",
+          "type": "GRID",
+          "label": "增量变更",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "QisRecord.handledAt",
+          "dataSource": null
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询变更",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnExport",
+          "type": "BUTTON",
+          "label": "导出变更",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [],
+      "events": [
+        {
+          "eventId": "SCR-INCREMENTAL.btnQuery_Click",
+          "name": "只读查询增量变更集",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "limit 不超过接口契约上限"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "GQ-05"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-INCREMENTAL.btnExport_Click",
+          "name": "导出增量变更文件",
+          "source": "btnExport.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "已确认导出时间范围"
+          ],
+          "callChain": [
+            {
+              "step": "VALIDATE",
+              "rules": [
+                "R-08"
+              ]
+            },
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "B-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-CATALOG",
+      "name": "四类知识资源目录",
+      "screenRef": "需求文档.md#REP-01",
+      "layout": "[txtKeyword] [grdCatalog] [btnQuery]",
+      "elements": [
+        {
+          "id": "txtKeyword",
+          "type": "TEXTBOX",
+          "label": "关键词",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Policy.policyTitle",
+          "dataSource": null
+        },
+        {
+          "id": "grdCatalog",
+          "type": "GRID",
+          "label": "资源目录",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": "REP-01"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "双击资源",
+          "condition": "需要图探索时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-CATALOG.btnQuery_Click",
+          "name": "查询四类知识资源目录",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-01"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-01"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-INDICATOR-ANALYSIS",
+      "name": "指标时序对比",
+      "screenRef": "需求文档.md#REP-02",
+      "layout": "[cboIndicator] [grdSeries] [btnQuery]",
+      "elements": [
+        {
+          "id": "cboIndicator",
+          "type": "COMBO",
+          "label": "指标",
+          "io": "I",
+          "required": true,
+          "enabled": true,
+          "dataBinding": "IvdData.indicatorId",
+          "dataSource": null
+        },
+        {
+          "id": "grdSeries",
+          "type": "GRID",
+          "label": "时序结果",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "IvdData.period",
+          "dataSource": "REP-02"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-TRACE-AUDIT",
+          "trigger": "点击来源",
+          "condition": "需要来源抽查时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-INDICATOR-ANALYSIS.btnQuery_Click",
+          "name": "查询指标时序对比",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "已选择指标"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-02"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-02"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-TRACE-AUDIT",
+      "name": "来源可追溯抽查",
+      "screenRef": "需求文档.md#REP-03",
+      "layout": "[cboRootCategory] [grdTraceSamples] [btnSample]",
+      "elements": [
+        {
+          "id": "cboRootCategory",
+          "type": "COMBO",
+          "label": "知识大类",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "KtcCategory.rootCategory",
+          "dataSource": null
+        },
+        {
+          "id": "grdTraceSamples",
+          "type": "GRID",
+          "label": "追溯抽查结果",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "SourceDoc.Segment.segmentText",
+          "dataSource": "REP-03"
+        },
+        {
+          "id": "btnSample",
+          "type": "BUTTON",
+          "label": "开始抽查",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-KG-EXPLORER",
+          "trigger": "双击条目",
+          "condition": "需要图实体回溯时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-TRACE-AUDIT.btnSample_Click",
+          "name": "抽查来源可追溯性",
+          "source": "btnSample.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "抽样数量在允许范围内"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-03"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-03"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-ONTOLOGY-COVERAGE",
+      "name": "本体概念覆盖统计",
+      "screenRef": "需求文档.md#REP-05",
+      "layout": "[cboOntology] [grdCoverage] [btnQuery]",
+      "elements": [
+        {
+          "id": "cboOntology",
+          "type": "COMBO",
+          "label": "本体来源",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Concept.sourceOntology",
+          "dataSource": null
+        },
+        {
+          "id": "grdCoverage",
+          "type": "GRID",
+          "label": "概念覆盖结果",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Concept.conceptType",
+          "dataSource": "REP-05"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [],
+      "events": [
+        {
+          "eventId": "SCR-ONTOLOGY-COVERAGE.btnQuery_Click",
+          "name": "统计本体概念覆盖",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-05"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-05"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-CRAWL-MONITOR",
+      "name": "采集运行监控",
+      "screenRef": "需求文档.md#REP-06",
+      "layout": "[cboCrawlSource] [grdRunStats] [btnQuery]",
+      "elements": [
+        {
+          "id": "cboCrawlSource",
+          "type": "COMBO",
+          "label": "采集源",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "CrsSource.crawlSourceId",
+          "dataSource": null
+        },
+        {
+          "id": "grdRunStats",
+          "type": "GRID",
+          "label": "运行统计",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "CrsSource.CrawlRun.startedAt",
+          "dataSource": "REP-06"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-CRAWL-SOURCE",
+          "trigger": "点击采集源",
+          "condition": "需要调整配置时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-CRAWL-MONITOR.btnQuery_Click",
+          "name": "查询采集运行监控",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-06"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-06"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-TAXONOMY-COVERAGE",
+      "name": "知识体系覆盖与缺口",
+      "screenRef": "需求文档.md#REP-07",
+      "layout": "[treeCoverage] [grdCoverage] [btnQuery]",
+      "elements": [
+        {
+          "id": "treeCoverage",
+          "type": "TREEVIEW",
+          "label": "分类覆盖树",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "KtcCategory.categoryPath",
+          "dataSource": "REP-07"
+        },
+        {
+          "id": "grdCoverage",
+          "type": "GRID",
+          "label": "覆盖统计",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "KtcCategory.categoryCode",
+          "dataSource": "REP-07"
+        },
+        {
+          "id": "btnQuery",
+          "type": "BUTTON",
+          "label": "查询",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-TAXONOMY-FORM",
+          "trigger": "双击空白节点",
+          "condition": "需要维护分类时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-TAXONOMY-COVERAGE.btnQuery_Click",
+          "name": "查询知识体系覆盖与缺口",
+          "source": "btnQuery.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "Q-07"
+            },
+            {
+              "step": "QUERY_REPORT",
+              "reportRef": "REP-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screenId": "SCR-KG-EXPLORER",
+      "name": "业务知识图谱工作台",
+      "screenRef": "需求文档.md#GQ-01-GQ-04",
+      "layout": "[txtKeyword] [btnSearch] [grdResults] [graphCanvas] [frmEntity] [frmSourceTrace] [btnTrace]",
+      "elements": [
+        {
+          "id": "txtKeyword",
+          "type": "TEXTBOX",
+          "label": "图谱检索关键词",
+          "io": "I",
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "btnSearch",
+          "type": "BUTTON",
+          "label": "检索图谱",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        },
+        {
+          "id": "grdResults",
+          "type": "GRID",
+          "label": "实体检索结果",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Relation.subjectEntityId",
+          "dataSource": null
+        },
+        {
+          "id": "graphCanvas",
+          "type": "OTHER",
+          "label": "业务关系图",
+          "io": "I_O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Relation.relationId",
+          "dataSource": null
+        },
+        {
+          "id": "frmEntity",
+          "type": "FRAME",
+          "label": "实体属性与一跳关系",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "Relation.objectEntityId",
+          "dataSource": null
+        },
+        {
+          "id": "frmSourceTrace",
+          "type": "FRAME",
+          "label": "来源文档与段落原文",
+          "io": "O",
+          "required": false,
+          "enabled": true,
+          "dataBinding": "SourceDoc.Segment.segmentText",
+          "dataSource": null
+        },
+        {
+          "id": "btnTrace",
+          "type": "BUTTON",
+          "label": "来源回溯",
+          "io": null,
+          "required": false,
+          "enabled": true,
+          "dataBinding": null,
+          "dataSource": null
+        }
+      ],
+      "navigation": [
+        {
+          "to": "SCR-TRACE-AUDIT",
+          "trigger": "来源抽查",
+          "condition": "需要批量抽样时"
+        }
+      ],
+      "events": [
+        {
+          "eventId": "SCR-KG-EXPLORER.btnSearch_Click",
+          "name": "检索真实业务实体",
+          "source": "btnSearch.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "检索条件符合接口长度与分页约束"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "GQ-01"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-KG-EXPLORER.grdResults_DoubleClick",
+          "name": "查看图实体详情",
+          "source": "grdResults.DoubleClick",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "已选择一个实体"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "GQ-02"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-KG-EXPLORER.graphNode_DoubleClick",
+          "name": "展开图节点关系",
+          "source": "graphCanvas.NodeDoubleClick",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "已选择图节点且展开跳数不超过上限"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "GQ-03"
+            }
+          ]
+        },
+        {
+          "eventId": "SCR-KG-EXPLORER.btnTrace_Click",
+          "name": "回溯实体来源段落",
+          "source": "btnTrace.Click",
+          "permissions": [
+            "PERM-04"
+          ],
+          "preConditions": [
+            "已选择一个具有来源引用的实体"
+          ],
+          "callChain": [
+            {
+              "step": "BEHAVIOR_CALL",
+              "behaviorRef": "GQ-04"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

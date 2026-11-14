@@ -1,0 +1,2 @@
+:VID,indicatorId,indicatorCode,indicatorName,indicatorCategory,unit,frequency,caliber,sourceOrg,knowledgeCategoryId,industryStage,status,createdBy,createdAt,updatedBy,updatedAt
+IND0001,IND0001,AE-YIELD-001,粮食总产量,产量,万吨,年度,,,KTC0003,生产,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

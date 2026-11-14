@@ -1,0 +1,1712 @@
+model_type: MAPPING
+version: '2.1'
+domain: 粮油产业多维知识图谱
+description: 粮油产业多维知识图谱对象到 SQLite 表的映射：15 个聚合根主表与 4 个子实体从表；内部主键与业务编码双轨，表名和列名沿用 M1 标识
+mappings:
+- id: M-MAP-SOURCE-001
+  objectRef: AGG-SOURCE-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 来源文档
+  tableMappings:
+  - tableName: SourceDoc
+    tableRole: MASTER
+    primaryKey: docId
+    columnMappings:
+    - attributeRef: SourceDoc.docId
+      column: docId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: SourceDoc.title
+      column: title
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.docType
+      column: docType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：SourceDoc.docType
+    - attributeRef: SourceDoc.issuer
+      column: issuer
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.publishDate
+      column: publishDate
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.docVersion
+      column: docVersion
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.fileFormat
+      column: fileFormat
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：SourceDoc.fileFormat
+    - attributeRef: SourceDoc.storageUri
+      column: storageUri
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.checksum
+      column: checksum
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.language
+      column: language
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：SourceDoc.language
+    - attributeRef: SourceDoc.pageCount
+      column: pageCount
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.sourceUrl
+      column: sourceUrl
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.crawlSourceId
+      column: crawlSourceId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CrsSource
+      fkTargetColumn: crawlSourceId
+      mappingNote: AggregateRootRef → CrsSource.crawlSourceId
+    - attributeRef: SourceDoc.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: SourceDoc.summary
+      column: summary
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：SourceDoc.status
+  - tableName: SourceDoc_Segment
+    tableRole: DETAIL
+    primaryKey: segmentId
+    foreignKeys:
+    - fkName: FK_SourceDoc_Segment_SourceDoc
+      localColumn: docId
+      targetTable: SourceDoc
+      targetColumn: docId
+    columnMappings:
+    - attributeRef: SourceDoc.Segment[].docId
+      column: docId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: 父聚合引用：SourceDoc.docId
+    - attributeRef: SourceDoc.Segment[].segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: SourceDoc.Segment[].segmentNo
+      column: segmentNo
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].pageNo
+      column: pageNo
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].chapterPath
+      column: chapterPath
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].charStart
+      column: charStart
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].charEnd
+      column: charEnd
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].segmentText
+      column: segmentText
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: SourceDoc.Segment[].segmentType
+      column: segmentType
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Segment.segmentType
+    - attributeRef: SourceDoc.Segment[].vectorId
+      column: vectorId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+- id: M-MAP-POLICY-001
+  objectRef: AGG-POLICY-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 政策法规
+  tableMappings:
+  - tableName: Policy
+    tableRole: MASTER
+    primaryKey: policyId
+    columnMappings:
+    - attributeRef: Policy.policyId
+      column: policyId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Policy.policyTitle
+      column: policyTitle
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.docNumber
+      column: docNumber
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.policyLevel
+      column: policyLevel
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Policy.policyLevel
+    - attributeRef: Policy.issuer
+      column: issuer
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.effectiveDate
+      column: effectiveDate
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.expireDate
+      column: expireDate
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.policyStatus
+      column: policyStatus
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Policy.policyStatus
+    - attributeRef: Policy.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: Policy.sourceDocId
+      column: sourceDocId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: AggregateRootRef → SourceDoc.docId
+    - attributeRef: Policy.segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: Policy.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Policy.industryStage
+    - attributeRef: Policy.factorDimensions
+      column: factorDimensions
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.reviewStatus
+      column: reviewStatus
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Policy.reviewStatus
+    - attributeRef: Policy.summary
+      column: summary
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+  - tableName: Policy_Clause
+    tableRole: DETAIL
+    primaryKey: clauseId
+    foreignKeys:
+    - fkName: FK_Policy_Clause_Policy
+      localColumn: policyId
+      targetTable: Policy
+      targetColumn: policyId
+    columnMappings:
+    - attributeRef: Policy.Clause[].policyId
+      column: policyId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Policy
+      fkTargetColumn: policyId
+      mappingNote: 父聚合引用：Policy.policyId
+    - attributeRef: Policy.Clause[].clauseId
+      column: clauseId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Policy.Clause[].clauseNo
+      column: clauseNo
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.Clause[].clauseTitle
+      column: clauseTitle
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.Clause[].clauseText
+      column: clauseText
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.Clause[].measureType
+      column: measureType
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Clause.measureType
+    - attributeRef: Policy.Clause[].targetObject
+      column: targetObject
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Policy.Clause[].clauseEffectiveDate
+      column: clauseEffectiveDate
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+- id: M-MAP-INDICATOR-001
+  objectRef: AGG-INDICATOR-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 指标定义
+  tableMappings:
+  - tableName: Indicator
+    tableRole: MASTER
+    primaryKey: indicatorId
+    columnMappings:
+    - attributeRef: Indicator.indicatorId
+      column: indicatorId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Indicator.indicatorCode
+      column: indicatorCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Indicator.indicatorName
+      column: indicatorName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Indicator.indicatorCategory
+      column: indicatorCategory
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Indicator.indicatorCategory
+    - attributeRef: Indicator.unit
+      column: unit
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Indicator.frequency
+      column: frequency
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Indicator.frequency
+    - attributeRef: Indicator.caliber
+      column: caliber
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Indicator.sourceOrg
+      column: sourceOrg
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Indicator.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: Indicator.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Indicator.industryStage
+    - attributeRef: Indicator.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Indicator.status
+- id: M-MAP-INDVAL-001
+  objectRef: AGG-INDVAL-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 指标数据
+  tableMappings:
+  - tableName: IvdData
+    tableRole: MASTER
+    primaryKey: valueId
+    columnMappings:
+    - attributeRef: IvdData.valueId
+      column: valueId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: IvdData.indicatorId
+      column: indicatorId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Indicator
+      fkTargetColumn: indicatorId
+      mappingNote: AggregateRootRef → Indicator.indicatorId
+    - attributeRef: IvdData.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: IvdData.commodityId
+      column: commodityId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CmdCommodity
+      fkTargetColumn: commodityId
+      mappingNote: AggregateRootRef → CmdCommodity.commodityId
+    - attributeRef: IvdData.periodType
+      column: periodType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：IvdData.periodType
+    - attributeRef: IvdData.period
+      column: period
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: IvdData.value
+      column: value
+      columnType: REAL
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: IvdData.unit
+      column: unit
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: IvdData.qualityFlag
+      column: qualityFlag
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：IvdData.qualityFlag
+    - attributeRef: IvdData.sourceDocId
+      column: sourceDocId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: AggregateRootRef → SourceDoc.docId
+    - attributeRef: IvdData.segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: IvdData.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: IvdData.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：IvdData.industryStage
+    - attributeRef: IvdData.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：IvdData.status
+    - attributeRef: IvdData.remark
+      column: remark
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+- id: M-MAP-YEARBOOK-001
+  objectRef: AGG-YEARBOOK-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 年鉴记录
+  tableMappings:
+  - tableName: YrbYearbook
+    tableRole: MASTER
+    primaryKey: recordId
+    columnMappings:
+    - attributeRef: YrbYearbook.recordId
+      column: recordId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: YrbYearbook.yearbookName
+      column: yearbookName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.edition
+      column: edition
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.statYear
+      column: statYear
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.tableName
+      column: tableName
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.indicatorId
+      column: indicatorId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Indicator
+      fkTargetColumn: indicatorId
+      mappingNote: AggregateRootRef → Indicator.indicatorId
+    - attributeRef: YrbYearbook.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: YrbYearbook.commodityId
+      column: commodityId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CmdCommodity
+      fkTargetColumn: commodityId
+      mappingNote: AggregateRootRef → CmdCommodity.commodityId
+    - attributeRef: YrbYearbook.value
+      column: value
+      columnType: REAL
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.unit
+      column: unit
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.caliberNote
+      column: caliberNote
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.sourceDocId
+      column: sourceDocId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: AggregateRootRef → SourceDoc.docId
+    - attributeRef: YrbYearbook.segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: YrbYearbook.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: YrbYearbook.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Yearbook.industryStage
+    - attributeRef: YrbYearbook.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Yearbook.status
+- id: M-MAP-INTEL-001
+  objectRef: AGG-INTEL-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 农业情报
+  tableMappings:
+  - tableName: Intel
+    tableRole: MASTER
+    primaryKey: intelId
+    columnMappings:
+    - attributeRef: Intel.intelId
+      column: intelId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Intel.intelTitle
+      column: intelTitle
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.intelType
+      column: intelType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Intel.intelType
+    - attributeRef: Intel.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: Intel.commodityId
+      column: commodityId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CmdCommodity
+      fkTargetColumn: commodityId
+      mappingNote: AggregateRootRef → CmdCommodity.commodityId
+    - attributeRef: Intel.publishOrg
+      column: publishOrg
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.publishDate
+      column: publishDate
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.keyPoints
+      column: keyPoints
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.credibility
+      column: credibility
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Intel.credibility
+    - attributeRef: Intel.sourceDocId
+      column: sourceDocId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: AggregateRootRef → SourceDoc.docId
+    - attributeRef: Intel.segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: Intel.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Intel.industryStage
+    - attributeRef: Intel.factorDimensions
+      column: factorDimensions
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Intel.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Intel.status
+- id: M-MAP-COMMODITY-001
+  objectRef: AGG-COMMODITY-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 品种
+  tableMappings:
+  - tableName: CmdCommodity
+    tableRole: MASTER
+    primaryKey: commodityId
+    columnMappings:
+    - attributeRef: CmdCommodity.commodityId
+      column: commodityId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: CmdCommodity.commodityCode
+      column: commodityCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: CmdCommodity.commodityName
+      column: commodityName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CmdCommodity.commodityCategory
+      column: commodityCategory
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Commodity.commodityCategory
+    - attributeRef: CmdCommodity.scientificName
+      column: scientificName
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CmdCommodity.parentCommodityId
+      column: parentCommodityId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CmdCommodity
+      fkTargetColumn: commodityId
+      mappingNote: AggregateRootRef → CmdCommodity.commodityId
+    - attributeRef: CmdCommodity.conceptId
+      column: conceptId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Concept
+      fkTargetColumn: conceptId
+      mappingNote: AggregateRootRef → Concept.conceptId
+    - attributeRef: CmdCommodity.description
+      column: description
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CmdCommodity.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Commodity.status
+- id: M-MAP-PRODUCT-001
+  objectRef: AGG-PRODUCT-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 产品
+  tableMappings:
+  - tableName: Product
+    tableRole: MASTER
+    primaryKey: productId
+    columnMappings:
+    - attributeRef: Product.productId
+      column: productId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Product.productCode
+      column: productCode
+      columnType: TEXT
+      nullable: true
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Product.productName
+      column: productName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Product.commodityId
+      column: commodityId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CmdCommodity
+      fkTargetColumn: commodityId
+      mappingNote: AggregateRootRef → CmdCommodity.commodityId
+    - attributeRef: Product.productCategory
+      column: productCategory
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Product.productCategory
+    - attributeRef: Product.grade
+      column: grade
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Product.grade
+    - attributeRef: Product.standardCode
+      column: standardCode
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Product.enterpriseId
+      column: enterpriseId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Enterprise
+      fkTargetColumn: enterpriseId
+      mappingNote: AggregateRootRef → Enterprise.enterpriseId
+    - attributeRef: Product.description
+      column: description
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Product.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Product.status
+- id: M-MAP-REGION-001
+  objectRef: AGG-REGION-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 地区
+  tableMappings:
+  - tableName: Region
+    tableRole: MASTER
+    primaryKey: regionId
+    columnMappings:
+    - attributeRef: Region.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Region.regionCode
+      column: regionCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Region.regionName
+      column: regionName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Region.regionLevel
+      column: regionLevel
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Region.regionLevel
+    - attributeRef: Region.parentRegionId
+      column: parentRegionId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: Region.adminCode
+      column: adminCode
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Region.faoRegion
+      column: faoRegion
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Region.isChongqing
+      column: isChongqing
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Region.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Region.status
+- id: M-MAP-ENTERPRISE-001
+  objectRef: AGG-ENTERPRISE-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 企业
+  tableMappings:
+  - tableName: Enterprise
+    tableRole: MASTER
+    primaryKey: enterpriseId
+    columnMappings:
+    - attributeRef: Enterprise.enterpriseId
+      column: enterpriseId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Enterprise.enterpriseCode
+      column: enterpriseCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Enterprise.enterpriseName
+      column: enterpriseName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Enterprise.creditCode
+      column: creditCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Enterprise.enterpriseType
+      column: enterpriseType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Enterprise.enterpriseType
+    - attributeRef: Enterprise.regionId
+      column: regionId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Region
+      fkTargetColumn: regionId
+      mappingNote: AggregateRootRef → Region.regionId
+    - attributeRef: Enterprise.scale
+      column: scale
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Enterprise.scale
+    - attributeRef: Enterprise.legalPerson
+      column: legalPerson
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Enterprise.address
+      column: address
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Enterprise.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Enterprise.status
+- id: M-MAP-CONCEPT-001
+  objectRef: AGG-CONCEPT-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 本体概念
+  tableMappings:
+  - tableName: Concept
+    tableRole: MASTER
+    primaryKey: conceptId
+    columnMappings:
+    - attributeRef: Concept.conceptId
+      column: conceptId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Concept.conceptCode
+      column: conceptCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: Concept.conceptName
+      column: conceptName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Concept.conceptType
+      column: conceptType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Concept.conceptType
+    - attributeRef: Concept.sourceOntology
+      column: sourceOntology
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Concept.sourceOntology
+    - attributeRef: Concept.externalUri
+      column: externalUri
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Concept.parentConceptId
+      column: parentConceptId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Concept
+      fkTargetColumn: conceptId
+      mappingNote: AggregateRootRef → Concept.conceptId
+    - attributeRef: Concept.definition
+      column: definition
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Concept.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Concept.status
+  - tableName: Concept_Synonym
+    tableRole: DETAIL
+    primaryKey: synonymId
+    foreignKeys:
+    - fkName: FK_Concept_Synonym_Concept
+      localColumn: conceptId
+      targetTable: Concept
+      targetColumn: conceptId
+    columnMappings:
+    - attributeRef: Concept.Synonym[].conceptId
+      column: conceptId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: Concept
+      fkTargetColumn: conceptId
+      mappingNote: 父聚合引用：Concept.conceptId
+    - attributeRef: Concept.Synonym[].synonymId
+      column: synonymId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Concept.Synonym[].synonymName
+      column: synonymName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Concept.Synonym[].language
+      column: language
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Synonym.language
+    - attributeRef: Concept.Synonym[].synonymType
+      column: synonymType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Synonym.synonymType
+- id: M-MAP-RELATION-001
+  objectRef: AGG-RELATION-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 知识关系
+  tableMappings:
+  - tableName: Relation
+    tableRole: MASTER
+    primaryKey: relationId
+    columnMappings:
+    - attributeRef: Relation.relationId
+      column: relationId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: Relation.subjectEntityType
+      column: subjectEntityType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Relation.subjectEntityType
+    - attributeRef: Relation.subjectEntityId
+      column: subjectEntityId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.predicate
+      column: predicate
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Relation.predicate
+    - attributeRef: Relation.objectEntityType
+      column: objectEntityType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Relation.objectEntityType
+    - attributeRef: Relation.objectEntityId
+      column: objectEntityId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.confidence
+      column: confidence
+      columnType: REAL
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.sourceDocId
+      column: sourceDocId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: SourceDoc
+      fkTargetColumn: docId
+      mappingNote: AggregateRootRef → SourceDoc.docId
+    - attributeRef: Relation.segmentId
+      column: segmentId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.extractedBy
+      column: extractedBy
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Relation.extractedBy
+    - attributeRef: Relation.validFrom
+      column: validFrom
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.validTo
+      column: validTo
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: Relation.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：Relation.status
+- id: M-MAP-QUALITY-001
+  objectRef: AGG-QUALITY-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 质量治理记录
+  tableMappings:
+  - tableName: QisRecord
+    tableRole: MASTER
+    primaryKey: issueId
+    columnMappings:
+    - attributeRef: QisRecord.issueId
+      column: issueId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: QisRecord.issueType
+      column: issueType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：QisRecord.issueType
+    - attributeRef: QisRecord.primaryEntityType
+      column: primaryEntityType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：QisRecord.primaryEntityType
+    - attributeRef: QisRecord.primaryEntityId
+      column: primaryEntityId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.duplicateEntityId
+      column: duplicateEntityId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.similarity
+      column: similarity
+      columnType: REAL
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.conflictField
+      column: conflictField
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.conflictValueA
+      column: conflictValueA
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.conflictValueB
+      column: conflictValueB
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.handleStatus
+      column: handleStatus
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：QisRecord.handleStatus
+    - attributeRef: QisRecord.handleRemark
+      column: handleRemark
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.handler
+      column: handler
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: QisRecord.handledAt
+      column: handledAt
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+- id: M-MAP-CRAWL-001
+  objectRef: AGG-CRAWL-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 采集源
+  tableMappings:
+  - tableName: CrsSource
+    tableRole: MASTER
+    primaryKey: crawlSourceId
+    columnMappings:
+    - attributeRef: CrsSource.crawlSourceId
+      column: crawlSourceId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: CrsSource.sourceName
+      column: sourceName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.sourceUrl
+      column: sourceUrl
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.sourceType
+      column: sourceType
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrsSource.sourceType
+    - attributeRef: CrsSource.contentCategory
+      column: contentCategory
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrsSource.contentCategory
+    - attributeRef: CrsSource.crawlMode
+      column: crawlMode
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrsSource.crawlMode
+    - attributeRef: CrsSource.cronExpr
+      column: cronExpr
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.charset
+      column: charset
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrsSource.charset
+    - attributeRef: CrsSource.requestHeaders
+      column: requestHeaders
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.minIntervalMinutes
+      column: minIntervalMinutes
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.maxRetry
+      column: maxRetry
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.knowledgeCategoryId
+      column: knowledgeCategoryId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: CrsSource.enabledFlag
+      column: enabledFlag
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrsSource.enabledFlag
+    - attributeRef: CrsSource.lastRunAt
+      column: lastRunAt
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+  - tableName: CrsSource_CrawlRun
+    tableRole: DETAIL
+    primaryKey: runId
+    foreignKeys:
+    - fkName: FK_CrsSource_CrawlRun_CrsSource
+      localColumn: crawlSourceId
+      targetTable: CrsSource
+      targetColumn: crawlSourceId
+    columnMappings:
+    - attributeRef: CrsSource.CrawlRun[].crawlSourceId
+      column: crawlSourceId
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: CrsSource
+      fkTargetColumn: crawlSourceId
+      mappingNote: 父聚合引用：CrsSource.crawlSourceId
+    - attributeRef: CrsSource.CrawlRun[].runId
+      column: runId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: CrsSource.CrawlRun[].startedAt
+      column: startedAt
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].finishedAt
+      column: finishedAt
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].runStatus
+      column: runStatus
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：CrawlRun.runStatus
+    - attributeRef: CrsSource.CrawlRun[].httpStatus
+      column: httpStatus
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].fetchedCount
+      column: fetchedCount
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].savedCount
+      column: savedCount
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].newDocCount
+      column: newDocCount
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].duplicateCount
+      column: duplicateCount
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].durationMs
+      column: durationMs
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: CrsSource.CrawlRun[].errorMessage
+      column: errorMessage
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+- id: M-MAP-TAXONOMY-001
+  objectRef: AGG-TAXONOMY-001
+  objectRole: AGGREGATE_ROOT
+  objectName: 知识分类
+  tableMappings:
+  - tableName: KtcCategory
+    tableRole: MASTER
+    primaryKey: categoryId
+    columnMappings:
+    - attributeRef: KtcCategory.categoryId
+      column: categoryId
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: true
+    - attributeRef: KtcCategory.categoryCode
+      column: categoryCode
+      columnType: TEXT
+      nullable: false
+      unique: true
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.categoryName
+      column: categoryName
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.parentCategoryId
+      column: parentCategoryId
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+      isForeignKey: true
+      fkTargetTable: KtcCategory
+      fkTargetColumn: categoryId
+      mappingNote: AggregateRootRef → KtcCategory.categoryId
+    - attributeRef: KtcCategory.level
+      column: level
+      columnType: INTEGER
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.categoryPath
+      column: categoryPath
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.rootCategory
+      column: rootCategory
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：KtcCategory.rootCategory
+    - attributeRef: KtcCategory.industryStage
+      column: industryStage
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：KtcCategory.industryStage
+    - attributeRef: KtcCategory.factorDimensions
+      column: factorDimensions
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.definition
+      column: definition
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.keywords
+      column: keywords
+      columnType: TEXT
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.sortNo
+      column: sortNo
+      columnType: INTEGER
+      nullable: true
+      unique: false
+      isPrimaryKey: false
+    - attributeRef: KtcCategory.status
+      column: status
+      columnType: TEXT
+      nullable: false
+      unique: false
+      isPrimaryKey: false
+      mappingNote: dictionaryRef：KtcCategory.status

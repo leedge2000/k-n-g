@@ -1,0 +1,2 @@
+:VID,valueId,indicatorId,regionId,commodityId,periodType,period,value,unit,qualityFlag,sourceDocId,segmentId,knowledgeCategoryId,industryStage,status,remark,createdBy,createdAt,updatedBy,updatedAt
+IVD0001,IVD0001,IND0001,REG0001,CMD0001,年度,2025,1100.0,万吨,正常,SOU0001,SOU0001-S002,KTC0003,生产,已发布,,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

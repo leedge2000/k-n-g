@@ -1,0 +1,9 @@
+{
+  "embeddingBackend": "hash",
+  "embeddingBaseUrl": "",
+  "embeddingApiKey": "",
+  "embeddingModel": "text-embedding-3-small",
+  "llmBaseUrl": "",
+  "llmApiKey": "",
+  "llmModel": "gpt-4o-mini"
+}

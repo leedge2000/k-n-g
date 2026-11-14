@@ -1,0 +1,4 @@
+:VID,categoryId,categoryCode,categoryName,parentCategoryId,level,categoryPath,rootCategory,industryStage,factorDimensions,definition,keywords,sortNo,status,createdBy,createdAt,updatedBy,updatedAt
+KTC0001,KTC0001,AE,农业经济,,1,农业经济,农业经济,生产,,,,1,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35
+KTC0002,KTC0002,AE-02,粮食生产经济,,2,农业经济/粮食生产经济,农业经济,生产,,,,2,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35
+KTC0003,KTC0003,AE-02-02,粮食单产与总产,,3,农业经济/粮食生产经济/粮食单产与总产,农业经济,生产,供给,,,2,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

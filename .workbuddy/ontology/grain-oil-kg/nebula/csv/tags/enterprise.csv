@@ -1,0 +1,2 @@
+:VID,enterpriseId,enterpriseCode,enterpriseName,creditCode,enterpriseType,regionId,scale,legalPerson,address,status,createdBy,createdAt,updatedBy,updatedAt
+ENT0001,ENT0001,ENT-TEST-001,重庆某某粮油有限公司,91500000MA5U12345X,加工,REG0001,,,,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

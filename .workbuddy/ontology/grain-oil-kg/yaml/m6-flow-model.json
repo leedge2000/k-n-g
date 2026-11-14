@@ -1,0 +1,339 @@
+{
+  "model_type": "FLOW",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "知识采集或登记、质量检查、一级审核、发布入图的端到端协同流与审批子流程",
+  "flows": [
+    {
+      "id": "PROC-01",
+      "name": "知识入库到发布协同流",
+      "flowType": "COLLABORATION",
+      "description": "支持公开来源自动采集或离线文档人工登记，经段落定位、知识登记、重复与冲突检查后进入一级审核并发布入图",
+      "businessObjectRefs": [
+        "AGG-SOURCE-001",
+        "AGG-CRAWL-001",
+        "AGG-POLICY-001",
+        "AGG-INDVAL-001",
+        "AGG-YEARBOOK-001",
+        "AGG-INTEL-001",
+        "AGG-RELATION-001",
+        "AGG-QUALITY-001"
+      ],
+      "roleRefs": [
+        "ROLE-01",
+        "ROLE-02",
+        "ROLE-03"
+      ],
+      "trigger": {
+        "triggerType": "MANUAL"
+      },
+      "preconditions": [
+        "操作角色具备来源登记或采集管理权限",
+        "自动采集仅访问公开 HTTP/HTTPS 页面且通过 R-09~R-12 安全校验"
+      ],
+      "postconditions": [
+        "知识条目已发布入图，或退回后等待修改重新提交"
+      ],
+      "startActivity": "A01",
+      "endActivities": [
+        "A15"
+      ],
+      "activities": [
+        {
+          "activityId": "A01",
+          "name": "开始",
+          "activityType": "START",
+          "nextActivities": [
+            "A02"
+          ]
+        },
+        {
+          "activityId": "A02",
+          "name": "来源入库方式选择",
+          "activityType": "GATEWAY",
+          "branches": [
+            {
+              "branchName": "人工登记离线文档",
+              "conditionExpression": "sourceMode == 'MANUAL'",
+              "targetActivity": "A03"
+            },
+            {
+              "branchName": "执行公开来源采集",
+              "conditionExpression": "sourceMode == 'CRAWL'",
+              "targetActivity": "A05",
+              "isDefault": true
+            }
+          ]
+        },
+        {
+          "activityId": "A03",
+          "name": "登记来源文档",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-01",
+          "screenRef": "SCR-SOURCE-FORM",
+          "nextActivities": [
+            "A04"
+          ]
+        },
+        {
+          "activityId": "A04",
+          "name": "段落切分与定位",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-02",
+          "screenRef": "SCR-SOURCE-FORM",
+          "nextActivities": [
+            "A06"
+          ]
+        },
+        {
+          "activityId": "A05",
+          "name": "采集并登记来源文档与段落",
+          "activityType": "BEHAVIOR_CALL",
+          "behaviorRef": "FUNC-12",
+          "screenRef": "SCR-CRAWL-SOURCE",
+          "nextActivities": [
+            "A06"
+          ]
+        },
+        {
+          "activityId": "A06",
+          "name": "知识条目类型选择",
+          "activityType": "GATEWAY",
+          "branches": [
+            {
+              "branchName": "政策法规",
+              "conditionExpression": "entryType == 'POLICY'",
+              "targetActivity": "A07"
+            },
+            {
+              "branchName": "指标数据",
+              "conditionExpression": "entryType == 'INDICATOR'",
+              "targetActivity": "A08"
+            },
+            {
+              "branchName": "年鉴记录",
+              "conditionExpression": "entryType == 'YEARBOOK'",
+              "targetActivity": "A09"
+            },
+            {
+              "branchName": "农业情报",
+              "conditionExpression": "entryType == 'INTEL'",
+              "targetActivity": "A10"
+            },
+            {
+              "branchName": "知识关系",
+              "conditionExpression": "entryType == 'RELATION'",
+              "targetActivity": "A11",
+              "isDefault": true
+            }
+          ]
+        },
+        {
+          "activityId": "A07",
+          "name": "登记政策法规及条款",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-03",
+          "screenRef": "SCR-POLICY-FORM",
+          "nextActivities": [
+            "A12"
+          ]
+        },
+        {
+          "activityId": "A08",
+          "name": "登记指标数据",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-05",
+          "screenRef": "SCR-INDVAL-FORM",
+          "nextActivities": [
+            "A12"
+          ]
+        },
+        {
+          "activityId": "A09",
+          "name": "登记年鉴记录",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-06",
+          "screenRef": "SCR-YEARBOOK-FORM",
+          "nextActivities": [
+            "A12"
+          ]
+        },
+        {
+          "activityId": "A10",
+          "name": "登记全球农业情报",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-07",
+          "screenRef": "SCR-INTEL-FORM",
+          "nextActivities": [
+            "A12"
+          ]
+        },
+        {
+          "activityId": "A11",
+          "name": "登记知识关系三元组",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "FUNC-10",
+          "screenRef": "SCR-RELATION-FORM",
+          "nextActivities": [
+            "A12"
+          ]
+        },
+        {
+          "activityId": "A12",
+          "name": "重复检测",
+          "activityType": "SYSTEM_TASK",
+          "ruleRef": "R-02",
+          "screenRef": "SCR-QUALITY",
+          "nextActivities": [
+            "A13"
+          ]
+        },
+        {
+          "activityId": "A13",
+          "name": "冲突标识",
+          "activityType": "SYSTEM_TASK",
+          "ruleRef": "R-07",
+          "screenRef": "SCR-QUALITY",
+          "nextActivities": [
+            "A14"
+          ]
+        },
+        {
+          "activityId": "A14",
+          "name": "调用知识发布一级审核流",
+          "activityType": "SUB_FLOW_CALL",
+          "subFlowRef": "PROC-APP-01",
+          "screenRef": "SCR-REVIEW",
+          "nextActivities": [
+            "A15"
+          ]
+        },
+        {
+          "activityId": "A15",
+          "name": "发布入图或等待退回修改",
+          "activityType": "END",
+          "nextActivities": []
+        }
+      ],
+      "version": "2.1"
+    },
+    {
+      "id": "PROC-APP-01",
+      "name": "知识发布一级审核流",
+      "flowType": "APPROVAL",
+      "description": "数据录入员提交，审核员通过或退回；退回后由录入员修改并重新提交，通过即发布入图",
+      "businessObjectRefs": [
+        "AGG-POLICY-001",
+        "AGG-INDVAL-001",
+        "AGG-YEARBOOK-001",
+        "AGG-INTEL-001",
+        "AGG-RELATION-001"
+      ],
+      "roleRefs": [
+        "ROLE-02",
+        "ROLE-03"
+      ],
+      "trigger": {
+        "triggerType": "SUB_FLOW"
+      },
+      "preconditions": [
+        "知识条目状态为草稿或已退回",
+        "来源文档有效且段落定位完整"
+      ],
+      "postconditions": [
+        "审核通过后状态为已发布，或退回后状态为已退回并等待重新提交"
+      ],
+      "startActivity": "P01",
+      "endActivities": [
+        "P07"
+      ],
+      "activities": [
+        {
+          "activityId": "P01",
+          "name": "开始",
+          "activityType": "START",
+          "nextActivities": [
+            "P02"
+          ]
+        },
+        {
+          "activityId": "P02",
+          "name": "提交或重新提交审核",
+          "activityType": "USER_TASK",
+          "roleRef": "ROLE-02",
+          "behaviorRef": "B-01",
+          "screenRef": "SCR-REVIEW",
+          "nextActivities": [
+            "P03"
+          ]
+        },
+        {
+          "activityId": "P03",
+          "name": "审核员一级审核",
+          "activityType": "APPROVAL_TASK",
+          "roleRef": "ROLE-03",
+          "screenRef": "SCR-REVIEW",
+          "approvalOutcomes": [
+            "APPROVE",
+            "RETURN"
+          ],
+          "nextActivities": [
+            "P04"
+          ]
+        },
+        {
+          "activityId": "P04",
+          "name": "审核结果判断",
+          "activityType": "GATEWAY",
+          "branches": [
+            {
+              "branchName": "审核通过",
+              "approvalOutcome": "APPROVE",
+              "targetActivity": "P05"
+            },
+            {
+              "branchName": "审核退回",
+              "approvalOutcome": "RETURN",
+              "targetActivity": "P06",
+              "isDefault": true
+            }
+          ]
+        },
+        {
+          "activityId": "P05",
+          "name": "审核通过并发布入图",
+          "activityType": "BEHAVIOR_CALL",
+          "behaviorRef": "B-02",
+          "screenRef": "SCR-REVIEW",
+          "nextActivities": [
+            "P07"
+          ]
+        },
+        {
+          "activityId": "P06",
+          "name": "审核退回并等待修改",
+          "activityType": "BEHAVIOR_CALL",
+          "behaviorRef": "B-03",
+          "screenRef": "SCR-REVIEW",
+          "nextActivities": [
+            "P02"
+          ]
+        },
+        {
+          "activityId": "P07",
+          "name": "审批通过结束",
+          "activityType": "END",
+          "nextActivities": []
+        }
+      ],
+      "version": "2.1"
+    }
+  ]
+}

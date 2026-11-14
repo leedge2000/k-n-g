@@ -1,0 +1,2 @@
+:VID,issueId,issueType,primaryEntityType,primaryEntityId,duplicateEntityId,similarity,conflictField,conflictValueA,conflictValueB,handleStatus,handleRemark,handler,handledAt,createdBy,createdAt,updatedBy,updatedAt
+QIS0001,QIS0001,重复,指标数据,IVD0001,IVD0007,0.92,,,,待处理,,,,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

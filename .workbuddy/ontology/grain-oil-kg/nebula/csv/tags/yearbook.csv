@@ -1,0 +1,2 @@
+:VID,recordId,yearbookName,edition,statYear,tableName,indicatorId,regionId,commodityId,value,unit,caliberNote,sourceDocId,segmentId,knowledgeCategoryId,industryStage,status,createdBy,createdAt,updatedBy,updatedAt
+YRB0001,YRB0001,重庆统计年鉴,2025卷,2024,主要农产品产量,IND0001,REG0001,CMD0001,1087.0,万吨,,SOU0001,SOU0001-S002,KTC0003,生产,已发布,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35

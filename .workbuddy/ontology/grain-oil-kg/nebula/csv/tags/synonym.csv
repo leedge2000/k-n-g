@@ -1,0 +1,3 @@
+:VID,conceptId,synonymId,synonymName,language,synonymType
+CON0001-S001,CON0001,CON0001-S001,水稻,中文,别名
+CON0001-S002,CON0001,CON0001-S002,paddy,英文,外文

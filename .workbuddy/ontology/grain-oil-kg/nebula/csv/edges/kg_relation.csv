@@ -1,0 +1,2 @@
+:SRC_VID,:DST_VID,:RANK,relationId,predicate,confidence
+CMD0001,REG0001,0,REL0001,产于,0.95

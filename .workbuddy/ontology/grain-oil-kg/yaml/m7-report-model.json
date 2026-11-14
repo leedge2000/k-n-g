@@ -1,0 +1,1954 @@
+{
+  "model_type": "REPORT",
+  "version": "2.1",
+  "domain": "粮油产业多维知识图谱",
+  "description": "七张固定查询报表；REP-01~REP-07 与 M2 的 Q-01~Q-07 严格一对一，图探索与段落回溯由 GQ-01~GQ-05 承接",
+  "query_reports": [
+    {
+      "id": "REP-01",
+      "name": "四类知识资源目录",
+      "alias": "knowledgeResourceCatalog",
+      "objectType": "STATISTICAL_QUERY",
+      "description": "汇总政策法规、农业经济指标数据、行业年鉴、全球农业情报与知识关系，按知识类别和状态统计资源量及最近更新时间",
+      "behaviorRef": "Q-01",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-POLICY-001",
+          "alias": "policy",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-INDVAL-001",
+          "alias": "indicatorValue",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-YEARBOOK-001",
+          "alias": "yearbook",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-INTEL-001",
+          "alias": "intel",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-RELATION-001",
+          "alias": "relation",
+          "primary": false
+        }
+      ],
+      "joins": [],
+      "parameters": [
+        {
+          "name": "knowledgeType",
+          "label": "知识类别",
+          "dataType": "Enum",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": null
+        },
+        {
+          "name": "status",
+          "label": "条目状态",
+          "dataType": "DictionaryRef",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": null
+        },
+        {
+          "name": "dateFrom",
+          "label": "开始时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "GE"
+          ],
+          "sourceField": null
+        },
+        {
+          "name": "dateTo",
+          "label": "结束时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": null
+        },
+        {
+          "name": "keyword",
+          "label": "关键词",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LIKE"
+          ],
+          "sourceField": null
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN '政策法规' WHEN indicatorValue.valueId IS NOT NULL THEN '农业经济' WHEN yearbook.recordId IS NOT NULL THEN '行业年鉴' WHEN intel.intelId IS NOT NULL THEN '全球农业情报' ELSE '知识关系' END",
+          "operator": "EQ",
+          "parameterRef": "knowledgeType",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.reviewStatus WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.status WHEN yearbook.recordId IS NOT NULL THEN yearbook.status WHEN intel.intelId IS NOT NULL THEN intel.status ELSE relation.status END",
+          "operator": "EQ",
+          "parameterRef": "status",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C03",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.updatedAt WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.updatedAt WHEN yearbook.recordId IS NOT NULL THEN yearbook.updatedAt WHEN intel.intelId IS NOT NULL THEN intel.updatedAt ELSE relation.updatedAt END",
+          "operator": "GE",
+          "parameterRef": "dateFrom",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C04",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.updatedAt WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.updatedAt WHEN yearbook.recordId IS NOT NULL THEN yearbook.updatedAt WHEN intel.intelId IS NOT NULL THEN intel.updatedAt ELSE relation.updatedAt END",
+          "operator": "LE",
+          "parameterRef": "dateTo",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C05",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.policyTitle WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.indicatorId WHEN yearbook.recordId IS NOT NULL THEN yearbook.yearbookName WHEN intel.intelId IS NOT NULL THEN intel.intelTitle ELSE relation.predicate END",
+          "operator": "LIKE",
+          "parameterRef": "keyword",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "knowledgeType",
+          "label": "知识类别",
+          "dataType": "String",
+          "sourceExpression": "CASE WHEN policy.policyId IS NOT NULL THEN '政策法规' WHEN indicatorValue.valueId IS NOT NULL THEN '农业经济' WHEN yearbook.recordId IS NOT NULL THEN '行业年鉴' WHEN intel.intelId IS NOT NULL THEN '全球农业情报' ELSE '知识关系' END",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "itemCount",
+          "label": "条目数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.policyId WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.valueId WHEN yearbook.recordId IS NOT NULL THEN yearbook.recordId WHEN intel.intelId IS NOT NULL THEN intel.intelId ELSE relation.relationId END",
+          "aggregateFunction": "COUNT",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "publishedCount",
+          "label": "已发布数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN (CASE WHEN policy.policyId IS NOT NULL THEN policy.reviewStatus WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.status WHEN yearbook.recordId IS NOT NULL THEN yearbook.status WHEN intel.intelId IS NOT NULL THEN intel.status ELSE relation.status END) = '已发布' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "pendingCount",
+          "label": "待审核数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN (CASE WHEN policy.policyId IS NOT NULL THEN policy.reviewStatus WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.status WHEN yearbook.recordId IS NOT NULL THEN yearbook.status WHEN intel.intelId IS NOT NULL THEN intel.status ELSE relation.status END) = '待审核' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "latestUpdatedAt",
+          "label": "最近更新时间",
+          "dataType": "DateTime",
+          "sourceExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.updatedAt WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.updatedAt WHEN yearbook.recordId IS NOT NULL THEN yearbook.updatedAt WHEN intel.intelId IS NOT NULL THEN intel.updatedAt ELSE relation.updatedAt END",
+          "aggregateFunction": "MAX",
+          "format": "yyyy-MM-dd HH:mm:ss",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        }
+      ],
+      "groupBy": [
+        "CASE WHEN policy.policyId IS NOT NULL THEN '政策法规' WHEN indicatorValue.valueId IS NOT NULL THEN '农业经济' WHEN yearbook.recordId IS NOT NULL THEN '行业年鉴' WHEN intel.intelId IS NOT NULL THEN '全球农业情报' ELSE '知识关系' END"
+      ],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "itemCount",
+          "direction": "DESC"
+        },
+        {
+          "expression": "knowledgeType",
+          "direction": "ASC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 20,
+        "maxPageSize": 100
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "WITH resource AS (\n  SELECT '政策法规' AS knowledge_type, policyId AS resource_id, policyTitle AS title, reviewStatus AS status, updatedAt FROM Policy\n  UNION ALL SELECT '农业经济', valueId, indicatorId, status, updatedAt FROM IvdData\n  UNION ALL SELECT '行业年鉴', recordId, yearbookName, status, updatedAt FROM YrbYearbook\n  UNION ALL SELECT '全球农业情报', intelId, intelTitle, status, updatedAt FROM Intel\n  UNION ALL SELECT '知识关系', relationId, predicate, status, updatedAt FROM Relation\n)\nSELECT knowledge_type AS knowledgeType, COUNT(resource_id) AS itemCount,\n       SUM(CASE WHEN status = '已发布' THEN 1 ELSE 0 END) AS publishedCount,\n       SUM(CASE WHEN status = '待审核' THEN 1 ELSE 0 END) AS pendingCount,\n       MAX(updatedAt) AS latestUpdatedAt\nFROM resource\nWHERE (:knowledgeType IS NULL OR knowledge_type = :knowledgeType)\n  AND (:status IS NULL OR status = :status)\n  AND (:dateFrom IS NULL OR updatedAt >= :dateFrom)\n  AND (:dateTo IS NULL OR updatedAt <= :dateTo)\n  AND (:keyword IS NULL OR title LIKE '%' || :keyword || '%')\nGROUP BY knowledge_type\nORDER BY itemCount DESC, knowledge_type ASC\n",
+        "parameterBindings": [
+          {
+            "parameter": "knowledgeType",
+            "placeholder": ":knowledgeType"
+          },
+          {
+            "parameter": "status",
+            "placeholder": ":status"
+          },
+          {
+            "parameter": "dateFrom",
+            "placeholder": ":dateFrom"
+          },
+          {
+            "parameter": "dateTo",
+            "placeholder": ":dateTo"
+          },
+          {
+            "parameter": "keyword",
+            "placeholder": ":keyword"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "knowledgeType",
+            "resultColumn": "knowledgeType"
+          },
+          {
+            "sqlColumn": "itemCount",
+            "resultColumn": "itemCount"
+          },
+          {
+            "sqlColumn": "publishedCount",
+            "resultColumn": "publishedCount"
+          },
+          {
+            "sqlColumn": "pendingCount",
+            "resultColumn": "pendingCount"
+          },
+          {
+            "sqlColumn": "latestUpdatedAt",
+            "resultColumn": "latestUpdatedAt"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-02",
+      "name": "指标时序对比",
+      "alias": "indicatorTimeSeriesComparison",
+      "objectType": "LIST_QUERY",
+      "description": "按指标、地区、品种与期间输出已发布指标值；同比仅在同指标、同地区、同品种、同期间类型且上年同期存在时计算，否则为空",
+      "behaviorRef": "Q-02",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-INDVAL-001",
+          "alias": "value",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-INDVAL-001",
+          "alias": "previousYear",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-INDICATOR-001",
+          "alias": "indicator",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-REGION-001",
+          "alias": "region",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-COMMODITY-001",
+          "alias": "commodity",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-SOURCE-001",
+          "alias": "source",
+          "primary": false
+        }
+      ],
+      "joins": [
+        {
+          "joinId": "J01",
+          "joinType": "INNER",
+          "leftSource": "value",
+          "rightSource": "indicator",
+          "relationRef": null,
+          "conditionExpression": "value.indicatorId == indicator.indicatorId"
+        },
+        {
+          "joinId": "J02",
+          "joinType": "INNER",
+          "leftSource": "value",
+          "rightSource": "region",
+          "relationRef": null,
+          "conditionExpression": "value.regionId == region.regionId"
+        },
+        {
+          "joinId": "J03",
+          "joinType": "LEFT",
+          "leftSource": "value",
+          "rightSource": "commodity",
+          "relationRef": null,
+          "conditionExpression": "value.commodityId == commodity.commodityId"
+        },
+        {
+          "joinId": "J04",
+          "joinType": "INNER",
+          "leftSource": "value",
+          "rightSource": "source",
+          "relationRef": null,
+          "conditionExpression": "value.sourceDocId == source.docId"
+        },
+        {
+          "joinId": "J05",
+          "joinType": "LEFT",
+          "leftSource": "value",
+          "rightSource": "previousYear",
+          "relationRef": null,
+          "conditionExpression": "previousYear.indicatorId == value.indicatorId AND previousYear.regionId == value.regionId AND COALESCE(previousYear.commodityId, '') == COALESCE(value.commodityId, '') AND previousYear.periodType == value.periodType AND previousYear.period == CAST(CAST(SUBSTR(value.period, 1, 4) AS INTEGER) - 1 AS TEXT) || SUBSTR(value.period, 5) AND previousYear.status == '已发布'"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "indicatorId",
+          "label": "指标",
+          "dataType": "String",
+          "required": true,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "value.indicatorId"
+        },
+        {
+          "name": "regionId",
+          "label": "地区",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "value.regionId"
+        },
+        {
+          "name": "commodityId",
+          "label": "品种",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "value.commodityId"
+        },
+        {
+          "name": "periodFrom",
+          "label": "开始期间",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "GE"
+          ],
+          "sourceField": "value.period"
+        },
+        {
+          "name": "periodTo",
+          "label": "结束期间",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": "value.period"
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "value.indicatorId",
+          "operator": "EQ",
+          "parameterRef": "indicatorId",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": false
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "value.regionId",
+          "operator": "EQ",
+          "parameterRef": "regionId",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C03",
+          "leftExpression": "value.commodityId",
+          "operator": "EQ",
+          "parameterRef": "commodityId",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C04",
+          "leftExpression": "value.period",
+          "operator": "GE",
+          "parameterRef": "periodFrom",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C05",
+          "leftExpression": "value.period",
+          "operator": "LE",
+          "parameterRef": "periodTo",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C06",
+          "leftExpression": "value.status",
+          "operator": "EQ",
+          "parameterRef": null,
+          "fixedValue": "已发布",
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": false
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "indicatorName",
+          "label": "指标名称",
+          "dataType": "String",
+          "sourceExpression": "indicator.indicatorName",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "regionName",
+          "label": "地区",
+          "dataType": "String",
+          "sourceExpression": "region.regionName",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "commodityName",
+          "label": "品种",
+          "dataType": "String",
+          "sourceExpression": "commodity.commodityName",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "period",
+          "label": "期间",
+          "dataType": "String",
+          "sourceExpression": "value.period",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "value",
+          "label": "数值",
+          "dataType": "Decimal",
+          "sourceExpression": "value.value",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "unit",
+          "label": "单位",
+          "dataType": "String",
+          "sourceExpression": "value.unit",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": true,
+          "visible": true,
+          "sortable": false
+        },
+        {
+          "name": "yoyRate",
+          "label": "同比",
+          "dataType": "Decimal",
+          "sourceExpression": "(value.value / NULLIF(previousYear.value",
+          "0)) - 1": null,
+          "aggregateFunction": "NONE",
+          "format": "percentage",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "sourceTitle",
+          "label": "来源文档",
+          "dataType": "String",
+          "sourceExpression": "source.title",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "segmentId",
+          "label": "来源段落",
+          "dataType": "String",
+          "sourceExpression": "value.segmentId",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": false
+        }
+      ],
+      "groupBy": [],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "value.period",
+          "direction": "ASC"
+        },
+        {
+          "expression": "region.regionName",
+          "direction": "ASC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 50,
+        "maxPageSize": 200
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "SELECT i.indicatorName, r.regionName, c.commodityName, v.period, v.value, v.unit,\n       CASE WHEN py.value IS NULL OR py.value = 0 THEN NULL ELSE v.value / py.value - 1 END AS yoyRate,\n       d.title AS sourceTitle, v.segmentId\nFROM IvdData v\nJOIN Indicator i ON v.indicatorId = i.indicatorId\nJOIN Region r ON v.regionId = r.regionId\nLEFT JOIN CmdCommodity c ON v.commodityId = c.commodityId\nJOIN SourceDoc d ON v.sourceDocId = d.docId\nLEFT JOIN IvdData py ON py.indicatorId = v.indicatorId AND py.regionId = v.regionId\n  AND COALESCE(py.commodityId, '') = COALESCE(v.commodityId, '')\n  AND py.periodType = v.periodType\n  AND py.period = CAST(CAST(substr(v.period, 1, 4) AS INTEGER) - 1 AS TEXT) || substr(v.period, 5)\n  AND py.status = '已发布'\nWHERE v.indicatorId = :indicatorId\n  AND (:regionId IS NULL OR v.regionId = :regionId)\n  AND (:commodityId IS NULL OR v.commodityId = :commodityId)\n  AND (:periodFrom IS NULL OR v.period >= :periodFrom)\n  AND (:periodTo IS NULL OR v.period <= :periodTo)\n  AND v.status = '已发布'\nORDER BY v.period ASC, r.regionName ASC\n",
+        "parameterBindings": [
+          {
+            "parameter": "indicatorId",
+            "placeholder": ":indicatorId"
+          },
+          {
+            "parameter": "regionId",
+            "placeholder": ":regionId"
+          },
+          {
+            "parameter": "commodityId",
+            "placeholder": ":commodityId"
+          },
+          {
+            "parameter": "periodFrom",
+            "placeholder": ":periodFrom"
+          },
+          {
+            "parameter": "periodTo",
+            "placeholder": ":periodTo"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "indicatorName",
+            "resultColumn": "indicatorName"
+          },
+          {
+            "sqlColumn": "regionName",
+            "resultColumn": "regionName"
+          },
+          {
+            "sqlColumn": "commodityName",
+            "resultColumn": "commodityName"
+          },
+          {
+            "sqlColumn": "period",
+            "resultColumn": "period"
+          },
+          {
+            "sqlColumn": "value",
+            "resultColumn": "value"
+          },
+          {
+            "sqlColumn": "unit",
+            "resultColumn": "unit"
+          },
+          {
+            "sqlColumn": "yoyRate",
+            "resultColumn": "yoyRate"
+          },
+          {
+            "sqlColumn": "sourceTitle",
+            "resultColumn": "sourceTitle"
+          },
+          {
+            "sqlColumn": "segmentId",
+            "resultColumn": "segmentId"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-03",
+      "name": "来源可追溯抽查",
+      "alias": "sourceTraceabilitySample",
+      "objectType": "LIST_QUERY",
+      "description": "从政策法规中按知识类别随机抽取条目，核对来源文档、段落页码、章节、字符区间和段落摘要",
+      "behaviorRef": "Q-03",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-POLICY-001",
+          "alias": "policy",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-SOURCE-001",
+          "alias": "source",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-SOURCE-001",
+          "alias": "segment",
+          "entityPath": "Segment",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-TAXONOMY-001",
+          "alias": "category",
+          "primary": false
+        }
+      ],
+      "joins": [
+        {
+          "joinId": "J01",
+          "joinType": "INNER",
+          "leftSource": "policy",
+          "rightSource": "source",
+          "relationRef": null,
+          "conditionExpression": "policy.sourceDocId == source.docId"
+        },
+        {
+          "joinId": "J02",
+          "joinType": "INNER",
+          "leftSource": "policy",
+          "rightSource": "segment",
+          "relationRef": null,
+          "conditionExpression": "policy.sourceDocId == segment.docId AND policy.segmentId == segment.segmentId"
+        },
+        {
+          "joinId": "J03",
+          "joinType": "INNER",
+          "leftSource": "policy",
+          "rightSource": "category",
+          "relationRef": null,
+          "conditionExpression": "policy.knowledgeCategoryId == category.categoryId"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "rootCategory",
+          "label": "知识大类",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "category.rootCategory"
+        },
+        {
+          "name": "sampleSize",
+          "label": "抽样数量",
+          "dataType": "Integer",
+          "required": true,
+          "defaultValue": 20,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": null
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "category.rootCategory",
+          "operator": "EQ",
+          "parameterRef": "rootCategory",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "policy.reviewStatus",
+          "operator": "EQ",
+          "parameterRef": null,
+          "fixedValue": "已发布",
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": false
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "policyId",
+          "label": "条目编号",
+          "dataType": "String",
+          "sourceExpression": "policy.policyId",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "policyTitle",
+          "label": "条目标题",
+          "dataType": "String",
+          "sourceExpression": "policy.policyTitle",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "documentTitle",
+          "label": "文档标题",
+          "dataType": "String",
+          "sourceExpression": "source.title",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "pageNo",
+          "label": "页码",
+          "dataType": "Integer",
+          "sourceExpression": "segment.pageNo",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "chapterPath",
+          "label": "章节",
+          "dataType": "String",
+          "sourceExpression": "segment.chapterPath",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": true,
+          "visible": true,
+          "sortable": false
+        },
+        {
+          "name": "charRange",
+          "label": "字符区间",
+          "dataType": "String",
+          "sourceExpression": "segment.charStart + '-' + segment.charEnd",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": false
+        },
+        {
+          "name": "segmentSummary",
+          "label": "段落摘要",
+          "dataType": "String",
+          "sourceExpression": "segment.segmentText",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": false
+        }
+      ],
+      "groupBy": [],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "RANDOM()",
+          "direction": "ASC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 20,
+        "maxPageSize": 100
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "SELECT p.policyId, p.policyTitle, d.title AS documentTitle, s.pageNo, s.chapterPath,\n       s.charStart || '-' || s.charEnd AS charRange, substr(s.segmentText, 1, 300) AS segmentSummary\nFROM Policy p\nJOIN SourceDoc d ON p.sourceDocId = d.docId\nJOIN SourceDoc_Segment s ON p.sourceDocId = s.docId AND p.segmentId = s.segmentId\nJOIN KtcCategory k ON p.knowledgeCategoryId = k.categoryId\nWHERE (:rootCategory IS NULL OR k.rootCategory = :rootCategory) AND p.reviewStatus = '已发布'\nORDER BY RANDOM() LIMIT :sampleSize\n",
+        "parameterBindings": [
+          {
+            "parameter": "rootCategory",
+            "placeholder": ":rootCategory"
+          },
+          {
+            "parameter": "sampleSize",
+            "placeholder": ":sampleSize"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "policyId",
+            "resultColumn": "policyId"
+          },
+          {
+            "sqlColumn": "policyTitle",
+            "resultColumn": "policyTitle"
+          },
+          {
+            "sqlColumn": "documentTitle",
+            "resultColumn": "documentTitle"
+          },
+          {
+            "sqlColumn": "pageNo",
+            "resultColumn": "pageNo"
+          },
+          {
+            "sqlColumn": "chapterPath",
+            "resultColumn": "chapterPath"
+          },
+          {
+            "sqlColumn": "charRange",
+            "resultColumn": "charRange"
+          },
+          {
+            "sqlColumn": "segmentSummary",
+            "resultColumn": "segmentSummary"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-04",
+      "name": "质量治理看板",
+      "alias": "qualityGovernanceBoard",
+      "objectType": "STATISTICAL_QUERY",
+      "description": "按问题类型统计待处理、已融合与冲突问题数量及平均相似度，支持按处理状态和时间过滤明细范围",
+      "behaviorRef": "Q-04",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-QUALITY-001",
+          "alias": "quality",
+          "primary": true
+        }
+      ],
+      "joins": [],
+      "parameters": [
+        {
+          "name": "issueType",
+          "label": "问题类型",
+          "dataType": "DictionaryRef",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "quality.issueType"
+        },
+        {
+          "name": "handleStatus",
+          "label": "处理状态",
+          "dataType": "DictionaryRef",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "quality.handleStatus"
+        },
+        {
+          "name": "handledFrom",
+          "label": "处理开始时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "GE"
+          ],
+          "sourceField": "quality.handledAt"
+        },
+        {
+          "name": "handledTo",
+          "label": "处理结束时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": "quality.handledAt"
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "quality.issueType",
+          "operator": "EQ",
+          "parameterRef": "issueType",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "quality.handleStatus",
+          "operator": "EQ",
+          "parameterRef": "handleStatus",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C03",
+          "leftExpression": "quality.handledAt",
+          "operator": "GE",
+          "parameterRef": "handledFrom",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C04",
+          "leftExpression": "quality.handledAt",
+          "operator": "LE",
+          "parameterRef": "handledTo",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "issueType",
+          "label": "问题类型",
+          "dataType": "String",
+          "sourceExpression": "quality.issueType",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "pendingCount",
+          "label": "待处理数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN quality.handleStatus = '待处理' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "mergedCount",
+          "label": "已融合数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN quality.handleStatus = '已融合' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "conflictCount",
+          "label": "冲突数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN quality.issueType = '属性冲突' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "averageSimilarity",
+          "label": "平均相似度",
+          "dataType": "Decimal",
+          "sourceExpression": "quality.similarity",
+          "aggregateFunction": "AVG",
+          "format": "0.0000",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        }
+      ],
+      "groupBy": [
+        "quality.issueType"
+      ],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "pendingCount",
+          "direction": "DESC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 20,
+        "maxPageSize": 100
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "SELECT issueType,\n       SUM(CASE WHEN handleStatus = '待处理' THEN 1 ELSE 0 END) AS pendingCount,\n       SUM(CASE WHEN handleStatus = '已融合' THEN 1 ELSE 0 END) AS mergedCount,\n       SUM(CASE WHEN issueType = '属性冲突' THEN 1 ELSE 0 END) AS conflictCount,\n       AVG(similarity) AS averageSimilarity\nFROM QisRecord\nWHERE (:issueType IS NULL OR issueType = :issueType)\n  AND (:handleStatus IS NULL OR handleStatus = :handleStatus)\n  AND (:handledFrom IS NULL OR handledAt >= :handledFrom)\n  AND (:handledTo IS NULL OR handledAt <= :handledTo)\nGROUP BY issueType ORDER BY pendingCount DESC\n",
+        "parameterBindings": [
+          {
+            "parameter": "issueType",
+            "placeholder": ":issueType"
+          },
+          {
+            "parameter": "handleStatus",
+            "placeholder": ":handleStatus"
+          },
+          {
+            "parameter": "handledFrom",
+            "placeholder": ":handledFrom"
+          },
+          {
+            "parameter": "handledTo",
+            "placeholder": ":handledTo"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "issueType",
+            "resultColumn": "issueType"
+          },
+          {
+            "sqlColumn": "pendingCount",
+            "resultColumn": "pendingCount"
+          },
+          {
+            "sqlColumn": "mergedCount",
+            "resultColumn": "mergedCount"
+          },
+          {
+            "sqlColumn": "conflictCount",
+            "resultColumn": "conflictCount"
+          },
+          {
+            "sqlColumn": "averageSimilarity",
+            "resultColumn": "averageSimilarity"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-05",
+      "name": "本体概念覆盖统计",
+      "alias": "ontologyConceptCoverage",
+      "objectType": "STATISTICAL_QUERY",
+      "description": "按本体来源与概念类型统计概念数、同义词数、已发布关系数和按已发布关系数加权的平均置信度",
+      "behaviorRef": "Q-05",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-CONCEPT-001",
+          "alias": "concept",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-CONCEPT-001",
+          "alias": "synonym",
+          "entityPath": "Synonym",
+          "primary": false,
+          "preAggregation": {
+            "groupBy": [
+              "conceptId"
+            ],
+            "columns": [
+              {
+                "name": "synonymCount",
+                "sourceExpression": "synonymId",
+                "aggregateFunction": "COUNT"
+              }
+            ]
+          }
+        },
+        {
+          "objectRef": "AGG-RELATION-001",
+          "alias": "subjectRelation",
+          "primary": false,
+          "preAggregation": {
+            "groupBy": [
+              "subjectEntityType",
+              "subjectEntityId"
+            ],
+            "columns": [
+              {
+                "name": "relationCount",
+                "sourceExpression": "CASE WHEN status = '已发布' THEN relationId ELSE NULL END",
+                "aggregateFunction": "COUNT_DISTINCT"
+              },
+              {
+                "name": "confidenceSum",
+                "sourceExpression": "CASE WHEN status = '已发布' THEN confidence ELSE 0 END",
+                "aggregateFunction": "SUM"
+              }
+            ]
+          }
+        },
+        {
+          "objectRef": "AGG-RELATION-001",
+          "alias": "objectRelation",
+          "primary": false,
+          "preAggregation": {
+            "groupBy": [
+              "objectEntityType",
+              "objectEntityId"
+            ],
+            "columns": [
+              {
+                "name": "relationCount",
+                "sourceExpression": "CASE WHEN status = '已发布' THEN relationId ELSE NULL END",
+                "aggregateFunction": "COUNT_DISTINCT"
+              },
+              {
+                "name": "confidenceSum",
+                "sourceExpression": "CASE WHEN status = '已发布' THEN confidence ELSE 0 END",
+                "aggregateFunction": "SUM"
+              }
+            ]
+          }
+        }
+      ],
+      "joins": [
+        {
+          "joinId": "J01",
+          "joinType": "LEFT",
+          "leftSource": "concept",
+          "rightSource": "synonym",
+          "relationRef": null,
+          "conditionExpression": "concept.conceptId == synonym.conceptId"
+        },
+        {
+          "joinId": "J02",
+          "joinType": "LEFT",
+          "leftSource": "concept",
+          "rightSource": "subjectRelation",
+          "relationRef": null,
+          "conditionExpression": "concept.conceptId == subjectRelation.subjectEntityId AND subjectRelation.subjectEntityType == '本体概念'"
+        },
+        {
+          "joinId": "J03",
+          "joinType": "LEFT",
+          "leftSource": "concept",
+          "rightSource": "objectRelation",
+          "relationRef": null,
+          "conditionExpression": "concept.conceptId == objectRelation.objectEntityId AND objectRelation.objectEntityType == '本体概念'"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "sourceOntology",
+          "label": "本体来源",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "concept.sourceOntology"
+        },
+        {
+          "name": "conceptType",
+          "label": "概念类型",
+          "dataType": "DictionaryRef",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "concept.conceptType"
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "concept.sourceOntology",
+          "operator": "EQ",
+          "parameterRef": "sourceOntology",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "concept.conceptType",
+          "operator": "EQ",
+          "parameterRef": "conceptType",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "sourceOntology",
+          "label": "本体来源",
+          "dataType": "String",
+          "sourceExpression": "concept.sourceOntology",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "conceptType",
+          "label": "概念类型",
+          "dataType": "String",
+          "sourceExpression": "concept.conceptType",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "conceptCount",
+          "label": "概念数",
+          "dataType": "Integer",
+          "sourceExpression": "concept.conceptId",
+          "aggregateFunction": "COUNT_DISTINCT",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "synonymCount",
+          "label": "同义词数",
+          "dataType": "Integer",
+          "sourceExpression": "COALESCE(synonym.synonymCount",
+          "0)": null,
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "relationCount",
+          "label": "关系数",
+          "dataType": "Integer",
+          "sourceExpression": "COALESCE(subjectRelation.relationCount",
+          "0) + COALESCE(objectRelation.relationCount": null,
+          "0)": null,
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "averageConfidence",
+          "label": "平均置信度",
+          "dataType": "Decimal",
+          "sourceExpression": "SUM(COALESCE(subjectRelation.confidenceSum",
+          "0) + COALESCE(objectRelation.confidenceSum": null,
+          "0)) / NULLIF(SUM(COALESCE(subjectRelation.relationCount": null,
+          "0) + COALESCE(objectRelation.relationCount": null,
+          "0))": null,
+          "0)": null,
+          "aggregateFunction": "NONE",
+          "format": "0.0000",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        }
+      ],
+      "groupBy": [
+        "concept.sourceOntology",
+        "concept.conceptType"
+      ],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "conceptCount",
+          "direction": "DESC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 20,
+        "maxPageSize": 100
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "WITH synonym_agg AS (\n  SELECT conceptId, COUNT(synonymId) AS synonymCount FROM Concept_Synonym GROUP BY conceptId\n), subject_relation AS (\n  SELECT subjectEntityType, subjectEntityId,\n         COUNT(DISTINCT CASE WHEN status = '已发布' THEN relationId END) AS relationCount,\n         SUM(CASE WHEN status = '已发布' THEN confidence ELSE 0 END) AS confidenceSum\n  FROM Relation GROUP BY subjectEntityType, subjectEntityId\n), object_relation AS (\n  SELECT objectEntityType, objectEntityId,\n         COUNT(DISTINCT CASE WHEN status = '已发布' THEN relationId END) AS relationCount,\n         SUM(CASE WHEN status = '已发布' THEN confidence ELSE 0 END) AS confidenceSum\n  FROM Relation GROUP BY objectEntityType, objectEntityId\n)\nSELECT c.sourceOntology, c.conceptType, COUNT(DISTINCT c.conceptId) AS conceptCount,\n       COALESCE(SUM(cs.synonymCount), 0) AS synonymCount,\n       SUM(COALESCE(sr.relationCount, 0) + COALESCE(orr.relationCount, 0)) AS relationCount,\n       SUM(COALESCE(sr.confidenceSum, 0) + COALESCE(orr.confidenceSum, 0)) /\n         NULLIF(SUM(COALESCE(sr.relationCount, 0) + COALESCE(orr.relationCount, 0)), 0) AS averageConfidence\nFROM Concept c\nLEFT JOIN synonym_agg cs ON c.conceptId = cs.conceptId\nLEFT JOIN subject_relation sr ON c.conceptId = sr.subjectEntityId AND sr.subjectEntityType = '本体概念'\nLEFT JOIN object_relation orr ON c.conceptId = orr.objectEntityId AND orr.objectEntityType = '本体概念'\nWHERE (:sourceOntology IS NULL OR c.sourceOntology = :sourceOntology)\n  AND (:conceptType IS NULL OR c.conceptType = :conceptType)\nGROUP BY c.sourceOntology, c.conceptType ORDER BY conceptCount DESC\n",
+        "parameterBindings": [
+          {
+            "parameter": "sourceOntology",
+            "placeholder": ":sourceOntology"
+          },
+          {
+            "parameter": "conceptType",
+            "placeholder": ":conceptType"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "sourceOntology",
+            "resultColumn": "sourceOntology"
+          },
+          {
+            "sqlColumn": "conceptType",
+            "resultColumn": "conceptType"
+          },
+          {
+            "sqlColumn": "conceptCount",
+            "resultColumn": "conceptCount"
+          },
+          {
+            "sqlColumn": "synonymCount",
+            "resultColumn": "synonymCount"
+          },
+          {
+            "sqlColumn": "relationCount",
+            "resultColumn": "relationCount"
+          },
+          {
+            "sqlColumn": "averageConfidence",
+            "resultColumn": "averageConfidence"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-06",
+      "name": "采集运行监控",
+      "alias": "crawlRunMonitoring",
+      "objectType": "STATISTICAL_QUERY",
+      "description": "按采集源统计最近执行时间、成功失败次数、新增文档数、去重跳过数与平均耗时",
+      "behaviorRef": "Q-06",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-CRAWL-001",
+          "alias": "source",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-CRAWL-001",
+          "alias": "run",
+          "entityPath": "CrawlRun",
+          "primary": false
+        }
+      ],
+      "joins": [
+        {
+          "joinId": "J01",
+          "joinType": "LEFT",
+          "leftSource": "source",
+          "rightSource": "run",
+          "relationRef": null,
+          "conditionExpression": "source.crawlSourceId == run.crawlSourceId"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "crawlSourceId",
+          "label": "采集源",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "source.crawlSourceId"
+        },
+        {
+          "name": "runStatus",
+          "label": "运行状态",
+          "dataType": "DictionaryRef",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "run.runStatus"
+        },
+        {
+          "name": "startedFrom",
+          "label": "开始时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "GE"
+          ],
+          "sourceField": "run.startedAt"
+        },
+        {
+          "name": "startedTo",
+          "label": "结束时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": "run.startedAt"
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "source.crawlSourceId",
+          "operator": "EQ",
+          "parameterRef": "crawlSourceId",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "run.runStatus",
+          "operator": "EQ",
+          "parameterRef": "runStatus",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C03",
+          "leftExpression": "run.startedAt",
+          "operator": "GE",
+          "parameterRef": "startedFrom",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C04",
+          "leftExpression": "run.startedAt",
+          "operator": "LE",
+          "parameterRef": "startedTo",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "sourceName",
+          "label": "采集源名称",
+          "dataType": "String",
+          "sourceExpression": "source.sourceName",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "lastRunAt",
+          "label": "最近执行时间",
+          "dataType": "DateTime",
+          "sourceExpression": "run.startedAt",
+          "aggregateFunction": "MAX",
+          "format": "yyyy-MM-dd HH:mm:ss",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "successCount",
+          "label": "成功次数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN run.runStatus = '成功' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "failureCount",
+          "label": "失败次数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN run.runStatus = '失败' THEN 1 ELSE 0 END",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "newDocumentCount",
+          "label": "新增文档数",
+          "dataType": "Integer",
+          "sourceExpression": "run.newDocCount",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "duplicateSkipCount",
+          "label": "去重跳过数",
+          "dataType": "Integer",
+          "sourceExpression": "run.duplicateCount",
+          "aggregateFunction": "SUM",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "averageDurationMs",
+          "label": "平均耗时毫秒",
+          "dataType": "Decimal",
+          "sourceExpression": "run.durationMs",
+          "aggregateFunction": "AVG",
+          "format": "0.0",
+          "nullable": true,
+          "visible": true,
+          "sortable": true
+        }
+      ],
+      "groupBy": [
+        "source.crawlSourceId",
+        "source.sourceName"
+      ],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "lastRunAt",
+          "direction": "DESC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 20,
+        "maxPageSize": 100
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "SELECT c.sourceName, MAX(r.startedAt) AS lastRunAt,\n       SUM(CASE WHEN r.runStatus = '成功' THEN 1 ELSE 0 END) AS successCount,\n       SUM(CASE WHEN r.runStatus = '失败' THEN 1 ELSE 0 END) AS failureCount,\n       COALESCE(SUM(r.newDocCount), 0) AS newDocumentCount,\n       COALESCE(SUM(r.duplicateCount), 0) AS duplicateSkipCount,\n       AVG(r.durationMs) AS averageDurationMs\nFROM CrsSource c LEFT JOIN CrsSource_CrawlRun r ON c.crawlSourceId = r.crawlSourceId\nWHERE (:crawlSourceId IS NULL OR c.crawlSourceId = :crawlSourceId)\n  AND (:runStatus IS NULL OR r.runStatus = :runStatus)\n  AND (:startedFrom IS NULL OR r.startedAt >= :startedFrom)\n  AND (:startedTo IS NULL OR r.startedAt <= :startedTo)\nGROUP BY c.crawlSourceId, c.sourceName ORDER BY lastRunAt DESC\n",
+        "parameterBindings": [
+          {
+            "parameter": "crawlSourceId",
+            "placeholder": ":crawlSourceId"
+          },
+          {
+            "parameter": "runStatus",
+            "placeholder": ":runStatus"
+          },
+          {
+            "parameter": "startedFrom",
+            "placeholder": ":startedFrom"
+          },
+          {
+            "parameter": "startedTo",
+            "placeholder": ":startedTo"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "sourceName",
+            "resultColumn": "sourceName"
+          },
+          {
+            "sqlColumn": "lastRunAt",
+            "resultColumn": "lastRunAt"
+          },
+          {
+            "sqlColumn": "successCount",
+            "resultColumn": "successCount"
+          },
+          {
+            "sqlColumn": "failureCount",
+            "resultColumn": "failureCount"
+          },
+          {
+            "sqlColumn": "newDocumentCount",
+            "resultColumn": "newDocumentCount"
+          },
+          {
+            "sqlColumn": "duplicateSkipCount",
+            "resultColumn": "duplicateSkipCount"
+          },
+          {
+            "sqlColumn": "averageDurationMs",
+            "resultColumn": "averageDurationMs"
+          }
+        ]
+      },
+      "version": "2.1"
+    },
+    {
+      "id": "REP-07",
+      "name": "知识体系覆盖与缺口",
+      "alias": "knowledgeCategoryCoverage",
+      "objectType": "STATISTICAL_QUERY",
+      "description": "按分类节点统计四类知识条目的直接与含子类数量、已发布数量及空白节点标识；四类条目按 UNION 语义合并，递归分类闭包由参考 SQL 实现，时间范围按条目更新时间过滤",
+      "behaviorRef": "Q-07",
+      "sourceObjects": [
+        {
+          "objectRef": "AGG-TAXONOMY-001",
+          "alias": "category",
+          "primary": true
+        },
+        {
+          "objectRef": "AGG-TAXONOMY-001",
+          "alias": "descendantCategory",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-POLICY-001",
+          "alias": "policy",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-INDVAL-001",
+          "alias": "indicatorValue",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-YEARBOOK-001",
+          "alias": "yearbook",
+          "primary": false
+        },
+        {
+          "objectRef": "AGG-INTEL-001",
+          "alias": "intel",
+          "primary": false
+        }
+      ],
+      "joins": [
+        {
+          "joinId": "J01",
+          "joinType": "LEFT",
+          "leftSource": "category",
+          "rightSource": "descendantCategory",
+          "relationRef": null,
+          "conditionExpression": "descendantCategory.categoryPath == category.categoryPath OR descendantCategory.categoryPath LIKE category.categoryPath + '/%'"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "rootCategory",
+          "label": "归属大类",
+          "dataType": "String",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "category.rootCategory"
+        },
+        {
+          "name": "level",
+          "label": "分类层级",
+          "dataType": "Integer",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "EQ"
+          ],
+          "sourceField": "category.level"
+        },
+        {
+          "name": "dateFrom",
+          "label": "开始时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "GE"
+          ],
+          "sourceField": null
+        },
+        {
+          "name": "dateTo",
+          "label": "结束时间",
+          "dataType": "DateTime",
+          "required": false,
+          "defaultValue": null,
+          "allowedOperators": [
+            "LE"
+          ],
+          "sourceField": null
+        }
+      ],
+      "conditions": [
+        {
+          "conditionId": "C01",
+          "leftExpression": "category.rootCategory",
+          "operator": "EQ",
+          "parameterRef": "rootCategory",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C02",
+          "leftExpression": "category.level",
+          "operator": "EQ",
+          "parameterRef": "level",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C03",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.updatedAt WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.updatedAt WHEN yearbook.recordId IS NOT NULL THEN yearbook.updatedAt ELSE intel.updatedAt END",
+          "operator": "GE",
+          "parameterRef": "dateFrom",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        },
+        {
+          "conditionId": "C04",
+          "leftExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.updatedAt WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.updatedAt WHEN yearbook.recordId IS NOT NULL THEN yearbook.updatedAt ELSE intel.updatedAt END",
+          "operator": "LE",
+          "parameterRef": "dateTo",
+          "fixedValue": null,
+          "logicalConnector": "AND",
+          "group": "BASE",
+          "skipWhenParameterEmpty": true
+        }
+      ],
+      "resultColumns": [
+        {
+          "name": "categoryCode",
+          "label": "分类编码",
+          "dataType": "String",
+          "sourceExpression": "category.categoryCode",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "categoryPath",
+          "label": "分类路径",
+          "dataType": "String",
+          "sourceExpression": "category.categoryPath",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "directItemCount",
+          "label": "直接条目数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN descendantCategory.categoryId = category.categoryId THEN CASE WHEN policy.policyId IS NOT NULL THEN policy.policyId WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.valueId WHEN yearbook.recordId IS NOT NULL THEN yearbook.recordId ELSE intel.intelId END ELSE NULL END",
+          "aggregateFunction": "COUNT_DISTINCT",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "descendantItemCount",
+          "label": "含子类条目数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN policy.policyId IS NOT NULL THEN policy.policyId WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.valueId WHEN yearbook.recordId IS NOT NULL THEN yearbook.recordId ELSE intel.intelId END",
+          "aggregateFunction": "COUNT_DISTINCT",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "publishedCount",
+          "label": "已发布数",
+          "dataType": "Integer",
+          "sourceExpression": "CASE WHEN (CASE WHEN policy.policyId IS NOT NULL THEN policy.reviewStatus WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.status WHEN yearbook.recordId IS NOT NULL THEN yearbook.status ELSE intel.status END) = '已发布' THEN CASE WHEN policy.policyId IS NOT NULL THEN policy.policyId WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.valueId WHEN yearbook.recordId IS NOT NULL THEN yearbook.recordId ELSE intel.intelId END ELSE NULL END",
+          "aggregateFunction": "COUNT_DISTINCT",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        },
+        {
+          "name": "emptyNodeFlag",
+          "label": "空白节点标识",
+          "dataType": "Boolean",
+          "sourceExpression": "COUNT(DISTINCT CASE WHEN policy.policyId IS NOT NULL THEN policy.policyId WHEN indicatorValue.valueId IS NOT NULL THEN indicatorValue.valueId WHEN yearbook.recordId IS NOT NULL THEN yearbook.recordId ELSE intel.intelId END) = 0",
+          "aggregateFunction": "NONE",
+          "format": null,
+          "nullable": false,
+          "visible": true,
+          "sortable": true
+        }
+      ],
+      "groupBy": [
+        "category.categoryId",
+        "category.categoryCode",
+        "category.categoryPath"
+      ],
+      "having": [],
+      "orderBy": [
+        {
+          "expression": "category.categoryPath",
+          "direction": "ASC"
+        }
+      ],
+      "pagination": {
+        "enabled": true,
+        "defaultPageSize": 50,
+        "maxPageSize": 200
+      },
+      "reportOptions": null,
+      "referenceSql": {
+        "dialect": "SQLite",
+        "sql": "WITH RECURSIVE category_tree(categoryId, descendantId) AS (\n  SELECT categoryId, categoryId FROM KtcCategory\n  UNION ALL\n  SELECT ct.categoryId, c.categoryId FROM category_tree ct JOIN KtcCategory c ON c.parentCategoryId = ct.descendantId\n), entry AS (\n  SELECT knowledgeCategoryId, 'POL:' || policyId AS resourceId, reviewStatus AS status, updatedAt FROM Policy\n  UNION ALL SELECT knowledgeCategoryId, 'IVD:' || valueId, status, updatedAt FROM IvdData\n  UNION ALL SELECT knowledgeCategoryId, 'YRB:' || recordId, status, updatedAt FROM YrbYearbook\n  UNION ALL SELECT knowledgeCategoryId, 'INT:' || intelId, status, updatedAt FROM Intel\n), coverage AS (\n  SELECT ct.categoryId, e.resourceId, e.status, e.updatedAt,\n         CASE WHEN ct.categoryId = ct.descendantId THEN 1 ELSE 0 END AS isDirect\n  FROM category_tree ct JOIN entry e ON e.knowledgeCategoryId = ct.descendantId\n  WHERE (:dateFrom IS NULL OR e.updatedAt >= :dateFrom) AND (:dateTo IS NULL OR e.updatedAt <= :dateTo)\n)\nSELECT k.categoryCode, k.categoryPath,\n       COUNT(DISTINCT CASE WHEN c.isDirect = 1 THEN c.resourceId END) AS directItemCount,\n       COUNT(DISTINCT c.resourceId) AS descendantItemCount,\n       COUNT(DISTINCT CASE WHEN c.status = '已发布' THEN c.resourceId END) AS publishedCount,\n       CASE WHEN COUNT(c.resourceId) = 0 THEN 1 ELSE 0 END AS emptyNodeFlag\nFROM KtcCategory k LEFT JOIN coverage c ON k.categoryId = c.categoryId\nWHERE (:rootCategory IS NULL OR k.rootCategory = :rootCategory) AND (:level IS NULL OR k.level = :level)\nGROUP BY k.categoryId, k.categoryCode, k.categoryPath ORDER BY k.categoryPath ASC\n",
+        "parameterBindings": [
+          {
+            "parameter": "rootCategory",
+            "placeholder": ":rootCategory"
+          },
+          {
+            "parameter": "level",
+            "placeholder": ":level"
+          },
+          {
+            "parameter": "dateFrom",
+            "placeholder": ":dateFrom"
+          },
+          {
+            "parameter": "dateTo",
+            "placeholder": ":dateTo"
+          }
+        ],
+        "resultMappings": [
+          {
+            "sqlColumn": "categoryCode",
+            "resultColumn": "categoryCode"
+          },
+          {
+            "sqlColumn": "categoryPath",
+            "resultColumn": "categoryPath"
+          },
+          {
+            "sqlColumn": "directItemCount",
+            "resultColumn": "directItemCount"
+          },
+          {
+            "sqlColumn": "descendantItemCount",
+            "resultColumn": "descendantItemCount"
+          },
+          {
+            "sqlColumn": "publishedCount",
+            "resultColumn": "publishedCount"
+          },
+          {
+            "sqlColumn": "emptyNodeFlag",
+            "resultColumn": "emptyNodeFlag"
+          }
+        ]
+      },
+      "version": "2.1"
+    }
+  ]
+}

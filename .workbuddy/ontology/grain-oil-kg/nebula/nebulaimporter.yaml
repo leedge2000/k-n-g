@@ -1,0 +1,1379 @@
+version: v3
+description: 粮油产业多维知识图谱 · NebulaGraph 数据导入
+clientSettings:
+  retry: 3
+  concurrency: 10
+  channelBufferSize: 128
+  connection:
+    address: 127.0.0.1:9669
+    user: root
+    password: nebula
+  space: grain_oil_kg
+  ssl:
+    enabled: false
+log:
+  level: info
+  console: true
+  files:
+  - ./logs/nebula-importer.log
+sources:
+- path: ./csv/tags/commodity.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: commodity
+    id:
+      type: string
+      index: 0
+    props:
+    - name: commodityId
+      type: string
+      index: 1
+    - name: commodityCode
+      type: string
+      index: 2
+    - name: commodityName
+      type: string
+      index: 3
+    - name: commodityCategory
+      type: string
+      index: 4
+    - name: scientificName
+      type: string
+      index: 5
+    - name: parentCommodityId
+      type: string
+      index: 6
+    - name: conceptId
+      type: string
+      index: 7
+    - name: description
+      type: string
+      index: 8
+    - name: status
+      type: string
+      index: 9
+    - name: createdBy
+      type: string
+      index: 10
+    - name: createdAt
+      type: string
+      index: 11
+    - name: updatedBy
+      type: string
+      index: 12
+    - name: updatedAt
+      type: string
+      index: 13
+- path: ./csv/tags/concept.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: concept
+    id:
+      type: string
+      index: 0
+    props:
+    - name: conceptId
+      type: string
+      index: 1
+    - name: conceptCode
+      type: string
+      index: 2
+    - name: conceptName
+      type: string
+      index: 3
+    - name: conceptType
+      type: string
+      index: 4
+    - name: sourceOntology
+      type: string
+      index: 5
+    - name: externalUri
+      type: string
+      index: 6
+    - name: parentConceptId
+      type: string
+      index: 7
+    - name: definition
+      type: string
+      index: 8
+    - name: status
+      type: string
+      index: 9
+    - name: createdBy
+      type: string
+      index: 10
+    - name: createdAt
+      type: string
+      index: 11
+    - name: updatedBy
+      type: string
+      index: 12
+    - name: updatedAt
+      type: string
+      index: 13
+- path: ./csv/tags/crawl_run.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: crawl_run
+    id:
+      type: string
+      index: 0
+    props:
+    - name: crawlSourceId
+      type: string
+      index: 1
+    - name: runId
+      type: string
+      index: 2
+    - name: startedAt
+      type: string
+      index: 3
+    - name: finishedAt
+      type: string
+      index: 4
+    - name: runStatus
+      type: string
+      index: 5
+    - name: httpStatus
+      type: int
+      index: 6
+    - name: fetchedCount
+      type: int
+      index: 7
+    - name: savedCount
+      type: int
+      index: 8
+    - name: newDocCount
+      type: int
+      index: 9
+    - name: duplicateCount
+      type: int
+      index: 10
+    - name: durationMs
+      type: int
+      index: 11
+    - name: errorMessage
+      type: string
+      index: 12
+- path: ./csv/tags/crawl_source.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: crawl_source
+    id:
+      type: string
+      index: 0
+    props:
+    - name: crawlSourceId
+      type: string
+      index: 1
+    - name: sourceName
+      type: string
+      index: 2
+    - name: sourceUrl
+      type: string
+      index: 3
+    - name: sourceType
+      type: string
+      index: 4
+    - name: contentCategory
+      type: string
+      index: 5
+    - name: crawlMode
+      type: string
+      index: 6
+    - name: cronExpr
+      type: string
+      index: 7
+    - name: charset
+      type: string
+      index: 8
+    - name: requestHeaders
+      type: string
+      index: 9
+    - name: minIntervalMinutes
+      type: int
+      index: 10
+    - name: maxRetry
+      type: int
+      index: 11
+    - name: knowledgeCategoryId
+      type: string
+      index: 12
+    - name: enabledFlag
+      type: string
+      index: 13
+    - name: lastRunAt
+      type: string
+      index: 14
+    - name: createdBy
+      type: string
+      index: 15
+    - name: createdAt
+      type: string
+      index: 16
+    - name: updatedBy
+      type: string
+      index: 17
+    - name: updatedAt
+      type: string
+      index: 18
+- path: ./csv/tags/enterprise.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: enterprise
+    id:
+      type: string
+      index: 0
+    props:
+    - name: enterpriseId
+      type: string
+      index: 1
+    - name: enterpriseCode
+      type: string
+      index: 2
+    - name: enterpriseName
+      type: string
+      index: 3
+    - name: creditCode
+      type: string
+      index: 4
+    - name: enterpriseType
+      type: string
+      index: 5
+    - name: regionId
+      type: string
+      index: 6
+    - name: scale
+      type: string
+      index: 7
+    - name: legalPerson
+      type: string
+      index: 8
+    - name: address
+      type: string
+      index: 9
+    - name: status
+      type: string
+      index: 10
+    - name: createdBy
+      type: string
+      index: 11
+    - name: createdAt
+      type: string
+      index: 12
+    - name: updatedBy
+      type: string
+      index: 13
+    - name: updatedAt
+      type: string
+      index: 14
+- path: ./csv/tags/indicator.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: indicator
+    id:
+      type: string
+      index: 0
+    props:
+    - name: indicatorId
+      type: string
+      index: 1
+    - name: indicatorCode
+      type: string
+      index: 2
+    - name: indicatorName
+      type: string
+      index: 3
+    - name: indicatorCategory
+      type: string
+      index: 4
+    - name: unit
+      type: string
+      index: 5
+    - name: frequency
+      type: string
+      index: 6
+    - name: caliber
+      type: string
+      index: 7
+    - name: sourceOrg
+      type: string
+      index: 8
+    - name: knowledgeCategoryId
+      type: string
+      index: 9
+    - name: industryStage
+      type: string
+      index: 10
+    - name: status
+      type: string
+      index: 11
+    - name: createdBy
+      type: string
+      index: 12
+    - name: createdAt
+      type: string
+      index: 13
+    - name: updatedBy
+      type: string
+      index: 14
+    - name: updatedAt
+      type: string
+      index: 15
+- path: ./csv/tags/indval.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: indval
+    id:
+      type: string
+      index: 0
+    props:
+    - name: valueId
+      type: string
+      index: 1
+    - name: indicatorId
+      type: string
+      index: 2
+    - name: regionId
+      type: string
+      index: 3
+    - name: commodityId
+      type: string
+      index: 4
+    - name: periodType
+      type: string
+      index: 5
+    - name: period
+      type: string
+      index: 6
+    - name: value
+      type: double
+      index: 7
+    - name: unit
+      type: string
+      index: 8
+    - name: qualityFlag
+      type: string
+      index: 9
+    - name: sourceDocId
+      type: string
+      index: 10
+    - name: segmentId
+      type: string
+      index: 11
+    - name: knowledgeCategoryId
+      type: string
+      index: 12
+    - name: industryStage
+      type: string
+      index: 13
+    - name: status
+      type: string
+      index: 14
+    - name: remark
+      type: string
+      index: 15
+    - name: createdBy
+      type: string
+      index: 16
+    - name: createdAt
+      type: string
+      index: 17
+    - name: updatedBy
+      type: string
+      index: 18
+    - name: updatedAt
+      type: string
+      index: 19
+- path: ./csv/tags/intel.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: intel
+    id:
+      type: string
+      index: 0
+    props:
+    - name: intelId
+      type: string
+      index: 1
+    - name: intelTitle
+      type: string
+      index: 2
+    - name: intelType
+      type: string
+      index: 3
+    - name: regionId
+      type: string
+      index: 4
+    - name: commodityId
+      type: string
+      index: 5
+    - name: publishOrg
+      type: string
+      index: 6
+    - name: publishDate
+      type: string
+      index: 7
+    - name: keyPoints
+      type: string
+      index: 8
+    - name: credibility
+      type: string
+      index: 9
+    - name: sourceDocId
+      type: string
+      index: 10
+    - name: segmentId
+      type: string
+      index: 11
+    - name: knowledgeCategoryId
+      type: string
+      index: 12
+    - name: industryStage
+      type: string
+      index: 13
+    - name: factorDimensions
+      type: string
+      index: 14
+    - name: status
+      type: string
+      index: 15
+    - name: createdBy
+      type: string
+      index: 16
+    - name: createdAt
+      type: string
+      index: 17
+    - name: updatedBy
+      type: string
+      index: 18
+    - name: updatedAt
+      type: string
+      index: 19
+- path: ./csv/tags/kg_relation.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: kg_relation
+    id:
+      type: string
+      index: 0
+    props:
+    - name: relationId
+      type: string
+      index: 1
+    - name: subjectEntityType
+      type: string
+      index: 2
+    - name: subjectEntityId
+      type: string
+      index: 3
+    - name: predicate
+      type: string
+      index: 4
+    - name: objectEntityType
+      type: string
+      index: 5
+    - name: objectEntityId
+      type: string
+      index: 6
+    - name: confidence
+      type: double
+      index: 7
+    - name: sourceDocId
+      type: string
+      index: 8
+    - name: segmentId
+      type: string
+      index: 9
+    - name: extractedBy
+      type: string
+      index: 10
+    - name: validFrom
+      type: string
+      index: 11
+    - name: validTo
+      type: string
+      index: 12
+    - name: status
+      type: string
+      index: 13
+    - name: createdBy
+      type: string
+      index: 14
+    - name: createdAt
+      type: string
+      index: 15
+    - name: updatedBy
+      type: string
+      index: 16
+    - name: updatedAt
+      type: string
+      index: 17
+- path: ./csv/tags/knowledge_category.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: knowledge_category
+    id:
+      type: string
+      index: 0
+    props:
+    - name: categoryId
+      type: string
+      index: 1
+    - name: categoryCode
+      type: string
+      index: 2
+    - name: categoryName
+      type: string
+      index: 3
+    - name: parentCategoryId
+      type: string
+      index: 4
+    - name: level
+      type: int
+      index: 5
+    - name: categoryPath
+      type: string
+      index: 6
+    - name: rootCategory
+      type: string
+      index: 7
+    - name: industryStage
+      type: string
+      index: 8
+    - name: factorDimensions
+      type: string
+      index: 9
+    - name: definition
+      type: string
+      index: 10
+    - name: keywords
+      type: string
+      index: 11
+    - name: sortNo
+      type: int
+      index: 12
+    - name: status
+      type: string
+      index: 13
+    - name: createdBy
+      type: string
+      index: 14
+    - name: createdAt
+      type: string
+      index: 15
+    - name: updatedBy
+      type: string
+      index: 16
+    - name: updatedAt
+      type: string
+      index: 17
+- path: ./csv/tags/policy.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: policy
+    id:
+      type: string
+      index: 0
+    props:
+    - name: policyId
+      type: string
+      index: 1
+    - name: policyTitle
+      type: string
+      index: 2
+    - name: docNumber
+      type: string
+      index: 3
+    - name: policyLevel
+      type: string
+      index: 4
+    - name: issuer
+      type: string
+      index: 5
+    - name: effectiveDate
+      type: string
+      index: 6
+    - name: expireDate
+      type: string
+      index: 7
+    - name: policyStatus
+      type: string
+      index: 8
+    - name: regionId
+      type: string
+      index: 9
+    - name: sourceDocId
+      type: string
+      index: 10
+    - name: segmentId
+      type: string
+      index: 11
+    - name: knowledgeCategoryId
+      type: string
+      index: 12
+    - name: industryStage
+      type: string
+      index: 13
+    - name: factorDimensions
+      type: string
+      index: 14
+    - name: reviewStatus
+      type: string
+      index: 15
+    - name: summary
+      type: string
+      index: 16
+    - name: createdBy
+      type: string
+      index: 17
+    - name: createdAt
+      type: string
+      index: 18
+    - name: updatedBy
+      type: string
+      index: 19
+    - name: updatedAt
+      type: string
+      index: 20
+- path: ./csv/tags/policy_clause.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: policy_clause
+    id:
+      type: string
+      index: 0
+    props:
+    - name: policyId
+      type: string
+      index: 1
+    - name: clauseId
+      type: string
+      index: 2
+    - name: clauseNo
+      type: int
+      index: 3
+    - name: clauseTitle
+      type: string
+      index: 4
+    - name: clauseText
+      type: string
+      index: 5
+    - name: measureType
+      type: string
+      index: 6
+    - name: targetObject
+      type: string
+      index: 7
+    - name: clauseEffectiveDate
+      type: string
+      index: 8
+- path: ./csv/tags/product.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: product
+    id:
+      type: string
+      index: 0
+    props:
+    - name: productId
+      type: string
+      index: 1
+    - name: productCode
+      type: string
+      index: 2
+    - name: productName
+      type: string
+      index: 3
+    - name: commodityId
+      type: string
+      index: 4
+    - name: productCategory
+      type: string
+      index: 5
+    - name: grade
+      type: string
+      index: 6
+    - name: standardCode
+      type: string
+      index: 7
+    - name: enterpriseId
+      type: string
+      index: 8
+    - name: description
+      type: string
+      index: 9
+    - name: status
+      type: string
+      index: 10
+    - name: createdBy
+      type: string
+      index: 11
+    - name: createdAt
+      type: string
+      index: 12
+    - name: updatedBy
+      type: string
+      index: 13
+    - name: updatedAt
+      type: string
+      index: 14
+- path: ./csv/tags/quality_record.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: quality_record
+    id:
+      type: string
+      index: 0
+    props:
+    - name: issueId
+      type: string
+      index: 1
+    - name: issueType
+      type: string
+      index: 2
+    - name: primaryEntityType
+      type: string
+      index: 3
+    - name: primaryEntityId
+      type: string
+      index: 4
+    - name: duplicateEntityId
+      type: string
+      index: 5
+    - name: similarity
+      type: double
+      index: 6
+    - name: conflictField
+      type: string
+      index: 7
+    - name: conflictValueA
+      type: string
+      index: 8
+    - name: conflictValueB
+      type: string
+      index: 9
+    - name: handleStatus
+      type: string
+      index: 10
+    - name: handleRemark
+      type: string
+      index: 11
+    - name: handler
+      type: string
+      index: 12
+    - name: handledAt
+      type: string
+      index: 13
+    - name: createdBy
+      type: string
+      index: 14
+    - name: createdAt
+      type: string
+      index: 15
+    - name: updatedBy
+      type: string
+      index: 16
+    - name: updatedAt
+      type: string
+      index: 17
+- path: ./csv/tags/region.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: region
+    id:
+      type: string
+      index: 0
+    props:
+    - name: regionId
+      type: string
+      index: 1
+    - name: regionCode
+      type: string
+      index: 2
+    - name: regionName
+      type: string
+      index: 3
+    - name: regionLevel
+      type: string
+      index: 4
+    - name: parentRegionId
+      type: string
+      index: 5
+    - name: adminCode
+      type: string
+      index: 6
+    - name: faoRegion
+      type: string
+      index: 7
+    - name: isChongqing
+      type: bool
+      index: 8
+    - name: status
+      type: string
+      index: 9
+    - name: createdBy
+      type: string
+      index: 10
+    - name: createdAt
+      type: string
+      index: 11
+    - name: updatedBy
+      type: string
+      index: 12
+    - name: updatedAt
+      type: string
+      index: 13
+- path: ./csv/tags/segment.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: segment
+    id:
+      type: string
+      index: 0
+    props:
+    - name: docId
+      type: string
+      index: 1
+    - name: segmentId
+      type: string
+      index: 2
+    - name: segmentNo
+      type: int
+      index: 3
+    - name: pageNo
+      type: int
+      index: 4
+    - name: chapterPath
+      type: string
+      index: 5
+    - name: charStart
+      type: int
+      index: 6
+    - name: charEnd
+      type: int
+      index: 7
+    - name: segmentText
+      type: string
+      index: 8
+    - name: segmentType
+      type: string
+      index: 9
+    - name: vectorId
+      type: string
+      index: 10
+- path: ./csv/tags/source_doc.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: source_doc
+    id:
+      type: string
+      index: 0
+    props:
+    - name: docId
+      type: string
+      index: 1
+    - name: title
+      type: string
+      index: 2
+    - name: docType
+      type: string
+      index: 3
+    - name: issuer
+      type: string
+      index: 4
+    - name: publishDate
+      type: string
+      index: 5
+    - name: docVersion
+      type: string
+      index: 6
+    - name: fileFormat
+      type: string
+      index: 7
+    - name: storageUri
+      type: string
+      index: 8
+    - name: checksum
+      type: string
+      index: 9
+    - name: language
+      type: string
+      index: 10
+    - name: pageCount
+      type: int
+      index: 11
+    - name: sourceUrl
+      type: string
+      index: 12
+    - name: crawlSourceId
+      type: string
+      index: 13
+    - name: knowledgeCategoryId
+      type: string
+      index: 14
+    - name: summary
+      type: string
+      index: 15
+    - name: status
+      type: string
+      index: 16
+    - name: createdBy
+      type: string
+      index: 17
+    - name: createdAt
+      type: string
+      index: 18
+    - name: updatedBy
+      type: string
+      index: 19
+    - name: updatedAt
+      type: string
+      index: 20
+- path: ./csv/tags/synonym.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: synonym
+    id:
+      type: string
+      index: 0
+    props:
+    - name: conceptId
+      type: string
+      index: 1
+    - name: synonymId
+      type: string
+      index: 2
+    - name: synonymName
+      type: string
+      index: 3
+    - name: language
+      type: string
+      index: 4
+    - name: synonymType
+      type: string
+      index: 5
+- path: ./csv/tags/yearbook.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  tags:
+  - name: yearbook
+    id:
+      type: string
+      index: 0
+    props:
+    - name: recordId
+      type: string
+      index: 1
+    - name: yearbookName
+      type: string
+      index: 2
+    - name: edition
+      type: string
+      index: 3
+    - name: statYear
+      type: int
+      index: 4
+    - name: tableName
+      type: string
+      index: 5
+    - name: indicatorId
+      type: string
+      index: 6
+    - name: regionId
+      type: string
+      index: 7
+    - name: commodityId
+      type: string
+      index: 8
+    - name: value
+      type: double
+      index: 9
+    - name: unit
+      type: string
+      index: 10
+    - name: caliberNote
+      type: string
+      index: 11
+    - name: sourceDocId
+      type: string
+      index: 12
+    - name: segmentId
+      type: string
+      index: 13
+    - name: knowledgeCategoryId
+      type: string
+      index: 14
+    - name: industryStage
+      type: string
+      index: 15
+    - name: status
+      type: string
+      index: 16
+    - name: createdBy
+      type: string
+      index: 17
+    - name: createdAt
+      type: string
+      index: 18
+    - name: updatedBy
+      type: string
+      index: 19
+    - name: updatedAt
+      type: string
+      index: 20
+- path: ./csv/edges/applies_to_region.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: applies_to_region
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/from_doc.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: from_doc
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/has_clause.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: has_clause
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/has_run.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: has_run
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/has_segment.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: has_segment
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/has_synonym.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: has_synonym
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/in_category.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: in_category
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/in_region.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: in_region
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/kg_relation.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: kg_relation
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+    props:
+    - name: relationId
+      type: string
+      index: 3
+    - name: predicate
+      type: string
+      index: 4
+    - name: confidence
+      type: double
+      index: 5
+- path: ./csv/edges/located_in.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: located_in
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/made_by.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: made_by
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/maps_to_concept.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: maps_to_concept
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/of_commodity.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: of_commodity
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/of_indicator.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: of_indicator
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/parent_of.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: parent_of
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/processed_from.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: processed_from
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2
+- path: ./csv/edges/produced_by_crawl.csv
+  batch: 128
+  csv:
+    withHeader: true
+    delimiter: ','
+  edges:
+  - name: produced_by_crawl
+    src:
+      id:
+        type: string
+        index: 0
+    dst:
+      id:
+        type: string
+        index: 1
+    rank:
+      index: 2

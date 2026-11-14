@@ -1,0 +1,410 @@
+-- =============================================================
+-- 粮油产业多维知识图谱 · NebulaGraph Schema
+-- 版本：v1.0    对应本体：yaml/m1-object-model.yaml (v2.1)
+-- 说明：19 个 Tag（15 聚合根 + 4 子实体）与 17 类边；VID 一律使用内部主键字符串，业务编码仅用于检索
+-- 执行：nebula-console -addr <host> -port 9669 -u root -p <pwd> -f schema.ngql
+-- =============================================================
+
+CREATE SPACE IF NOT EXISTS grain_oil_kg (
+  partition_num = 10,
+  replica_factor = 1,
+  vid_type = FIXED_STRING(32)
+);
+USE grain_oil_kg;
+
+-- -------------------------------------------------------------
+-- 一、来源与采集
+-- -------------------------------------------------------------
+CREATE TAG IF NOT EXISTS source_doc (
+  docId string NOT NULL COMMENT '文档编号 SOU+4位',
+  title string NOT NULL COMMENT '文档标题',
+  docType string COMMENT '文档类别',
+  issuer string COMMENT '发布机构',
+  publishDate string COMMENT '发布日期 yyyy-MM-dd',
+  docVersion string COMMENT '文档版本',
+  fileFormat string COMMENT '文件格式',
+  storageUri string COMMENT '对象存储 URI',
+  checksum string COMMENT '正文 SHA-256',
+  language string COMMENT '语种',
+  pageCount int COMMENT '页数',
+  sourceUrl string COMMENT '来源链接',
+  crawlSourceId string COMMENT '采集源编号',
+  knowledgeCategoryId string COMMENT '知识分类编号',
+  summary string COMMENT '摘要',
+  status string COMMENT '状态：草稿/有效/已失效/已作废',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '来源文档';
+
+CREATE TAG IF NOT EXISTS segment (
+  segmentId string NOT NULL COMMENT '段落编号',
+  docId string NOT NULL COMMENT '所属文档',
+  segmentNo int COMMENT '段落序号',
+  pageNo int COMMENT '页码',
+  chapterPath string COMMENT '章节路径',
+  charStart int COMMENT '起始字符位置',
+  charEnd int COMMENT '结束字符位置',
+  segmentText string COMMENT '段落文本',
+  segmentType string COMMENT '段落类型',
+  vectorId string COMMENT '向量索引标识'
+) COMMENT = '文档段落（来源回溯最小粒度）';
+
+CREATE TAG IF NOT EXISTS crawl_source (
+  crawlSourceId string NOT NULL COMMENT '采集源编号 CRS+4位',
+  sourceName string NOT NULL COMMENT '采集源名称',
+  sourceUrl string NOT NULL COMMENT '入口地址',
+  sourceType string COMMENT '源类型',
+  contentCategory string COMMENT '内容归口',
+  crawlMode string COMMENT '采集方式',
+  cronExpr string COMMENT '调度表达式',
+  charset string COMMENT '字符集',
+  requestHeaders string COMMENT '请求头 JSON',
+  minIntervalMinutes int COMMENT '最小抓取间隔(分钟)',
+  maxRetry int COMMENT '最大重试次数',
+  knowledgeCategoryId string COMMENT '默认知识分类',
+  enabledFlag string COMMENT '启停状态',
+  lastRunAt string COMMENT '最近执行时间',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '采集源';
+
+CREATE TAG IF NOT EXISTS crawl_run (
+  runId string NOT NULL COMMENT '执行编号',
+  crawlSourceId string NOT NULL COMMENT '所属采集源',
+  startedAt string COMMENT '开始时间',
+  finishedAt string COMMENT '结束时间',
+  runStatus string COMMENT '执行状态',
+  httpStatus int COMMENT 'HTTP 状态码',
+  fetchedCount int COMMENT '抓取条数',
+  savedCount int COMMENT '入库条数',
+  newDocCount int COMMENT '新增文档数',
+  duplicateCount int COMMENT '去重跳过数',
+  durationMs int COMMENT '执行耗时毫秒',
+  errorMessage string COMMENT '错误信息'
+) COMMENT = '采集执行记录';
+
+-- -------------------------------------------------------------
+-- 二、四类知识
+-- -------------------------------------------------------------
+CREATE TAG IF NOT EXISTS policy (
+  policyId string NOT NULL COMMENT '政策编号 POL+4位',
+  policyTitle string NOT NULL COMMENT '政策标题',
+  docNumber string COMMENT '发文字号',
+  policyLevel string COMMENT '效力层级',
+  issuer string COMMENT '发文机关',
+  effectiveDate string COMMENT '生效日期',
+  expireDate string COMMENT '失效日期',
+  policyStatus string COMMENT '政策时效状态',
+  regionId string COMMENT '适用地区',
+  sourceDocId string COMMENT '来源文档',
+  segmentId string COMMENT '来源段落',
+  knowledgeCategoryId string COMMENT '知识分类',
+  industryStage string COMMENT '产业环节',
+  factorDimensions string COMMENT '要素维度（逗号分隔）',
+  reviewStatus string COMMENT '审核状态',
+  summary string COMMENT '政策要点摘要',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '政策法规';
+
+CREATE TAG IF NOT EXISTS policy_clause (
+  clauseId string NOT NULL COMMENT '条款编号',
+  policyId string NOT NULL COMMENT '所属政策',
+  clauseNo int COMMENT '条款序号',
+  clauseTitle string COMMENT '条款标题',
+  clauseText string COMMENT '条款正文',
+  measureType string COMMENT '措施类型',
+  targetObject string COMMENT '作用对象',
+  clauseEffectiveDate string COMMENT '条款生效日期'
+) COMMENT = '政策条款';
+
+CREATE TAG IF NOT EXISTS indicator (
+  indicatorId string NOT NULL COMMENT '指标内部标识 IND+4位',
+  indicatorCode string NOT NULL COMMENT '指标编码（业务唯一）',
+  indicatorName string NOT NULL COMMENT '指标名称',
+  indicatorCategory string COMMENT '指标类别',
+  unit string COMMENT '计量单位',
+  frequency string COMMENT '统计频率',
+  caliber string COMMENT '统计口径说明',
+  sourceOrg string COMMENT '口径来源机构',
+  knowledgeCategoryId string COMMENT '知识分类',
+  industryStage string COMMENT '产业环节',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '指标定义';
+
+CREATE TAG IF NOT EXISTS indval (
+  valueId string NOT NULL COMMENT '数据编号 IVD+4位',
+  indicatorId string NOT NULL COMMENT '指标定义',
+  regionId string NOT NULL COMMENT '地区',
+  commodityId string COMMENT '品种',
+  periodType string COMMENT '期间类型',
+  period string NOT NULL COMMENT '期间',
+  value double COMMENT '数值',
+  unit string COMMENT '计量单位',
+  qualityFlag string COMMENT '数据质量标识',
+  sourceDocId string NOT NULL COMMENT '来源文档',
+  segmentId string NOT NULL COMMENT '来源段落',
+  knowledgeCategoryId string COMMENT '知识分类',
+  industryStage string COMMENT '产业环节',
+  status string COMMENT '状态',
+  remark string COMMENT '备注',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '指标数据';
+
+CREATE TAG IF NOT EXISTS yearbook (
+  recordId string NOT NULL COMMENT '记录编号 YRB+4位',
+  yearbookName string NOT NULL COMMENT '年鉴名称',
+  edition string COMMENT '年鉴版本',
+  statYear int COMMENT '统计年份',
+  tableName string COMMENT '统计表名',
+  indicatorId string NOT NULL COMMENT '对应指标',
+  regionId string NOT NULL COMMENT '地区',
+  commodityId string COMMENT '品种',
+  value double COMMENT '数值',
+  unit string COMMENT '计量单位',
+  caliberNote string COMMENT '口径差异说明',
+  sourceDocId string NOT NULL COMMENT '来源文档',
+  segmentId string NOT NULL COMMENT '来源段落',
+  knowledgeCategoryId string COMMENT '知识分类',
+  industryStage string COMMENT '产业环节',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '年鉴记录';
+
+CREATE TAG IF NOT EXISTS intel (
+  intelId string NOT NULL COMMENT '情报编号 INT+4位',
+  intelTitle string NOT NULL COMMENT '情报标题',
+  intelType string COMMENT '情报类型',
+  regionId string COMMENT '涉及地区',
+  commodityId string COMMENT '涉及品种',
+  publishOrg string COMMENT '发布机构',
+  publishDate string COMMENT '发布日期',
+  keyPoints string COMMENT '核心要点',
+  credibility string COMMENT '可信度',
+  sourceDocId string NOT NULL COMMENT '来源文档',
+  segmentId string NOT NULL COMMENT '来源段落',
+  knowledgeCategoryId string COMMENT '知识分类',
+  industryStage string COMMENT '产业环节',
+  factorDimensions string COMMENT '要素维度（逗号分隔）',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '农业情报';
+
+-- -------------------------------------------------------------
+-- 三、产业主数据与本体
+-- -------------------------------------------------------------
+CREATE TAG IF NOT EXISTS commodity (
+  commodityId string NOT NULL COMMENT '品种内部标识 CMD+4位',
+  commodityCode string NOT NULL COMMENT '品种编码（业务唯一）',
+  commodityName string NOT NULL COMMENT '品种名称',
+  commodityCategory string COMMENT '品种类别',
+  scientificName string COMMENT '学名',
+  parentCommodityId string COMMENT '父品种',
+  conceptId string COMMENT '本体概念',
+  description string COMMENT '品种说明',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '品种';
+
+CREATE TAG IF NOT EXISTS product (
+  productId string NOT NULL COMMENT '产品内部标识 PRD+4位',
+  productCode string COMMENT '产品编码（业务唯一，可空）',
+  productName string NOT NULL COMMENT '产品名称',
+  commodityId string NOT NULL COMMENT '原料品种',
+  productCategory string COMMENT '产品类别',
+  grade string COMMENT '质量等级',
+  standardCode string COMMENT '执行标准号',
+  enterpriseId string COMMENT '生产企业',
+  description string COMMENT '产品说明',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '产品';
+
+CREATE TAG IF NOT EXISTS region (
+  regionId string NOT NULL COMMENT '地区内部标识 REG+4位',
+  regionCode string NOT NULL COMMENT '地区编码（业务唯一）',
+  regionName string NOT NULL COMMENT '地区名称',
+  regionLevel string COMMENT '层级',
+  parentRegionId string COMMENT '上级地区',
+  adminCode string COMMENT '行政区划代码',
+  faoRegion string COMMENT 'FAO 区域',
+  isChongqing bool COMMENT '是否重庆相关',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '地区';
+
+CREATE TAG IF NOT EXISTS enterprise (
+  enterpriseId string NOT NULL COMMENT '企业内部标识 ENT+4位',
+  enterpriseCode string NOT NULL COMMENT '企业编码（业务唯一）',
+  enterpriseName string NOT NULL COMMENT '企业名称',
+  creditCode string NOT NULL COMMENT '统一社会信用代码（18位）',
+  enterpriseType string COMMENT '企业类型',
+  regionId string COMMENT '所在地区',
+  scale string COMMENT '企业规模',
+  legalPerson string COMMENT '法定代表人',
+  address string COMMENT '注册地址',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '企业';
+
+CREATE TAG IF NOT EXISTS concept (
+  conceptId string NOT NULL COMMENT '概念内部标识 CON+4位',
+  conceptCode string NOT NULL COMMENT '概念编码（业务唯一）',
+  conceptName string NOT NULL COMMENT '概念名称',
+  conceptType string COMMENT '概念类型',
+  sourceOntology string COMMENT '来源本体',
+  externalUri string COMMENT '外部概念 URI',
+  parentConceptId string COMMENT '父概念',
+  definition string COMMENT '概念定义',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '本体概念';
+
+CREATE TAG IF NOT EXISTS synonym (
+  synonymId string NOT NULL COMMENT '同义词编号',
+  conceptId string NOT NULL COMMENT '所属概念',
+  synonymName string NOT NULL COMMENT '同义词',
+  language string COMMENT '语种',
+  synonymType string COMMENT '同义词类型'
+) COMMENT = '同义词';
+
+CREATE TAG IF NOT EXISTS knowledge_category (
+  categoryId string NOT NULL COMMENT '分类内部标识 KTC+4位',
+  categoryCode string NOT NULL COMMENT '分类编码（业务唯一）',
+  categoryName string NOT NULL COMMENT '分类名称',
+  parentCategoryId string COMMENT '父分类',
+  level int COMMENT '层级 1~4',
+  categoryPath string COMMENT '分类路径',
+  rootCategory string COMMENT '归属大类',
+  industryStage string COMMENT '默认产业环节',
+  factorDimensions string COMMENT '默认要素维度',
+  definition string COMMENT '分类定义',
+  keywords string COMMENT '关键词（分号分隔）',
+  sortNo int COMMENT '排序号',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '知识分类（三轴体系主轴）';
+
+-- -------------------------------------------------------------
+-- 四、关系与治理
+-- -------------------------------------------------------------
+CREATE TAG IF NOT EXISTS kg_relation (
+  relationId string NOT NULL COMMENT '关系编号 REL+4位',
+  subjectEntityType string NOT NULL COMMENT '主体实体类型',
+  subjectEntityId string NOT NULL COMMENT '主体实体编号',
+  predicate string NOT NULL COMMENT '关系谓词',
+  objectEntityType string NOT NULL COMMENT '客体实体类型',
+  objectEntityId string NOT NULL COMMENT '客体实体编号',
+  confidence double COMMENT '置信度 0~1',
+  sourceDocId string NOT NULL COMMENT '来源文档',
+  segmentId string NOT NULL COMMENT '来源段落',
+  extractedBy string COMMENT '抽取方式',
+  validFrom string COMMENT '生效日期',
+  validTo string COMMENT '失效日期',
+  status string COMMENT '状态',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '知识关系三元组（事实记录）';
+
+CREATE TAG IF NOT EXISTS quality_record (
+  issueId string NOT NULL COMMENT '治理记录编号 QIS+4位',
+  issueType string NOT NULL COMMENT '问题类型',
+  primaryEntityType string NOT NULL COMMENT '主实体类型',
+  primaryEntityId string NOT NULL COMMENT '主实体编号',
+  duplicateEntityId string COMMENT '重复/对照实体编号',
+  similarity double COMMENT '相似度 0~1',
+  conflictField string COMMENT '冲突字段',
+  conflictValueA string COMMENT '冲突值A',
+  conflictValueB string COMMENT '冲突值B',
+  handleStatus string COMMENT '处置状态',
+  handleRemark string COMMENT '处置说明',
+  handler string COMMENT '处置人',
+  handledAt string COMMENT '处置时间',
+  createdBy string COMMENT '创建人',
+  createdAt string COMMENT '创建时间',
+  updatedBy string COMMENT '最后更新人',
+  updatedAt string COMMENT '最后更新时间'
+) COMMENT = '质量治理记录';
+
+-- -------------------------------------------------------------
+-- 五、边类型（17 类）
+-- -------------------------------------------------------------
+CREATE EDGE IF NOT EXISTS has_segment (sortNo int COMMENT '段落序号') COMMENT = '文档-段落';
+CREATE EDGE IF NOT EXISTS has_clause (clauseNo int COMMENT '条款序号') COMMENT = '政策-条款';
+CREATE EDGE IF NOT EXISTS has_synonym (synonymType string COMMENT '同义词类型') COMMENT = '概念-同义词';
+CREATE EDGE IF NOT EXISTS has_run (startedAt string COMMENT '开始时间') COMMENT = '采集源-执行记录';
+
+CREATE EDGE IF NOT EXISTS produced_by_crawl (confidence double) COMMENT = '来源文档-采集源';
+CREATE EDGE IF NOT EXISTS from_doc (segmentId string COMMENT '来源段落') COMMENT = '知识条目-来源文档';
+CREATE EDGE IF NOT EXISTS in_category (isPrimary bool COMMENT '是否主分类') COMMENT = '知识条目-知识分类';
+CREATE EDGE IF NOT EXISTS in_region (relationType string COMMENT '适用/涉及/统计') COMMENT = '知识条目-地区';
+CREATE EDGE IF NOT EXISTS applies_to_region () COMMENT = '政策-适用地区';
+CREATE EDGE IF NOT EXISTS of_indicator (period string COMMENT '期间') COMMENT = '指标数据/年鉴-指标定义';
+CREATE EDGE IF NOT EXISTS of_commodity (relationType string COMMENT '计量/涉及/统计') COMMENT = '指标数据/年鉴/情报-品种';
+CREATE EDGE IF NOT EXISTS processed_from (yieldRate double COMMENT '出品率') COMMENT = '产品-原料品种';
+CREATE EDGE IF NOT EXISTS made_by () COMMENT = '产品-生产企业';
+CREATE EDGE IF NOT EXISTS located_in () COMMENT = '企业-地区';
+CREATE EDGE IF NOT EXISTS parent_of (level int COMMENT '层级') COMMENT = '品种/地区/概念/分类层级';
+CREATE EDGE IF NOT EXISTS maps_to_concept (matchType string COMMENT '精确/近似/上位') COMMENT = '品种-本体概念';
+CREATE EDGE IF NOT EXISTS kg_relation (
+  relationId string COMMENT '关系编号',
+  predicate string COMMENT '关系谓词',
+  confidence double COMMENT '置信度'
+) COMMENT = '已发布知识关系三元组边';
+
+-- -------------------------------------------------------------
+-- 六、索引（支撑 LOOKUP 与按编码精确检索）
+-- -------------------------------------------------------------
+CREATE TAG INDEX IF NOT EXISTS idx_source_doc_status ON source_doc(status(16));
+CREATE TAG INDEX IF NOT EXISTS idx_policy_status ON policy(policyStatus(16));
+CREATE TAG INDEX IF NOT EXISTS idx_indicator_code ON indicator(indicatorCode(32));
+CREATE TAG INDEX IF NOT EXISTS idx_indval_period ON indval(period(16));
+CREATE TAG INDEX IF NOT EXISTS idx_yearbook_year ON yearbook(statYear);
+CREATE TAG INDEX IF NOT EXISTS idx_commodity_code ON commodity(commodityCode(32));
+CREATE TAG INDEX IF NOT EXISTS idx_region_code ON region(regionCode(32));
+CREATE TAG INDEX IF NOT EXISTS idx_category_code ON knowledge_category(categoryCode(32));
+CREATE TAG INDEX IF NOT EXISTS idx_relation_predicate ON kg_relation(predicate(32));
+
+-- 索引创建后需执行 REBUILD TAG INDEX / REBUILD EDGE INDEX 才会生效
+-- REBUILD TAG INDEX idx_source_doc_status, idx_policy_status, idx_indicator_code,
+--   idx_indval_period, idx_yearbook_year, idx_commodity_code, idx_region_code,
+--   idx_category_code, idx_relation_predicate;

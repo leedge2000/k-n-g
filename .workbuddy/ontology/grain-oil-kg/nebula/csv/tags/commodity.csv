@@ -1,0 +1,3 @@
+:VID,commodityId,commodityCode,commodityName,commodityCategory,scientificName,parentCommodityId,conceptId,description,status,createdBy,createdAt,updatedBy,updatedAt
+CMD0001,CMD0001,CMD-RICE,稻谷,谷物,,,,,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35
+CMD0002,CMD0002,CMD-RAPE,油菜籽,油料,,,,,有效,admin,2026-11-11 21:21:35,admin,2026-11-11 21:21:35
