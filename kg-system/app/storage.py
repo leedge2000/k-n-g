@@ -13,10 +13,23 @@ class LocalSnapshotStore:
         self.directory = data_dir / "snapshots"
 
     def put(self, checksum: str, content: str) -> str:
+        return self.put_bytes(
+            checksum, content.encode("utf-8"), ".html", "text/html; charset=utf-8"
+        )
+
+    def put_bytes(self, checksum: str, content: bytes, extension: str,
+                  media_type: str = "application/octet-stream") -> str:
         self.directory.mkdir(parents=True, exist_ok=True)
-        path = self.directory / f"{checksum}.html"
-        path.write_text(content, encoding="utf-8")
+        path = self.directory / f"{checksum}{extension}"
+        path.write_bytes(content)
         return path.as_uri()
+
+    def get(self, checksum: str) -> bytes | None:
+        return self.get_asset(checksum, ".html")
+
+    def get_asset(self, checksum: str, extension: str) -> bytes | None:
+        path = self.directory / f"{checksum}{extension}"
+        return path.read_bytes() if path.is_file() else None
 
 
 class MinioSnapshotStore:
@@ -29,12 +42,38 @@ class MinioSnapshotStore:
             self.client.make_bucket(bucket)
 
     def put(self, checksum: str, content: str) -> str:
-        data = content.encode("utf-8")
-        object_name = f"snapshots/{checksum}.html"
+        return self.put_bytes(
+            checksum, content.encode("utf-8"), ".html", "text/html; charset=utf-8"
+        )
+
+    def put_bytes(self, checksum: str, content: bytes, extension: str,
+                  media_type: str = "application/octet-stream") -> str:
+        object_name = f"snapshots/{checksum}{extension}"
         self.client.put_object(
-            self.bucket, object_name, BytesIO(data), len(data), content_type="text/html; charset=utf-8"
+            self.bucket, object_name, BytesIO(content), len(content), content_type=media_type
         )
         return f"s3://{self.bucket}/{object_name}"
+
+    def get(self, checksum: str) -> bytes | None:
+        return self.get_asset(checksum, ".html")
+
+    def get_asset(self, checksum: str, extension: str) -> bytes | None:
+        from minio.error import S3Error
+
+        response = None
+        try:
+            response = self.client.get_object(
+                self.bucket, f"snapshots/{checksum}{extension}"
+            )
+            return response.read()
+        except S3Error as exc:
+            if exc.code == "NoSuchKey":
+                return None
+            raise
+        finally:
+            if response is not None:
+                response.close()
+                response.release_conn()
 
 
 class ElasticsearchSegmentIndex:

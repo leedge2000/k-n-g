@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from html import escape
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -18,6 +19,7 @@ from .auth import (
     principal_from_token,
     require_roles,
 )
+from .archive import ResponseArchive, guess_media_type
 from .config import Settings
 from .crawler import Crawler
 from .db import Database
@@ -38,6 +40,34 @@ from .scheduler import CrawlScheduler
 from .scope import ScopeError, ScopeService
 from .service import KnowledgeService
 from .storage import ElasticsearchSegmentIndex, LocalSnapshotStore, MinioSnapshotStore
+
+
+def offline_document_html(row: dict[str, Any], segments: list[dict[str, Any]]) -> str:
+    """用数据库中已保存的标题、摘要和正文生成可离线阅读的 HTML。"""
+    title = escape(str(row.get("title") or row.get("docId") or "来源文档"))
+    blocks = []
+    summary = str(row.get("summary") or "").strip()
+    if summary:
+        blocks.append(f"<p>{escape(summary)}</p>")
+    for segment in segments:
+        text = str(segment.get("segmentText") or "").strip()
+        if text:
+            blocks.append(f"<p>{escape(text)}</p>")
+    source_url = str(row.get("sourceUrl") or "")
+    source_note = (
+        f'<p class="meta">原始来源：<a href="{escape(source_url)}">{escape(source_url)}</a>'
+        "（当前显示的是数据库离线正文）</p>"
+        if source_url else ""
+    )
+    return (
+        "<!DOCTYPE html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\">"
+        f"<title>{title}</title><style>"
+        "body{font-family:system-ui,'Microsoft YaHei',sans-serif;max-width:860px;"
+        "margin:40px auto;padding:0 20px;line-height:1.9;color:#1f2937}"
+        "h1{font-size:22px;line-height:1.5}.meta{color:#6b7280;font-size:13px}"
+        "</style></head><body>"
+        f"<h1>{title}</h1>{source_note}{''.join(blocks)}</body></html>"
+    )
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -99,8 +129,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 app.state.rag.refresh()
             except Exception:
                 pass
+            app.state.snapshot_store = snapshot_store
+            app.state.archive = ResponseArchive(snapshot_store, settings.data_dir)
             app.state.crawler = Crawler(
-                db, app.state.knowledge, snapshot_store, search_index
+                db, app.state.knowledge, snapshot_store, search_index, app.state.archive
             )
             app.state.ops = OpsService(db, app.state.scope, app.state.crawler)
             app.state.ops.initialize()
@@ -397,6 +429,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         "CSV": "text/csv; charset=utf-8",
         "TXT": "text/plain; charset=utf-8",
         "MD": "text/markdown; charset=utf-8",
+        "HTML": "text/html; charset=utf-8",
     }
 
     def file_principal(request: Request, token: str | None = Query(None)) -> Principal:
@@ -409,24 +442,61 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/api/sources/{doc_id}/file")
     def source_file(doc_id: str, request: Request,
-                    _: Principal = Depends(file_principal)) -> FileResponse:
+                    _: Principal = Depends(file_principal)) -> Response:
         row = request.app.state.db.fetch_one(
-            'SELECT "docId","title","checksum","fileFormat","status" FROM "SourceDoc" WHERE "docId"=:id',
+            'SELECT "docId","title","checksum","fileFormat","status","storageUri","sourceUrl","summary" '
+            'FROM "SourceDoc" WHERE "docId"=:id',
             {"id": doc_id},
         )
         if not row:
             raise HTTPException(status.HTTP_404_NOT_FOUND, f"来源文档不存在：{doc_id}")
-        matches = sorted((Path(settings.data_dir) / "uploads").glob(f"{row['checksum']}.*"))
-        if not row.get("checksum") or not matches:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, "该文档未保存原件，可能是启用原件保存前登记的")
-        path = matches[0]
+        matches = sorted((Path(settings.data_dir) / "uploads").glob(f"{row['checksum']}.*")) \
+            if row.get("checksum") else []
         media = FILE_MEDIA_TYPES.get(str(row.get("fileFormat") or "").upper(), "application/octet-stream")
-        filename = f"{row['title'] or doc_id}{path.suffix}"
         disposition = "inline" if media.startswith(("text/", "application/pdf")) else "attachment"
-        return FileResponse(
-            path,
-            media_type=media,
-            headers={"Content-Disposition": f"{disposition}; filename*=UTF-8''{quote(filename)}"},
+        if matches:
+            path = matches[0]
+            filename = f"{row['title'] or doc_id}{path.suffix}"
+            return FileResponse(
+                path,
+                media_type=media,
+                headers={"Content-Disposition": f"{disposition}; filename*=UTF-8''{quote(filename)}"},
+            )
+        if row.get("checksum"):
+            content = request.app.state.snapshot_store.get(row["checksum"])
+            if content is not None:
+                filename = f"{row['title'] or doc_id}.html"
+                return Response(
+                    content=content,
+                    media_type=media,
+                    headers={"Content-Disposition": f"{disposition}; filename*=UTF-8''{quote(filename)}"},
+                )
+        # 没有网页原件时，用数据库已保存的正文生成离线页，绝不跳转外部网址
+        segments = request.app.state.db.fetch_all(
+            'SELECT "segmentText" FROM "SourceDoc_Segment" WHERE "docId"=:doc_id '
+            'ORDER BY "segmentNo"', {"doc_id": doc_id},
+        )
+        filename = f"{row['title'] or doc_id}.html"
+        return Response(
+            content=offline_document_html(row, segments),
+            media_type="text/html; charset=utf-8",
+            headers={"Content-Disposition": f"inline; filename*=UTF-8''{quote(filename)}"},
+        )
+
+    @app.get("/api/archive/{filename}")
+    def archive_asset(filename: str, request: Request,
+                      _: Principal = Depends(file_principal)) -> Response:
+        parts = request.app.state.archive.split_name(filename)
+        if not parts:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "归档资源不存在")
+        checksum, extension = parts
+        content = request.app.state.archive.get(checksum, extension)
+        if content is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "归档资源不存在")
+        return Response(
+            content=content,
+            media_type=guess_media_type(extension),
+            headers={"Content-Disposition": f"inline; filename*=UTF-8''{quote(filename)}"},
         )
 
     @app.get("/api/sources/{doc_id}/segments")

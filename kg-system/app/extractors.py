@@ -144,6 +144,7 @@ class PolicyExtractor(BaseExtractor):
                 "summary": body[:500],
                 "segments": [{"chapterPath": "政策正文", "segmentText": p}
                              for p in dp.parts if p.strip()][:50],
+                "_snapshotHtml": detail_html,
             }
             result.sub_documents.append(sub_doc)
             policy = {
@@ -469,6 +470,7 @@ class IntelExtractor(BaseExtractor):
                 "summary": body[:500],
                 "segments": [{"chapterPath": "情报正文", "segmentText": p}
                              for p in dp.parts if p.strip()][:30],
+                "_snapshotHtml": detail_html,
             })
             result.records.append(("Intel", {
                 "intelId": None,

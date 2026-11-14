@@ -5,6 +5,41 @@ import pytest
 from app.storage import ElasticsearchSegmentIndex, MinioSnapshotStore
 
 
+def test_minio_snapshot_get_reads_bytes_and_releases_response():
+    store = MinioSnapshotStore.__new__(MinioSnapshotStore)
+    store.bucket = "grain-oil-test"
+
+    class FakeResponse:
+        closed = False
+        released = False
+
+        def read(self):
+            return "稻谷快照".encode("utf-8")
+
+        def close(self):
+            self.closed = True
+
+        def release_conn(self):
+            self.released = True
+
+    response = FakeResponse()
+
+    class FakeClient:
+        object_name = None
+
+        def get_object(self, bucket, object_name):
+            assert bucket == "grain-oil-test"
+            self.object_name = object_name
+            return response
+
+    store.client = FakeClient()
+
+    assert store.get("snapshot-id") == "稻谷快照".encode("utf-8")
+    assert store.client.object_name == "snapshots/snapshot-id.html"
+    assert response.closed
+    assert response.released
+
+
 @pytest.mark.skipif(
     os.getenv("KG_TEST_ELASTICSEARCH") != "1",
     reason="需要可用的 Elasticsearch 集成环境",

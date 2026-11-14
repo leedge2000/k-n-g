@@ -133,6 +133,77 @@ def test_source_registration_creates_paragraph_level_evidence(client, settings):
     assert trace.json()["segmentText"] == "第一段。"
 
 
+def test_source_file_serves_saved_crawler_snapshot(client, settings):
+    checksum = "a" * 64
+    html = "<html><body>已保存的稻谷来源快照</body></html>"
+    snapshot = settings.data_dir / "snapshots" / f"{checksum}.html"
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.write_text(html, encoding="utf-8")
+    created = client.post("/api/sources", json={
+        "title": "稻谷来源快照",
+        "docType": "自动采集",
+        "fileFormat": "HTML",
+        "sourceUrl": "https://example.com/source",
+        "knowledgeCategoryId": "KTC0011",
+        "checksum": checksum,
+        "storageUri": snapshot.as_uri(),
+        "segments": [{"segmentText": "已保存的稻谷来源快照"}],
+    }, headers=auth(settings, "ROLE-02"))
+    assert created.status_code == 201
+
+    response = client.get(
+        f"/api/sources/{created.json()['docId']}/file", headers=auth(settings)
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert response.text == html
+
+
+def test_source_file_serves_offline_database_body_when_snapshot_missing(client, settings):
+    source_url = "https://example.com/original-policy"
+    created = client.post("/api/sources", json={
+        "title": "仅保存正文的旧文档",
+        "docType": "政策详情",
+        "fileFormat": "HTML",
+        "sourceUrl": source_url,
+        "knowledgeCategoryId": "KTC0011",
+        "summary": "旧文档摘要",
+        "segments": [{"segmentText": "数据库中保存的正文"}],
+    }, headers=auth(settings, "ROLE-02"))
+    assert created.status_code == 201
+
+    response = client.get(
+        f"/api/sources/{created.json()['docId']}/file",
+        headers=auth(settings),
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert "仅保存正文的旧文档" in response.text
+    assert "数据库中保存的正文" in response.text
+    assert "旧文档摘要" in response.text
+    assert "location" not in response.headers
+
+
+def test_archive_serves_saved_response_bytes(client, settings):
+    content = b'{"TITLE":"\xe7\xb2\xae\xe9\xa3\x9f\xe6\x94\xbf\xe7\xad\x96"}'
+    record = client.app.state.archive.save(
+        "https://example.com/ZUIXINZHENGCE.json", content, "application/json"
+    )
+
+    response = client.get(
+        f"/api/archive/{record['name']}", headers=auth(settings)
+    )
+
+    assert response.status_code == 200
+    assert response.content == content
+    assert response.headers["content-type"].startswith("application/json")
+    manifest = settings.data_dir / "archive" / "manifest.jsonl"
+    assert record["checksum"] in manifest.read_text(encoding="utf-8")
+
+
 def test_knowledge_entry_goes_through_review_before_searchable(client, settings):
     payload = {
         "indicatorId": "IND0002",

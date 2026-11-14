@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import ipaddress
+import re
 import socket
 import threading
 import time
@@ -12,8 +14,11 @@ from urllib.parse import urljoin, urlparse
 import httpx
 from fastapi import HTTPException
 
+from .archive import guess_extension, guess_media_type
 from .db import Database, utc_now
 from .extractors import get_extractor
+
+IMG_SRC_RE = re.compile(r'(<img\b[^>]*?\bsrc\s*=\s*)(["\'])(.*?)\2', re.I | re.S)
 
 
 class CrawlSecurityError(ValueError):
@@ -72,13 +77,15 @@ class _TextExtractor(HTMLParser):
 
 class Crawler:
     def __init__(self, db: Database, knowledge: Any = None, snapshot_store: Any = None,
-                 search_index: Any = None):
+                 search_index: Any = None, archive: Any = None):
         from .service import KnowledgeService
 
         self.db = db
         self.knowledge = knowledge or KnowledgeService(db)
         self.snapshot_store = snapshot_store
         self.search_index = search_index
+        self.archive = archive
+        self._active_source_id: str | None = None
         self._locks: dict[str, threading.Lock] = {}
         self._locks_guard = threading.Lock()
 
@@ -90,6 +97,7 @@ class Crawler:
         try:
             return self._execute(source_id, actor)
         finally:
+            self._active_source_id = None
             lock.release()
 
     def _execute(self, source_id: str, actor: str) -> dict[str, Any]:
@@ -98,6 +106,7 @@ class Crawler:
             raise HTTPException(404, "采集源不存在")
         if source["enabledFlag"] != "启用":
             raise HTTPException(409, "采集源处于暂停状态，启用后才可执行")
+        self._active_source_id = source_id
         started_at = utc_now()
         started_clock = time.monotonic()
         run_id = self.db.next_id("CrsSource_CrawlRun", "RUN")
@@ -133,7 +142,11 @@ class Crawler:
                 duplicate_count = 1
                 doc_id = existing["docId"]
             else:
-                storage_uri = self.snapshot_store.put(checksum, text) if self.snapshot_store else None
+                snapshot_html = self._localize_html(text, source["sourceUrl"])
+                storage_uri = (
+                    self.snapshot_store.put(checksum, snapshot_html)
+                    if self.snapshot_store else None
+                )
                 registered = self.knowledge.register_source({
                     "title": extractor.title or source["sourceName"],
                     "docType": source["contentCategory"],
@@ -212,11 +225,26 @@ class Crawler:
         # 1) 存详情页 SourceDoc（按顺序，供 Policy/Intel 记录引用）
         sub_doc_ids: list[str] = []
         for payload in result.sub_documents:
+            raw_html = payload.pop("_snapshotHtml", None)
+            storage_uri = None
+            if raw_html and self.snapshot_store:
+                snapshot_html = self._localize_html(raw_html, payload.get("sourceUrl", ""))
+                checksum = hashlib.sha256(snapshot_html.encode("utf-8")).hexdigest()
+                storage_uri = self.snapshot_store.put(checksum, snapshot_html)
+                payload["checksum"] = checksum
+                payload["storageUri"] = storage_uri
             existing = self.db.fetch_one(
-                'SELECT "docId" FROM "SourceDoc" WHERE "sourceUrl"=:url',
+                'SELECT "docId","storageUri" FROM "SourceDoc" WHERE "sourceUrl"=:url',
                 {"url": payload.get("sourceUrl", "")},
             )
             if existing:
+                if storage_uri and not existing.get("storageUri"):
+                    with self.db.engine.begin() as conn:
+                        self.db.update(
+                            "SourceDoc", existing["docId"],
+                            {"checksum": payload["checksum"], "storageUri": storage_uri},
+                            conn, actor=actor,
+                        )
                 sub_doc_ids.append(existing["docId"])
                 continue
             checksum = hashlib.sha256((payload.get("summary") or "").encode("utf-8")).hexdigest()
@@ -325,5 +353,54 @@ class Crawler:
                 response.raise_for_status()
                 if len(response.content) > 10_000_000:
                     raise ValueError("采集资源超过 10MB 限制")
+                self._archive_response(current, response)
                 return response.status_code, response
         raise ValueError("重定向次数超过限制")
+
+    def _archive_response(self, url: str, response: httpx.Response) -> None:
+        """原样保存本次下载的字节，确保断网后仍可读取。"""
+        if self.archive is None:
+            return
+        try:
+            self.archive.save(
+                url,
+                response.content,
+                response.headers.get("content-type", ""),
+                crawl_source_id=self._active_source_id,
+            )
+        except Exception:
+            # 归档失败不能阻断采集，离线兜底页仍可基于已入库正文生成
+            pass
+
+    def _localize_html(self, html: str, base_url: str,
+                       max_images: int = 20, max_bytes: int = 6_000_000) -> str:
+        """把图片内嵌为 data URI，使保存下来的网页脱离网络也能显示。"""
+        if not html or "<img" not in html.lower() or not base_url:
+            return html
+        total = 0
+        used = 0
+
+        def replace(match: re.Match[str]) -> str:
+            nonlocal total, used
+            if used >= max_images:
+                return match.group(0)
+            src = match.group(3).strip()
+            if not src or src.lower().startswith(("data:", "#", "javascript:")):
+                return match.group(0)
+            absolute = urljoin(base_url, src)
+            if not absolute.startswith(("http://", "https://")):
+                return match.group(0)
+            try:
+                status, data = self.fetch_bytes(absolute)
+            except Exception:
+                return match.group(0)
+            if status != 200 or not data or len(data) > 2_000_000 or total + len(data) > max_bytes:
+                return match.group(0)
+            extension = guess_extension("", absolute, data)
+            media_type = guess_media_type(extension)
+            encoded = base64.b64encode(data).decode("ascii")
+            total += len(data)
+            used += 1
+            return f'{match.group(1)}{match.group(2)}data:{media_type};base64,{encoded}{match.group(2)}'
+
+        return IMG_SRC_RE.sub(replace, html)
