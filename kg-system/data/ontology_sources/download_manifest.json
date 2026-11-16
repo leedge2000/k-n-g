@@ -1,0 +1,165 @@
+{
+  "createdAt": "2026-11-15T10:28:45.871Z",
+  "files": [
+    {
+      "vocab": "AGROVOC",
+      "version": "2026-11-05T07:11:40Z",
+      "path": "AGROVOC/void.ttl",
+      "url": "https://aims.fao.org/aos/agrovoc/void.ttl",
+      "license": "CC-BY-4.0",
+      "role": "metadata",
+      "size": 113229,
+      "sha256": "051fc48691fa72bc3966e35bef80e78508824d5fd655c645d4e6cc11c824cc23",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "AGROVOC",
+      "version": "2026-11-05T07:11:40Z",
+      "path": "AGROVOC/agrovoc_lod.nt.zip",
+      "url": "https://agrovoc.fao.org/latestAgrovoc/agrovoc_lod.nt.zip",
+      "license": "CC-BY-4.0",
+      "role": "tbox",
+      "size": 97252998,
+      "sha256": "0482c3e0ea24f87595d51651afbc4e8fa3a3a1efee4edc6ec2e81a2ad1ba5737",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "FOODON",
+      "version": "v2025-01-29",
+      "path": "FOODON/foodon.owl",
+      "url": "https://github.com/FoodOntology/foodon/releases/download/v2025-01-29/foodon.owl",
+      "license": "CC-BY-4.0",
+      "role": "tbox",
+      "size": 41567810,
+      "sha256": "c9a232096f4cc794825a96ccff4b061946ac7234bec4a70e350299f3d0d7ec14",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_FullModel.owl",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_FullModel.owl",
+      "license": "AGPL-3.0",
+      "role": "tbox-original",
+      "size": 4846,
+      "sha256": "2da7494b746a22d858de342acf180b16826ec99cfce1ba1f9fe680876601596b",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_BusinessOntology.owl",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_BusinessOntology.owl",
+      "license": "AGPL-3.0",
+      "role": "tbox-original",
+      "size": 520911,
+      "sha256": "1eaa64421e9fc5c5220568f5853db21179f714a3da02b7e20fe42776f80cda0e",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_TechnicalOntology.owl",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_TechnicalOntology.owl",
+      "license": "AGPL-3.0",
+      "role": "tbox-original",
+      "size": 11085,
+      "sha256": "30f85006637093602d883a272129dbfd963b4d60b519de4c2aecb52af8eab231",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v1.8.0",
+      "path": "DFC/DFC_ProductGlossary.owl",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v1.8.0/DFC_ProductGlossary.owl",
+      "license": "AGPL-3.0",
+      "role": "tbox-original",
+      "size": 21121,
+      "sha256": "9042ec5ed4bdf1610e7fd842be7b2454e8980bab01cc385c0721f4167c97c1b3",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_FullModel.rdf",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_FullModel.rdf",
+      "license": "AGPL-3.0",
+      "role": "tbox",
+      "size": 4338,
+      "sha256": "6205b2a2d9f23a6e8c46e7990d36ef3d7c8328b96e9c229bb3e07cc35da24915",
+      "fetchedAt": "2026-11-15T10:39:36.122Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_BusinessOntology.rdf",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_BusinessOntology.rdf",
+      "license": "AGPL-3.0",
+      "role": "tbox",
+      "size": 414350,
+      "sha256": "5c5546cc23f652d991b59776febf352a860b06ab5c3e4961cf0d2e7c2e0685d8",
+      "fetchedAt": "2026-11-15T10:39:36.122Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v2.0.0",
+      "path": "DFC/DFC_TechnicalOntology.rdf",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v2.0.0/DFC_TechnicalOntology.rdf",
+      "license": "AGPL-3.0",
+      "role": "tbox",
+      "size": 13789,
+      "sha256": "305b7005a71af5f43c44fc72a5442c43186b1b422c679b3b3f358af89589695e",
+      "fetchedAt": "2026-11-15T10:39:36.122Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "v1.8.0",
+      "path": "DFC/DFC_ProductGlossary.rdf",
+      "url": "https://github.com/datafoodconsortium/ontology/releases/download/v1.8.0/DFC_ProductGlossary.rdf",
+      "license": "AGPL-3.0",
+      "role": "tbox",
+      "size": 12243,
+      "sha256": "1ec71d0b2b031fc1ab85759112761ca9049ad20a612d076c1180b8b30a26d934",
+      "fetchedAt": "2026-11-15T10:39:36.122Z"
+    },
+    {
+      "vocab": "DFC",
+      "version": "taxonomies-v2.0.0",
+      "path": "DFC/facets.rdf",
+      "url": "https://github.com/datafoodconsortium/taxonomies/releases/download/v2.0.0/facets.rdf",
+      "license": "AGPL-3.0",
+      "role": "tbox",
+      "size": 200023,
+      "sha256": "7fda0b08f01d7a204456d15dd7ba65191ac34c10b28dbeb6b9cec749d49bbbf1",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "KGAP",
+      "version": "v1.2",
+      "path": "KGAP/graph_apto.ttl",
+      "url": "https://zenodo.org/api/records/13741165/files/graph_apto.ttl/content",
+      "license": "CC-BY-NC-4.0; GPL-3.0",
+      "role": "tbox",
+      "size": 274086,
+      "sha256": "fe9cced2d4e4e1382c1435d0e15fb8b56905b52147387cea28d3f743817c50fe",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    },
+    {
+      "vocab": "KGAP",
+      "version": "almes-e8eb176f0f48bfb546679d5195b9f730dfbd5ec9",
+      "path": "KGAP/alm.ttl",
+      "url": "https://api.github.com/repos/AlmesCore/Almes-Core/contents/Serializations/alm.ttl?ref=e8eb176f0f48bfb546679d5195b9f730dfbd5ec9",
+      "license": "GPL-3.0",
+      "role": "tbox",
+      "github_api": true,
+      "size": 21682,
+      "sha256": "0c4aa098f586527f800854ba740114a0e07d916e1435f3e3bba1d7be0c26a468",
+      "fetchedAt": "2026-11-15T10:28:45.871Z"
+    }
+  ],
+  "notes": [
+    "AGROVOC version and official concept count are read from void.ttl.",
+    "DFC v2.0.0 FullModel omits ProductGlossary; the last official ProductGlossary v1.8.0 is included as a separately versioned component.",
+    "KGAP graph_data.zip, graph_metadata.ttl and graph_geonames.ttl are ABox and excluded; Almes Core RDF schema is pinned to commit e8eb176f0f48bfb546679d5195b9f730dfbd5ec9."
+  ]
+}

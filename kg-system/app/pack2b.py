@@ -96,20 +96,20 @@ def _classify_statement(text: str) -> str:
     """R2-1-1~2-1-7：六类 + 冲突优先级。
 
     判定顺序（显式优先隐式）：
-      TARGET（显式目标关键词+数字）→ PROHIBITION → OBLIGATION → PERMISSION
-      → AUTHORIZATION → DEFINITION（兜底：缺模态）
+      DEFINITION（事实动词，非目标语气）→ TARGET → PROHIBITION → OBLIGATION
+      → PERMISSION → AUTHORIZATION（兜底：缺模态）
     """
-    # DEFINITION：无其他模态的事实/数量陈述优先，避免把“产量为X”误作目标
+    # DEFINITION：含事实动词且无目标语气，避免把“产量为X”误作目标
     if _looks_like_definition(text):
         return "DEFINITION"
-    # TARGET：显式目标模态 + 量值，且高于 OBLIGATION
-    if re.search(r"目标|指标|定额|上限|下限", text) and re.search(r"\d", text):
+    # TARGET：显式目标语态 + 量值，且高于 OBLIGATION
+    if _looks_like_target(text):
         return "TARGET"
     # PROHIBITION
     if any(m in text for m in MODAL_PROHIBITION):
         return "PROHIBITION"
-    # OBLIGATION
-    if any(m in text for m in MODAL_OBLIGATION):
+    # OBLIGATION（含“要+处置动词”弱义务语态）
+    if any(m in text for m in MODAL_OBLIGATION) or OBLIGATION_WEAK.search(text):
         return "OBLIGATION"
     # PERMISSION
     if any(m in text for m in MODAL_PERMISSION):
@@ -121,15 +121,34 @@ def _classify_statement(text: str) -> str:
     return "DEFINITION"
 
 
+# R2-1-1 v2：“要+处置动词”作为弱义务语态（如“要及时落实补建”）
+OBLIGATION_WEAK = re.compile(
+    r"要(?:及时|严格|切实|认真|按照|按|在|于|将|加强|落实|确保|建立|完善)"
+)
+
+# R2-1-6 v2：显式目标语气（“到XXXX年…力争/确保” + 量值），不依赖“目标”二字
+TARGET_MARKERS = ("目标", "指标", "定额", "上限", "下限")
+
+
 def _looks_like_definition(text: str) -> bool:
-    """R1-1-4/R2-1-5：纯事实陈述 → DEFINITION。"""
-    # 不含任何模态词 且 含数字（价格/数量表）
+    """R1-1-4/R2-1-5 v2：纯事实陈述 → DEFINITION。
+
+    v2 收紧：必须有显式事实动词（为/定为/规定为/是指），
+    不再仅凭“含数字”判定——否则“到2030年力争建成13.5亿亩”会被误判为定义而非目标。
+    """
     all_modals = MODAL_OBLIGATION + MODAL_PROHIBITION + MODAL_PERMISSION
-    if not any(m in text for m in all_modals):
-        # 含数字 或 显式含"为/定为/规定为"等事实性动词
-        if re.search(r"\d", text) or re.search(r"为|定为|规定为", text):
-            return True
-    return False
+    if any(m in text for m in all_modals):
+        return False
+    return bool(re.search(r"为|定为|规定为|是指", text))
+
+
+def _looks_like_target(text: str) -> bool:
+    """R2-1-6 v2：显式目标关键词，或“到XXXX年/力争/确保”+ 量值 → TARGET。"""
+    if not re.search(r"\d", text):
+        return False
+    if any(marker in text for marker in TARGET_MARKERS):
+        return True
+    return bool(re.search(r"力争|确保|到\s*\d{4}\s*年", text))
 
 
 def _is_authorization(text: str) -> bool:
@@ -150,11 +169,34 @@ def _vagueness(text: str) -> tuple[bool, str]:
 
 
 def _extract_condition(text: str, target_object: str) -> dict[str, Any] | None:
-    """R5-1-1/5-1-4：抽扁平 LEAF 条件（品种类）。
+    """R5-1-1/5-1-4：抽扁平 LEAF 条件。
 
-    种子里 POL0001 的三条都是"2025年生产的早籼稻/中晚籼稻/粳稻最低收购价为X"，
-    最显式的条件是 targetObject 匹配。
+    v2 扩展三类可判定条件，按"语义最具体优先"顺序尝试：
+      1. 空间禁限类：facts.landType ∈ 文中点名的区域类型
+      2. 污染防治类：facts.wasteType ∈ 禁止排放/倾倒的废弃物
+      3. 对象类：facts.targetObject = 条款目标对象（兜底）
+    三类都不命中时返回 None——不再一律套 targetObject，避免语义错位。
     """
+    land_types = _extract_land_types(text)
+    if land_types:
+        return {
+            "operator": "LEAF",
+            "leftOperand": "facts.landType",
+            "comparator": "∈",
+            "rightValue": ",".join(land_types),
+            "factSource": "USER_INPUT",
+            "regionalScopeId": None,
+        }
+    waste_types = _extract_waste_types(text)
+    if waste_types:
+        return {
+            "operator": "LEAF",
+            "leftOperand": "facts.wasteType",
+            "comparator": "∈",
+            "rightValue": ",".join(waste_types),
+            "factSource": "USER_INPUT",
+            "regionalScopeId": None,
+        }
     if not target_object:
         return None
     return {
@@ -167,16 +209,89 @@ def _extract_condition(text: str, target_object: str) -> dict[str, Any] | None:
     }
 
 
-def _extract_exception(text: str) -> str | None:
-    """R6-1-1：显式含例外连词的子句。
+# R5-1-4 v2：空间禁限区域类型（点名词表，按出现顺序去重）
+LAND_TYPE_TERMS = (
+    "25度以上坡耕地",
+    "严格管控类耕地",
+    "生态保护红线",
+    "退耕还林还草还湖还牧区域",
+    "生态脆弱区",
+    "滩涂",
+)
 
-    简化实现：返回文本中第一个例外连词之后的部分。
+# R5-1-4 v2：禁止排放/倾倒的废弃物枚举（须由禁止性模态引导）
+WASTE_VERBS = ("排放", "倾倒", "存放", "堆放")
+WASTE_PATTERN = re.compile(
+    r"(?:严禁|禁止|不得)(?:将|把|向|在)?"
+    r"(?P<items>[^，。；、]{1,20}(?:、[^，。；、]{1,20}){0,8})(?:等)?"
+    r"(?:" + "|".join(WASTE_VERBS) + r")"
+)
+
+
+def _extract_land_types(text: str) -> list[str]:
+    """R5-1-4 v2：识别空间禁限条款点名的区域类型；无禁止/限制模态时不抽。"""
+    if not any(m in text for m in ("禁止", "不得", "严禁", "严格限制", "不能")):
+        return []
+    found: list[str] = []
+    for term in LAND_TYPE_TERMS:
+        if term in text and term not in found:
+            found.append(term)
+    return found
+
+
+def _extract_waste_types(text: str) -> list[str]:
+    """R5-1-4 v2：识别"严禁将X、Y排放/倾倒…"的废弃物枚举。"""
+    match = WASTE_PATTERN.search(text)
+    if not match:
+        return []
+    items = [part.strip() for part in match.group("items").split("、") if part.strip()]
+    if items and items[-1].endswith("等"):
+        items[-1] = items[-1][:-1]
+    return [item for item in items if item]
+
+
+def _protected_mask(text: str) -> list[bool]:
+    """标记括号/引号内字符，供例外连词与切分判断复用。"""
+    mask = [False] * len(text)
+    depth = 0
+    closers: list[str] = []
+    pairs = {'"': '"', "'": "'", "“": "”", "‘": "’", "「": "」", "『": "』"}
+    for i, ch in enumerate(text):
+        if closers:
+            mask[i] = True
+            if ch == closers[-1]:
+                closers.pop()
+            elif ch in pairs and pairs[ch] != ch:
+                closers.append(pairs[ch])
+            continue
+        if ch in pairs:
+            mask[i] = True
+            closers.append(pairs[ch])
+            continue
+        if ch in ("(", "（", "【"):
+            depth += 1
+            mask[i] = True
+            continue
+        if ch in (")", "）", "】"):
+            depth = max(0, depth - 1)
+            mask[i] = True
+            continue
+        mask[i] = depth > 0
+    return mask
+
+
+def _extract_exception(text: str) -> str | None:
+    """R6-1-1 v2：仅当例外连词出现在括号/引号**之外**时才算独立子句。
+
+    "（…除外）"这类括注是限定语，不是例外分支，不能抽成 ClauseException。
     """
-    for connector in EXCEPTION_CONNECTORS:
-        idx = text.find(connector)
-        if idx > 0:
-            # 取连词后 200 字符以内的子句
-            return text[idx: idx + 200].strip()
+    mask = _protected_mask(text)
+    for i, ch in enumerate(text):
+        if mask[i]:
+            continue
+        for connector in EXCEPTION_CONNECTORS:
+            if text.startswith(connector, i) and i > 0:
+                return text[i: i + 200].strip()
     return None
 
 
@@ -323,7 +438,8 @@ class Pack2bService:
 
             stmt_type = _classify_statement(subtext)
             vague, vague_note = _vagueness(subtext)
-            condition = _extract_condition(subtext, target_object)
+            # R5-1-4c v2：TARGET 是"目标达成度"，不构成规则适用条件，故不产条件
+            condition = None if stmt_type == "TARGET" else _extract_condition(subtext, target_object)
             consequence = _extract_consequence(subtext, stmt_type)
             parameters = _extract_parameter(subtext)
             exception_text = _extract_exception(subtext)

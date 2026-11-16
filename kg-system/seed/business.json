@@ -203,10 +203,10 @@
     {"regionId": "REG0003", "regionCode": "WORLD", "regionName": "全球", "regionLevel": "全球", "faoRegion": "World", "isChongqing": 0, "status": "有效"}
   ],
   "Concept": [
-    {"conceptId": "CON0001", "conceptCode": "AGROVOC-C-7576", "conceptName": "稻谷", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_7576", "parentConceptId": "CON0005", "definition": "水稻及其收获籽粒相关概念。", "status": "有效"},
-    {"conceptId": "CON0002", "conceptCode": "AGROVOC-C-8379", "conceptName": "小麦", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_8379", "parentConceptId": "CON0005", "definition": "小麦作物及籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0001", "conceptCode": "AGROVOC-C-6599", "conceptName": "稻谷", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_6599", "parentConceptId": "CON0005", "definition": "水稻及其收获籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0002", "conceptCode": "AGROVOC-C-8373", "conceptName": "小麦", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_8373", "parentConceptId": "CON0005", "definition": "小麦作物及籽粒相关概念。", "status": "有效"},
     {"conceptId": "CON0003", "conceptCode": "AGROVOC-C-12332", "conceptName": "玉米", "conceptType": "粮食品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_12332", "parentConceptId": "CON0005", "definition": "玉米作物及籽粒相关概念。", "status": "有效"},
-    {"conceptId": "CON0004", "conceptCode": "AGROVOC-C-3393", "conceptName": "大豆", "conceptType": "油料品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_3393", "definition": "大豆作物及籽粒相关概念。", "status": "有效"},
+    {"conceptId": "CON0004", "conceptCode": "AGROVOC-C-14477", "conceptName": "大豆", "conceptType": "油料品种", "sourceOntology": "AGROVOC", "externalUri": "http://aims.fao.org/aos/agrovoc/c_14477", "definition": "大豆作物及籽粒相关概念。", "status": "有效"},
     {"conceptId": "CON0005", "conceptCode": "GRAIN-CONCEPT", "conceptName": "粮食", "conceptType": "粮食总类", "sourceOntology": "粮油产业本体", "definition": "粮食作物及其产品的上位概念。", "status": "有效"}
   ],
   "Concept_Synonym": [

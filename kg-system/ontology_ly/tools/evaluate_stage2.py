@@ -379,6 +379,40 @@ def _proof_complete(outcome: dict[str, Any], clause_texts: dict[str, str]) -> bo
     )
 
 
+def _reset_stage2_assets(snapshot_path: Path) -> None:
+    """把副本库还原到 2b 抽取前的派生资产状态。
+
+    正式库中的 POL0001 已有 CONFIRMED 陈述/规则与测试用例，会触发受保护资产拦截；
+    评测对象是「从条款重新抽取并编译」，因此在副本上清空这些派生行后重跑。
+    只作用于 case 快照，不触碰正式库。
+    """
+    with sqlite3.connect(snapshot_path) as conn:
+        statement_ids = [
+            row[0] for row in conn.execute(
+                'SELECT s."statementId" FROM "NormativeStatement" s '
+                'JOIN "Policy_Clause" c ON c."clauseId"=s."clauseId" '
+                'WHERE c."policyId"=\'POL0001\''
+            )
+        ]
+        if statement_ids:
+            placeholders = ",".join("?" for _ in statement_ids)
+            conn.execute(
+                f'DELETE FROM "RuleTestCase" WHERE "statementId" IN ({placeholders})',
+                statement_ids,
+            )
+            for table in ("CompiledRule", "RuleParameter", "ClauseConsequence",
+                          "ClauseException", "ClauseCondition"):
+                conn.execute(
+                    f'DELETE FROM "{table}" WHERE "statementId" IN ({placeholders})',
+                    statement_ids,
+                )
+        conn.execute(
+            'DELETE FROM "NormativeStatement" WHERE "clauseId" IN ('
+            'SELECT "clauseId" FROM "Policy_Clause" WHERE "policyId"=\'POL0001\')'
+        )
+        conn.commit()
+
+
 def _execute_case(
     suite_name: str,
     case: dict[str, Any],
@@ -389,6 +423,7 @@ def _execute_case(
     snapshot_path = case_dir / "snapshot.db"
     shutil.copy2(database_path, snapshot_path)
     snapshot_hash = sha256(snapshot_path)
+    _reset_stage2_assets(snapshot_path)
     settings = Settings(
         database_url=f"sqlite:///{snapshot_path.as_posix()}",
         jwt_secret="technical-smoke-secret-with-at-least-32-bytes",

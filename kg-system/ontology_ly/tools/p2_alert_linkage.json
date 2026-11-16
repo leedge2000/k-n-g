@@ -1,0 +1,59 @@
+{
+ "fired": {
+  "asOf": "2025-06-01",
+  "scopeId": null,
+  "totalVerdicts": 3,
+  "raised": [
+   "RULE-RULE-180ec1d678c2c534c41cd1ff69b015bb"
+  ],
+  "closed": [],
+  "unchanged": [
+   "RULE-RULE-fb6c4bf8ccddab19bab8157a3666325f",
+   "RULE-RULE-400570c854322eb4c69d7c21ca716df0"
+  ]
+ },
+ "afterFired": [
+  {
+   "alertCode": "ALT-RULE-COVERAGE",
+   "severity": "P3",
+   "status": "OPEN"
+  },
+  {
+   "alertCode": "RULE-RULE-180ec1d678c2c534c41cd1ff69b015bb",
+   "severity": "P2",
+   "status": "OPEN"
+  }
+ ],
+ "afterSwitch": {
+  "asOf": "2025-06-01",
+  "scopeId": null,
+  "totalVerdicts": 3,
+  "raised": [
+   "RULE-RULE-fb6c4bf8ccddab19bab8157a3666325f"
+  ],
+  "closed": [
+   "RULE-RULE-180ec1d678c2c534c41cd1ff69b015bb"
+  ],
+  "unchanged": [
+   "RULE-RULE-400570c854322eb4c69d7c21ca716df0"
+  ]
+ },
+ "afterSwitchAlerts": [
+  {
+   "alertCode": "ALT-RULE-COVERAGE",
+   "severity": "P3",
+   "status": "OPEN"
+  },
+  {
+   "alertCode": "RULE-RULE-180ec1d678c2c534c41cd1ff69b015bb",
+   "severity": "P2",
+   "status": "CLOSED"
+  },
+  {
+   "alertCode": "RULE-RULE-fb6c4bf8ccddab19bab8157a3666325f",
+   "severity": "P2",
+   "status": "OPEN"
+  }
+ ],
+ "note": "在临时副本库执行，正式库 OpsAlert 未被写入"
+}

@@ -434,3 +434,45 @@ def test_nemo_engine_is_closed_after_request_and_with_application(settings):
         assert response.json()["outcomes"][0]["engine"] == "nemo"
         assert test_client.app.state.conclusion._engine._engine is None
     assert app.state.conclusion._engine._engine is None
+
+
+def test_target_statement_never_applicable_in_fallback(client, settings):
+    """TARGET 只描述建设目标，即使 facts 命中目标对象也不能判 APPLICABLE。"""
+    db = client.app.state.db
+    _insert_clause(
+        client,
+        clauseId="POL0001-C998",
+        clauseNo=98,
+        clauseTitle="建设目标条款",
+        clauseText="到2030年力争累计建成高标准农田13.5亿亩。",
+        targetObject="高标准农田",
+    )
+    with db.engine.begin() as conn:
+        db.insert(
+            "NormativeStatement",
+            {
+                "statementId": "STM-TARGET-TEST",
+                "clauseId": "POL0001-C998",
+                "clauseNo": "98",
+                "text": "到2030年力争累计建成高标准农田13.5亿亩",
+                "charStart": 0,
+                "charEnd": 20,
+                "statementType": "TARGET",
+                "exceptionIds": "[]",
+                "parameterIds": "[]",
+                "vaguenessFlag": 0,
+                "confirmationStatus": "DRAFT",
+            },
+            conn,
+        )
+
+    response = client.post(
+        "/api/policies/judge",
+        json={"asOf": "2025-06-01", "facts": {"targetObject": "高标准农田"}},
+        headers=auth(settings),
+    )
+    assert response.status_code == 200
+    verdict = {v["clauseId"]: v for v in response.json()["verdicts"]}["POL0001-C998"]
+    assert verdict["outcome"] == "UNABLE"
+    assert "目标类陈述" in verdict["reason"]
+    assert verdict["formalReasoning"] is False

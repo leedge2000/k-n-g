@@ -427,12 +427,23 @@ def test_recompile_protects_rule_testcases(client, settings):
 
 def test_registry_and_versioned_nemo_assets_match_compiled_rules(client, settings):
     registry = json.loads((POLICY_PACK / "tier1_policy_registry.json").read_text(encoding="utf-8"))
-    assert registry["registryVersion"] == "stage2-tier1-v1"
-    assert [p["policyId"] for p in registry["policies"]] == ["POL0001"]
+    assert registry["registryVersion"] == "stage2-tier1-v2"
+    assert [p["policyId"] for p in registry["policies"]] == [
+        "POL0001", "POL0009", "POL0005", "POL0008", "POL0010", "POL0011",
+    ]
     entry = registry["policies"][0]
     assert entry["docNumber"] == "发改价格〔2025〕308号"
     assert len(entry["qualificationEvidence"]) == 3
     assert entry["quantitativeClauseIds"] == ["POL0001-C001", "POL0001-C002", "POL0001-C003"]
+
+    high_standard = registry["policies"][1]
+    assert high_standard["docNumber"] == ""
+    assert high_standard["docNumberNote"]
+    assert {item["criterion"] for item in high_standard["qualificationEvidence"]} == {
+        "CENTRAL_MINISTRY_ISSUER", "NATIONAL_UNIFORM_PARAMETER", "QUANTIFIED_CLAUSES",
+    }
+    assert high_standard["quantitativeClauseIds"] == ["POL0009-C001", "POL0009-C002"]
+    assert high_standard["compiledRuleAsset"] == "rules/high_standard_farmland_2025.rls"
 
     _extract_2b(client, settings)
     _compile_2c(client, settings)

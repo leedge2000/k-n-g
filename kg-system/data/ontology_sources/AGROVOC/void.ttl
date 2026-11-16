@@ -1,0 +1,3588 @@
+@prefix :        <http://aims.fao.org/aos/agrovoc/void.ttl#> .
+@prefix agrovoc: <http://aims.fao.org/aos/agrovoc/> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl:  <http://www.w3.org/2008/05/skos-xl#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix lime:    <http://www.w3.org/ns/lemon/lime#> .
+
+:Agrovoc
+   rdf:type void:Dataset ;
+   rdfs:label "Agrovoc Dataset"^^xsd:string ;
+   foaf:homepage <http://aims.fao.org/vest-registry/vocabularies/agrovoc> ;
+   dct:created  "1981"^^xsd:gYear ;
+   dct:modified "2026-11-05T07:11:40Z"^^xsd:dateTime ;
+   dct:creator <https://www.wikidata.org/entity/Q82151> ;
+   dc:creator "منظمة الأغذية والزراعة للأمم المتحدة"@ar ;
+   dc:creator "Food and Agriculture Organization of the United Nations"@en ;
+   dc:creator "Organización de las Naciones Unidas para la Alimentación y la Agricultura"@es ;
+   dc:creator "Organisation des Nations Unies pour l'alimentation et l'agriculture"@fr ;
+   dc:creator "Продовольственная и сельскохозяйственная организация Объединенных Наций"@ru ;
+   dc:creator "联合国粮食及农业组织"@zh ;
+   dct:description "The AGROVOC thesaurus contains more than 41 000 concepts in 42 languages covering topics related to food, nutrition, agriculture, fisheries, forestry, environment and other related domains"@en ;
+   dct:license <https://creativecommons.org/licenses/by/4.0/> ;
+   dc:rights "CC-BY 4.0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+   dct:publisher <http://www.fao.org> ;
+   dct:source <http://aims.fao.org/agrovoc> ;
+   dct:subject <http://dbpedia.org/resource/Fishery> , <http://dbpedia.org/resource/Nutrition> , <http://dbpedia.org/resource/Agriculture> , <http://dbpedia.org/resource/Environment> , <http://dbpedia.org/resource/Food> , <http://dbpedia.org/resource/Forestry>;
+   dct:title "Agrovoc"^^xsd:string ;
+   void:dataDump <https://agrovoc.fao.org/latestAgrovoc/agrovoc_lod.nt.zip>;
+   void:feature <http://www.w3.org/ns/formats/N-Triples> , <http://www.w3.org/ns/formats/N-Quads> ;
+   void:exampleResource
+           <http://aims.fao.org/aos/agrovoc/c_12332> , <http://aims.fao.org/aos/agrovoc/c_203> , <http://aims.fao.org/aos/agrovoc/c_3055> , <http://aims.fao.org/aos/agrovoc/c_13551> , <http://aims.fao.org/aos/agrovoc/c_6599> ;      
+   void:rootResource agrovoc:c_330995 , agrovoc:c_331000 , agrovoc:c_50227 , agrovoc:c_331093 , agrovoc:c_7644 , agrovoc:c_7778 , agrovoc:c_330985 , agrovoc:c_330892 , agrovoc:c_330991 , agrovoc:c_13586 , agrovoc:c_49904 , agrovoc:c_330493 , agrovoc:c_9001017 , agrovoc:c_330705 , agrovoc:c_330704 , agrovoc:c_49874 , agrovoc:c_330834 , agrovoc:c_330829 , agrovoc:c_6211 , agrovoc:c_330979 , agrovoc:c_4788 , agrovoc:c_331061 , agrovoc:c_330988 , agrovoc:c_330919 , agrovoc:c_330998 ;
+   void:sparqlEndpoint <http://agrovoc.fao.org/sparql> ;
+   
+   void:uriSpace "http://aims.fao.org/aos/agrovoc/" ;
+   
+   # resources in the <http://landvoc.org/landvoc> scheme
+   void:subset :landvoc ;
+
+   # resources in the <http://aims.fao.org/aos/agrovoc/conceptScheme_aa4fdcd7> scheme
+   void:subset :faolex ;
+
+   # resources in the <http://aims.fao.org/aos/agrovoc/conceptScheme_7a97495f> scheme
+   void:subset :asfa ;
+
+   # resources in the <http://aims.fao.org/aos/agrovoc/conceptScheme_5b05e545> scheme
+  void:subset :one-cgiar ;
+      
+   
+# statistics computed on the LOD distribution
+   
+   void:triples 10203126 ;
+   void:entities 1308398 ;
+   void:distinctSubjects 1335157	 ;
+   void:distinctObjects 1390641 ;
+   
+   void:classPartition [
+     void:class skos:Concept;
+     void:entities 42100	;
+   ];
+   
+   void:classPartition [
+     void:class skosxl:Label;
+     void:entities 1266017;
+   ];
+   
+
+# set of lexicalizations in Agrovoc   
+	void:subset :ara_lex ;
+	void:subset :bel_lex ;
+	void:subset :bul_lex ;
+	void:subset :ben_lex ;
+	void:subset :cat_lex ;
+	void:subset :ces_lex ;
+	void:subset :dan_lex ;
+	void:subset :deu_lex ;
+	void:subset :gre_lex ;
+	void:subset :eng_lex ;
+	void:subset :spa_lex ;
+	void:subset :es-419_lex ;
+	void:subset :est_lex ;
+	void:subset :fas_lex ;
+	void:subset :fin_lex ;
+	void:subset :fra_lex ;
+	void:subset :gle_lex ;
+	void:subset :hin_lex ;
+	void:subset :hrv_lex ;
+	void:subset :hun_lex ;
+	void:subset :ind_lex ;
+	void:subset :ita_lex ;
+	void:subset :jpn_lex ;
+	void:subset :kat_lex ;
+	void:subset :khm_lex ;
+	void:subset :kor_lex ;
+	void:subset :lat_lex ;
+	void:subset :lao_lex ;
+	void:subset :lit_lex ;
+	void:subset :lav_lex ;
+	void:subset :mkd_lex ;
+	void:subset :mar_lex ;
+	void:subset :msa_lex ;
+	void:subset :mlt_lex ;
+	void:subset :mya_lex ;
+	void:subset :nob_lex ;
+	void:subset :nep_lex ;
+	void:subset :dut_lex ;
+	void:subset :nno_lex ;
+	void:subset :pol_lex ;
+	void:subset :por_lex ;
+	void:subset :pt-BR_lex ;
+	void:subset :ron_lex ;
+	void:subset :rus_lex ;
+	void:subset :sme_lex ;
+	void:subset :sin_lex ;
+	void:subset :slk_lex ;
+	void:subset :slv_lex ;
+	void:subset :alb_lex ;
+	void:subset :srp_lex ;
+	void:subset :swe_lex ;
+	void:subset :swa_lex ;
+	void:subset :tel_lex ;
+	void:subset :tha_lex ;
+	void:subset :tur_lex ;
+	void:subset :ukr_lex ;
+	void:subset :vie_lex ;
+	void:subset :zho_lex ;
+
+
+# set of linksets in Agrovoc
+   
+   void:subset :AGROVOC2DBPEDIA_1 ;
+   void:subset :AGROVOC2DBPEDIA_2 ;
+   void:subset :AGROVOC2DBPEDIA_3 ;
+   void:subset :AGROVOC2DBPEDIA_4 ;
+   void:subset :AGROVOC2DBPEDIA_5 ;
+
+   void:subset :AGROVOC2DDC_1 ;
+   void:subset :AGROVOC2DDC_2 ;
+   void:subset :AGROVOC2DDC_3 ;
+   void:subset :AGROVOC2DDC_4 ;
+   void:subset :AGROVOC2DDC_5 ;
+
+   void:subset :AGROVOC2DNB_1 ;
+   void:subset :AGROVOC2DNB_2 ;
+   void:subset :AGROVOC2DNB_3 ;
+   void:subset :AGROVOC2DNB_4 ;
+   void:subset :AGROVOC2DNB_5 ;
+
+   void:subset :AGROVOC2EUROVOC_1 ;
+   void:subset :AGROVOC2EUROVOC_2 ;
+   void:subset :AGROVOC2EUROVOC_3 ;
+   void:subset :AGROVOC2EUROVOC_4 ;
+   void:subset :AGROVOC2EUROVOC_5 ;
+
+   void:subset :AGROVOC2EIGE_1 ;
+   void:subset :AGROVOC2EIGE_2 ;
+   void:subset :AGROVOC2EIGE_3 ;
+   void:subset :AGROVOC2EIGE_4 ;
+   void:subset :AGROVOC2EIGE_5 ;
+
+   void:subset :AGROVOC2GEMET_1 ;
+   void:subset :AGROVOC2GEMET_2 ;
+   void:subset :AGROVOC2GEMET_3 ;
+   void:subset :AGROVOC2GEMET_4 ;
+   void:subset :AGROVOC2GEMET_5 ;
+
+   void:subset :AGROVOC2GeoNames_1 ;
+   void:subset :AGROVOC2GeoNames_2 ;
+   void:subset :AGROVOC2GeoNames_3 ;
+   void:subset :AGROVOC2GeoNames_4 ;
+   void:subset :AGROVOC2GeoNames_5 ;
+
+   void:subset :AGROVOC2GeopoliticalOntology_1 ;
+   void:subset :AGROVOC2GeopoliticalOntology_2 ;
+   void:subset :AGROVOC2GeopoliticalOntology_3 ;
+   void:subset :AGROVOC2GeopoliticalOntology_4 ;
+   void:subset :AGROVOC2GeopoliticalOntology_5 ;
+
+   void:subset :AGROVOC2LCSH_1 ;
+   void:subset :AGROVOC2LCSH_2 ;
+   void:subset :AGROVOC2LCSH_3 ;
+   void:subset :AGROVOC2LCSH_4 ;
+   void:subset :AGROVOC2LCSH_5 ;
+
+   void:subset :AGROVOC2NALT_1 ;
+   void:subset :AGROVOC2NALT_2 ;
+   void:subset :AGROVOC2NALT_3 ;
+   void:subset :AGROVOC2NALT_4 ;
+   void:subset :AGROVOC2NALT_5 ;
+
+   void:subset :AGROVOC2RAMEAU_1 ;
+   void:subset :AGROVOC2RAMEAU_2 ;
+   void:subset :AGROVOC2RAMEAU_3 ;
+   void:subset :AGROVOC2RAMEAU_4 ;
+   void:subset :AGROVOC2RAMEAU_5 ;
+
+   void:subset :AGROVOC2STW_1 ;
+   void:subset :AGROVOC2STW_2 ;
+   void:subset :AGROVOC2STW_3 ;
+   void:subset :AGROVOC2STW_4 ;
+   void:subset :AGROVOC2STW_5 ;
+
+   void:subset :AGROVOC2TheSoz_1 ;
+   void:subset :AGROVOC2TheSoz_2 ;
+   void:subset :AGROVOC2TheSoz_3 ;
+   void:subset :AGROVOC2TheSoz_4 ;
+   void:subset :AGROVOC2TheSoz_5 ;
+
+   void:subset :AGROVOC2EARTh_1 ;
+   void:subset :AGROVOC2EARTh_2 ;
+   void:subset :AGROVOC2EARTh_3 ;
+   void:subset :AGROVOC2EARTh_4 ;
+   void:subset :AGROVOC2EARTh_5 ;
+
+   void:subset :AGROVOC2CAAS_1 ;
+   void:subset :AGROVOC2CAAS_2 ;
+   void:subset :AGROVOC2CAAS_3 ;
+   void:subset :AGROVOC2CAAS_4 ;
+   void:subset :AGROVOC2CAAS_5 ;
+
+   void:subset :AGROVOC2BNCF_1 ;
+   void:subset :AGROVOC2BNCF_2 ;
+   void:subset :AGROVOC2BNCF_3 ;
+   void:subset :AGROVOC2BNCF_4 ;
+   void:subset :AGROVOC2BNCF_5 ;
+
+   void:subset :AGROVOC2CABI_1 ;
+   void:subset :AGROVOC2CABI_2 ;
+   void:subset :AGROVOC2CABI_3 ;
+   void:subset :AGROVOC2CABI_4 ;
+   void:subset :AGROVOC2CABI_5 ;
+
+   void:subset :AGROVOC2UNESCO_1 ;
+   void:subset :AGROVOC2UNESCO_2 ;
+   void:subset :AGROVOC2UNESCO_3 ;
+   void:subset :AGROVOC2UNESCO_4 ;
+   void:subset :AGROVOC2UNESCO_5 ;
+
+   void:subset :AGROVOC2INRA_1 ;
+   void:subset :AGROVOC2INRA_2 ;
+   void:subset :AGROVOC2INRA_3 ;
+   void:subset :AGROVOC2INRA_4 ;
+   void:subset :AGROVOC2INRA_5 ;
+
+   void:subset :AGROVOC2GACS_1 ;
+   void:subset :AGROVOC2GACS_2 ;
+   void:subset :AGROVOC2GACS_3 ;
+   void:subset :AGROVOC2GACS_4 ;
+   void:subset :AGROVOC2GACS_5 ;
+
+   void:subset :AGROVOC2WORLDBANK_1 ;
+   void:subset :AGROVOC2WORLDBANK_2 ;
+   void:subset :AGROVOC2WORLDBANK_3 ;
+   void:subset :AGROVOC2WORLDBANK_4 ;
+   void:subset :AGROVOC2WORLDBANK_5 ;
+
+   void:subset :AGROVOC2MESH_1 ;
+   void:subset :AGROVOC2MESH_2 ;
+   void:subset :AGROVOC2MESH_3 ;
+   void:subset :AGROVOC2MESH_4 ;
+   void:subset :AGROVOC2MESH_5 ;
+
+   void:subset :AGROVOC2GBIF_1 ;
+   void:subset :AGROVOC2GBIF_2 ;
+   void:subset :AGROVOC2GBIF_3 ;
+   void:subset :AGROVOC2GBIF_4 ;
+   void:subset :AGROVOC2GBIF_5 ;
+
+   void:subset :AGROVOC2REALFAGSTERMER_1 ;
+   void:subset :AGROVOC2REALFAGSTERMER_2 ;
+   void:subset :AGROVOC2REALFAGSTERMER_3 ;
+   void:subset :AGROVOC2REALFAGSTERMER_4 ;
+   void:subset :AGROVOC2REALFAGSTERMER_5 ;
+
+   void:subset :AGROVOC2UNBIS_1 ;
+   void:subset :AGROVOC2UNBIS_2 ;
+   void:subset :AGROVOC2UNBIS_3 ;
+   void:subset :AGROVOC2UNBIS_4 ;
+   void:subset :AGROVOC2UNBIS_5 ;
+
+   void:subset :AGROVOC2SDG_1 ;
+   void:subset :AGROVOC2SDG_2 ;
+   void:subset :AGROVOC2SDG_3 ;
+   void:subset :AGROVOC2SDG_4 ;
+   void:subset :AGROVOC2SDG_5 ;
+
+   void:subset :AGROVOC2LOTERRE_1 ;
+   void:subset :AGROVOC2LOTERRE_2 ;
+   void:subset :AGROVOC2LOTERRE_3 ;
+   void:subset :AGROVOC2LOTERRE_4 ;
+   void:subset :AGROVOC2LOTERRE_5 ;
+
+   void:subset :AGROVOC2ESCO_1 ;
+   void:subset :AGROVOC2ESCO_2 ;
+   void:subset :AGROVOC2ESCO_3 ;
+   void:subset :AGROVOC2ESCO_4 ;
+   void:subset :AGROVOC2ESCO_5 ;
+
+   void:subset :AGROVOC2UKAT_1 ;
+   void:subset :AGROVOC2UKAT_2 ;
+   void:subset :AGROVOC2UKAT_3 ;
+   void:subset :AGROVOC2UKAT_4 ;
+   void:subset :AGROVOC2UKAT_5 ;
+
+   void:subset :AGROVOC2CRAI_1 ;
+   void:subset :AGROVOC2CRAI_2 ;
+   void:subset :AGROVOC2CRAI_3 ;
+   void:subset :AGROVOC2CRAI_4 ;
+   void:subset :AGROVOC2CRAI_5 ;
+
+   void:subset :AGROVOC2NERC_1 ;
+   void:subset :AGROVOC2NERC_2 ;
+   void:subset :AGROVOC2NERC_3 ;
+   void:subset :AGROVOC2NERC_4 ;
+   void:subset :AGROVOC2NERC_5 ;
+
+   void:subset :AGROVOC2ENVTHES_1 ;
+   void:subset :AGROVOC2ENVTHES_2 ;
+   void:subset :AGROVOC2ENVTHES_3 ;
+   void:subset :AGROVOC2ENVTHES_4 ;
+   void:subset :AGROVOC2ENVTHES_5 ;
+
+   void:subset :AGROVOC2SCOT_1  ;
+   void:subset :AGROVOC2SCOT_2  ;
+   void:subset :AGROVOC2SCOT_3  ;
+   void:subset :AGROVOC2SCOT_4  ;
+   void:subset :AGROVOC2SCOT_5  ;
+
+   void:subset :AGROVOC2DTIC_1 ;
+   void:subset :AGROVOC2DTIC_2 ;
+   void:subset :AGROVOC2DTIC_3 ;
+   void:subset :AGROVOC2DTIC_4 ;
+   void:subset :AGROVOC2DTIC_5 ;
+
+   void:subset :AGROVOC2WIKIDATA_1 ;
+   void:subset :AGROVOC2WIKIDATA_2 ;
+   void:subset :AGROVOC2WIKIDATA_3 ;
+   void:subset :AGROVOC2WIKIDATA_4 ;
+   void:subset :AGROVOC2WIKIDATA_5 ;
+
+   void:subset :AGROVOC2MESA_1 ;
+   void:subset :AGROVOC2MESA_2 ;
+   void:subset :AGROVOC2MESA_3 ;
+   void:subset :AGROVOC2MESA_4 ;
+   void:subset :AGROVOC2MESA_5 ;
+
+   void:subset :AGROVOC2UNSPSC_1 ;
+   void:subset :AGROVOC2UNSPSC_2 ;
+   void:subset :AGROVOC2UNSPSC_3 ;
+   void:subset :AGROVOC2UNSPSC_4 ;
+   void:subset :AGROVOC2UNSPSC_5 ;
+
+   void:subset :AGROVOC2YSO_1 ;
+   void:subset :AGROVOC2YSO_2 ;
+   void:subset :AGROVOC2YSO_3 ;
+   void:subset :AGROVOC2YSO_4 ;
+   void:subset :AGROVOC2YSO_5 ;
+
+   void:subset :AGROVOC2EC_1 ;
+   void:subset :AGROVOC2EC_2 ;
+   void:subset :AGROVOC2EC_3 ;
+   void:subset :AGROVOC2EC_4 ;
+   void:subset :AGROVOC2EC_5 ;
+
+   void:subset :AGROVOC2THEPLANTLIST_1 ;
+   void:subset :AGROVOC2THEPLANTLIST_2 ;
+   void:subset :AGROVOC2THEPLANTLIST_3 ;
+   void:subset :AGROVOC2THEPLANTLIST_4 ;
+   void:subset :AGROVOC2THEPLANTLIST_5 ;
+
+   void:subset :AGROVOC2IPNI_1 ;
+   void:subset :AGROVOC2IPNI_2 ;
+   void:subset :AGROVOC2IPNI_3 ;
+   void:subset :AGROVOC2IPNI_4 ;
+   void:subset :AGROVOC2IPNI_5 ;
+
+   void:subset :AGROVOC2IUCN_1 ;
+   void:subset :AGROVOC2IUCN_2 ;
+   void:subset :AGROVOC2IUCN_3 ;
+   void:subset :AGROVOC2IUCN_4 ;
+   void:subset :AGROVOC2IUCN_5 ;
+
+   void:subset :AGROVOC2UNIPROT_1 ;
+   void:subset :AGROVOC2UNIPROT_2 ;
+   void:subset :AGROVOC2UNIPROT_3 ;
+   void:subset :AGROVOC2UNIPROT_4 ;
+   void:subset :AGROVOC2UNIPROT_5 ;
+
+   void:subset :AGROVOC2CALATHE_1 ;
+   void:subset :AGROVOC2CALATHE_2 ;
+   void:subset :AGROVOC2CALATHE_3 ;
+   void:subset :AGROVOC2CALATHE_4 ;
+   void:subset :AGROVOC2CALATHE_5 ;
+
+   void:subset :AGROVOC2ILO_1 ;
+   void:subset :AGROVOC2ILO_2 ;
+   void:subset :AGROVOC2ILO_3 ;
+   void:subset :AGROVOC2ILO_4 ;
+   void:subset :AGROVOC2ILO_5 ;
+
+   void:subset :AGROVOC2EPPO_1 ;
+   void:subset :AGROVOC2EPPO_2 ;
+   void:subset :AGROVOC2EPPO_3 ;
+   void:subset :AGROVOC2EPPO_4 ;
+   void:subset :AGROVOC2EPPO_5 ;
+
+   void:subset :AGROVOC2POWO_1 ;
+   void:subset :AGROVOC2POWO_2 ;
+   void:subset :AGROVOC2POWO_3 ;
+   void:subset :AGROVOC2POWO_4 ;
+   void:subset :AGROVOC2POWO_5 ;
+
+   void:subset :AGROVOC2TROPICOS_1 ;
+   void:subset :AGROVOC2TROPICOS_2 ;
+   void:subset :AGROVOC2TROPICOS_3 ;
+   void:subset :AGROVOC2TROPICOS_4 ;
+   void:subset :AGROVOC2TROPICOS_5 ;
+
+   void:subset :AGROVOC2EF_1 ;
+   void:subset :AGROVOC2EF_2 ;
+   void:subset :AGROVOC2EF_3 ;
+   void:subset :AGROVOC2EF_4 ;
+   void:subset :AGROVOC2EF_5 ;
+
+   void:subset :AGROVOC2FAUNAEUR_1 ;
+   void:subset :AGROVOC2FAUNAEUR_2 ;
+   void:subset :AGROVOC2FAUNAEUR_3 ;
+   void:subset :AGROVOC2FAUNAEUR_4 ;
+   void:subset :AGROVOC2FAUNAEUR_5 ;
+
+   void:subset :AGROVOC2INDEXFUNGORUM_1 ;
+   void:subset :AGROVOC2INDEXFUNGORUM_2 ;
+   void:subset :AGROVOC2INDEXFUNGORUM_3 ;
+   void:subset :AGROVOC2INDEXFUNGORUM_4 ;
+   void:subset :AGROVOC2INDEXFUNGORUM_5 ;
+
+   void:subset :AGROVOC2TESAUROBAC_1 ;
+   void:subset :AGROVOC2TESAUROBAC_2 ;
+   void:subset :AGROVOC2TESAUROBAC_3 ;
+   void:subset :AGROVOC2TESAUROBAC_4 ;
+   void:subset :AGROVOC2TESAUROBAC_5 ;
+
+   void:subset :AGROVOC2EURFASHION_1 ;
+   void:subset :AGROVOC2EURFASHION_2 ;
+   void:subset :AGROVOC2EURFASHION_3 ;
+   void:subset :AGROVOC2EURFASHION_4 ;
+   void:subset :AGROVOC2EURFASHION_5 ;
+
+   void:subset :AGROVOC2ICD_1 ;
+   void:subset :AGROVOC2ICD_2 ;
+   void:subset :AGROVOC2ICD_3 ;
+   void:subset :AGROVOC2ICD_4 ;
+   void:subset :AGROVOC2ICD_5 ;
+
+   void:subset :AGROVOC2EUVOCCOUNTRY_1 ;
+   void:subset :AGROVOC2EUVOCCOUNTRY_2 ;
+   void:subset :AGROVOC2EUVOCCOUNTRY_3 ;
+   void:subset :AGROVOC2EUVOCCOUNTRY_4 ;
+   void:subset :AGROVOC2EUVOCCOUNTRY_5 ;
+
+   void:subset :AGROVOC2EUVOFC300_1 ;
+   void:subset :AGROVOC2EUVOFC300_2 ;
+   void:subset :AGROVOC2EUVOFC300_3 ;
+   void:subset :AGROVOC2EUVOFC300_4 ;
+   void:subset :AGROVOC2EUVOFC300_5
+   .
+			
+
+
+# void description of the landvoc subset
+
+:landvoc
+   rdf:type void:Dataset ;
+   owl:versionInfo "2.0" ;
+   
+   dct:title "LandVoc - the Linked Land Governance Thesaurus"@en ;
+   dct:title "LandVoc - el tesauro de datos enlazados sobre gobernanza de la tierra"@es ;
+   dct:title "LandVoc - il tesauro connesso alla governance della terra"@it ;
+   dct:title "LandVoc - O léxico de ligação em governança da terra"@pt ;
+   dct:title "LandVoc - le thésaurus connecté de la gouvernance foncière"@fr ;
+   
+   rdfs:label "LandVoc - the Linked Land Governance Thesaurus"@en ;
+   rdfs:label "LandVoc - el tesauro de datos enlazados sobre gobernanza de la tierra"@es ;
+   rdfs:label "LandVoc - il tesauro connesso alla governance della terra"@it ;
+   rdfs:label "LandVoc - O léxico de ligação em governança da terra"@pt ;
+   rdfs:label "LandVoc - le thésaurus connecté de la gouvernance foncière"@fr ;
+   
+   dct:description "LandVoc is the standardized vocabulary for concepts relating to land governance, curated by the Land Portal Foundation"@en ;
+   dct:description "LandVoc es un vocabulario estandarizado de conceptos relativos a  la gobernanza de la tierra, seleccionado y organizado por Land Portal Foundation"@es ;
+   dct:description "LandVoc è un vocabolario standardizzato di concetti relativi alla governance della terra, a cura della Land Portal Foundation"@it ;
+   dct:description "LandVoc é o vocabulário padrão para conceitos relativos à governança da terra, com a curadoria da Land Portal Foundation"@pt ;
+   dct:description "LandVoc est le vocabulaire standardisé pour les concepts relatifs à la gouvernance foncière, geré par la Land Portal Foundation"@fr ;
+       
+   dc:contributor "Laura Meggiolaro" ;
+   dc:contributor  "Lisette Meij" ;
+   dc:contributor  "Vittoria Ruggiero" ;
+   dc:contributor  "Gerard Ciparisse" ;
+   dc:contributor  "Natalia Vaccarezza" ;
+   dc:contributor  "Carlos Tejo-Alonso" ;
+   dc:contributor  "Henrique Pires dos Santos (ACTUAR)" ;
+   dc:contributor  "Sara Jani (ICARDA, MEL)" ;
+   dc:contributor  "Mira Haddad (ICARDA, MEL)" ;
+   
+   dct:contributor <http://aims.fao.org> ;
+   dct:contributor  <http://www.opendevelopmentmekong.net> ;
+   dct:contributor  <http://landportal.org> ;
+   dct:contributor  <http://www.sudamericarural.org> ;
+   dct:contributor  <http://www.habitat.org/lac-en> ;
+   dct:contributor  <http://www.ldgi.org> ;
+   dct:contributor  <http://www.uttaran.net> ;
+   dct:contributor  <http://www.acode-u.org> ;
+   dct:contributor  <http://www.icarda.org> ;
+   dct:contributor  <http://mel.cgiar.org> ;
+   
+   dct:publisher <http://www.fao.org> ;
+   dct:license <http://creativecommons.org/licenses/by/4.0/> ;
+   
+   foaf:homepage <http://landvoc.org> ;
+
+   dct:created "2016-06-01"^^xsd:date ;
+   
+   dct:modified "2026-11-05T07:11:40Z"^^xsd:date ;
+   dct:issued "2016-06-01"^^xsd:date ;
+   
+   foaf:homepage <http://www.landportal.info/voc/landvoc> .
+   
+
+# void description of the asfa subset
+:asfa
+   rdf:type void:Dataset ;
+   owl:versionInfo "2.0" ;
+   dct:modified "2026-11-05T07:11:40Z"^^xsd:dateTime ;
+   dct:license <https://creativecommons.org/licenses/by/4.0/> ;
+   dct:publisher <http://www.fao.org> ;
+   void:sparqlEndpoint <https://agrovoc.fao.org/sparqlAsfa> ;
+   foaf:homepage <https://www.fao.org/fishery/en/asfa/en> ;
+   foaf:homepage <https://agrovoc.fao.org/skosmosAsfa/>.
+
+# void description of the faolex subset
+:faolex
+   rdf:type void:Dataset ;
+   owl:versionInfo "2.0" ;
+   dct:modified "2026-11-05T07:11:40Z"^^xsd:dateTime ;
+   dct:license <https://creativecommons.org/licenses/by/4.0/> ;
+   dct:publisher <http://www.fao.org> ;
+   void:sparqlEndpoint <https://agrovoc.fao.org/sparqlFaolex> ;
+   foaf:homepage <https://agrovoc.fao.org/skosmosFaolex> ;
+   foaf:homepage <https://www.fao.org/faolex/> .
+
+#void description of the one-cgiar subset
+:one-cgiar
+    rdf:type void:Dataset ;
+    owl:versionInfo "2.0" ;
+    dct:modified "2026-11-05T07:11:40Z"^^xsd:dateTime ;
+    dct:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dct:publisher <http://www.fao.org> ;
+    foaf:homepage <https://agrovoc.fao.org/skosmosOneCGIAR/> ;
+    foaf:homepage <https://www.cgiar.org/> .
+
+
+# Linguistic Metadata (LIME) 
+
+# see: https://www.w3.org/2016/05/ontolex/#metadata-lime
+# see: http://link.springer.com/chapter/10.1007%2F978-3-319-18818-8_20
+
+# lime:lexicalEntries             number of distinct lexical entries lexicalizing the dataset
+# lime:references                 number of entities in the dataset lexicalized by at least a lexical entry
+# lime:lexicalizations            number of lexicalizations in a lexicalization set, i.e. number of unique <lexentry,reference> pairs
+# lime:avgNumOfLexicalizations    average number of lexicalizations per dataset entity = lexicalizations/|ref-dataset|
+# lime:percentage									percentage of entities in the reference dataset which have at least one lexicalization
+
+
+:ara_lex a lime:LexicalizationSet ;
+   lime:language "ar" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ar>, <http://lexvo.org/id/iso639-3/ara> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "44309"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42103"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9993117"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "44518"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.0566316"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:bel_lex a lime:LexicalizationSet ;
+   lime:language "be" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/be>, <http://lexvo.org/id/iso639-3/bel> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "27929"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "23976"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.5690687"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "28011"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.6648391"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:bul_lex a lime:LexicalizationSet ;
+   lime:language "bg" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/bg>, <http://lexvo.org/id/iso639-3/bul> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "35"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "34"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "8.069876E-4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "35"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "8.307225E-4"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ben_lex a lime:LexicalizationSet ;
+   lime:language "bn" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/bn>, <http://lexvo.org/id/iso639-3/ben> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "5"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "5"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "1.18674645E-4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "5"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.18674645E-4"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:cat_lex a lime:LexicalizationSet ;
+   lime:language "ca" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ca>, <http://lexvo.org/id/iso639-3/cat> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "658"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "645"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.015309028"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "658"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.015617583"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ces_lex a lime:LexicalizationSet ;
+   lime:language "cs" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/cs>, <http://lexvo.org/id/iso639-3/ces> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "48165"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "39111"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9282968"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "48262"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.145495"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:dan_lex a lime:LexicalizationSet ;
+   lime:language "da" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/da>, <http://lexvo.org/id/iso639-3/dan> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "24546"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "24457"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.58048517"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "24546"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.58259755"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:deu_lex a lime:LexicalizationSet ;
+   lime:language "de" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/de>, <http://lexvo.org/id/iso639-3/deu> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "47162"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "39217"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.93081266"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "47179"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.1197902"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:gre_lex a lime:LexicalizationSet ;
+   lime:language "el" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/el>, <http://lexvo.org/id/iso639-3/gre> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "201"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "199"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.004723251"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "201"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0047707204"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:eng_lex a lime:LexicalizationSet ;
+   lime:language "en" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/en>, <http://lexvo.org/id/iso639-3/eng> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "55208"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42104"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9993354"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "55224"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.3107377"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:spa_lex a lime:LexicalizationSet ;
+   lime:language "es" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/es>, <http://lexvo.org/id/iso639-3/spa> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "59308"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42103"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9993117"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "59441"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.4108279"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:es-419_lex a lime:LexicalizationSet ;
+   lime:language "es-419" ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "2"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "2.3734929E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "2"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "4.7469857E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:est_lex a lime:LexicalizationSet ;
+   lime:language "et" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/et>, <http://lexvo.org/id/iso639-3/est> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "445"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "441"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.010467104"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "445"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.010562043"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:fas_lex a lime:LexicalizationSet ;
+   lime:language "fa" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/fa>, <http://lexvo.org/id/iso639-3/fas> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "28785"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "19919"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.47277603"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "28786"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.6832336"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:fin_lex a lime:LexicalizationSet ;
+   lime:language "fi" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/fi>, <http://lexvo.org/id/iso639-3/fin> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "743"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "734"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.017421437"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "743"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.017635051"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:fra_lex a lime:LexicalizationSet ;
+   lime:language "fr" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/fr>, <http://lexvo.org/id/iso639-3/fra> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "50688"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42103"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9993117"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "50705"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.2034795"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:gle_lex a lime:LexicalizationSet ;
+   lime:language "ga" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ga>, <http://lexvo.org/id/iso639-3/gle> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "95"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "95"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.002254818"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "95"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.002254818"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:hin_lex a lime:LexicalizationSet ;
+   lime:language "hi" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/hi>, <http://lexvo.org/id/iso639-3/hin> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "27385"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "20364"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.4833381"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "27599"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.6550603"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:hrv_lex a lime:LexicalizationSet ;
+   lime:language "hr" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/hr>, <http://lexvo.org/id/iso639-3/hrv> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "151"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "150"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.0035602392"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "151"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0035839742"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:hun_lex a lime:LexicalizationSet ;
+   lime:language "hu" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/hu>, <http://lexvo.org/id/iso639-3/hun> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "40883"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "34496"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.8187601"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "41007"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.9732982"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ind_lex a lime:LexicalizationSet ;
+   lime:language "id" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/id>, <http://lexvo.org/id/iso639-3/ind> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "32"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "32"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "7.595177E-4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "32"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "7.595177E-4"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ita_lex a lime:LexicalizationSet ;
+   lime:language "it" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/it>, <http://lexvo.org/id/iso639-3/ita> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "48534"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "39135"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.92886645"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "48691"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.1556774"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:jpn_lex a lime:LexicalizationSet ;
+   lime:language "ja" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ja>, <http://lexvo.org/id/iso639-3/jpn> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "35880"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "30674"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.72804517"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "36445"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.86501944"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:kat_lex a lime:LexicalizationSet ;
+   lime:language "ka" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ka>, <http://lexvo.org/id/iso639-3/kat> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "38935"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "32293"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.76647204"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "38936"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.9241432"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:khm_lex a lime:LexicalizationSet ;
+   lime:language "km" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/km>, <http://lexvo.org/id/iso639-3/khm> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "260"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "264"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.006266021"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "266"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.006313491"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:kor_lex a lime:LexicalizationSet ;
+   lime:language "ko" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ko>, <http://lexvo.org/id/iso639-3/kor> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "14574"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "12830"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.30451912"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "14746"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.34999526"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:lat_lex a lime:LexicalizationSet ;
+   lime:language "la" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/la>, <http://lexvo.org/id/iso639-3/lat> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "22454"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "22245"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.5279835"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "22454"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.5329441"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:lao_lex a lime:LexicalizationSet ;
+   lime:language "lo" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/lo>, <http://lexvo.org/id/iso639-3/lao> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "34389"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "31758"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.75377387"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "34398"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.8164341"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:lit_lex a lime:LexicalizationSet ;
+   lime:language "lt" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/lt>, <http://lexvo.org/id/iso639-3/lit> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "4"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "4"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "9.4939714E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "4"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "9.4939714E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:lav_lex a lime:LexicalizationSet ;
+   lime:language "lv" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/lv>, <http://lexvo.org/id/iso639-3/lav> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "12"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "12"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "2.8481914E-4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "12"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "2.8481914E-4"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:mkd_lex a lime:LexicalizationSet ;
+   lime:language "mk" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/mk>, <http://lexvo.org/id/iso639-3/mkd> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "2.3734929E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "2.3734929E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:mar_lex a lime:LexicalizationSet ;
+   lime:language "mr" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/mr>, <http://lexvo.org/id/iso639-3/mar> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "7.1204784E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "7.1204784E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:msa_lex a lime:LexicalizationSet ;
+   lime:language "ms" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ms>, <http://lexvo.org/id/iso639-3/msa> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "880"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "859"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.020388303"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "883"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.020957941"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:mlt_lex a lime:LexicalizationSet ;
+   lime:language "mt" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/mt>, <http://lexvo.org/id/iso639-3/mlt> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "7.1204784E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "3"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "7.1204784E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:mya_lex a lime:LexicalizationSet ;
+   lime:language "my" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/my>, <http://lexvo.org/id/iso639-3/mya> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "285"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "284"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.0067407195"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "287"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0068119243"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:nob_lex a lime:LexicalizationSet ;
+   lime:language "nb" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/nb>, <http://lexvo.org/id/iso639-3/nob> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "28562"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "28216"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.66970474"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "28562"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.677917"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:nep_lex a lime:LexicalizationSet ;
+   lime:language "ne" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ne>, <http://lexvo.org/id/iso639-3/nep> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "6"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "6"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "1.4240957E-4"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "6"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.4240957E-4"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:dut_lex a lime:LexicalizationSet ;
+   lime:language "nl" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/nl>, <http://lexvo.org/id/iso639-3/dut> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "23563"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "23510"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.5580082"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "23563"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.5592661"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:nno_lex a lime:LexicalizationSet ;
+   lime:language "nn" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/nn>, <http://lexvo.org/id/iso639-3/nno> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "1755"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "1696"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.04025444"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "1755"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0416548"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:pol_lex a lime:LexicalizationSet ;
+   lime:language "pl" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/pl>, <http://lexvo.org/id/iso639-3/pol> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "43611"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "34789"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.8257144"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "43612"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.0351276"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:por_lex a lime:LexicalizationSet ;
+   lime:language "pt" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/pt>, <http://lexvo.org/id/iso639-3/por> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "43518"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "37152"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.88180006"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "43551"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.0336798"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:pt-BR_lex a lime:LexicalizationSet ;
+   lime:language "pt-BR" ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "29414"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "27599"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.6550603"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "29458"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.6991835"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ron_lex a lime:LexicalizationSet ;
+   lime:language "ro" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ro>, <http://lexvo.org/id/iso639-3/ron> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "39182"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "34536"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.8197095"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "39187"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.9301006"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:rus_lex a lime:LexicalizationSet ;
+   lime:language "ru" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/ru>, <http://lexvo.org/id/iso639-3/rus> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "51879"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42103"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9993117"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "52001"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.23424"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:sme_lex a lime:LexicalizationSet ;
+   lime:language "se" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/se>, <http://lexvo.org/id/iso639-3/sme> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "91"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "88"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.0020886736"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "91"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0021598784"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:sin_lex a lime:LexicalizationSet ;
+   lime:language "si" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/si>, <http://lexvo.org/id/iso639-3/sin> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "2.3734929E-5"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "2.3734929E-5"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:slk_lex a lime:LexicalizationSet ;
+   lime:language "sk" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sk>, <http://lexvo.org/id/iso639-3/slk> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "39783"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "34193"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.8115684"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "40019"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.9498481"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:slv_lex a lime:LexicalizationSet ;
+   lime:language "sl" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sl>, <http://lexvo.org/id/iso639-3/slv> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "182"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "179"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.004248552"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "182"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0043197568"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:alb_lex a lime:LexicalizationSet ;
+   lime:language "sq" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sq>, <http://lexvo.org/id/iso639-3/alb> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "52"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "52"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.0012342163"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "52"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.0012342163"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:srp_lex a lime:LexicalizationSet ;
+   lime:language "sr" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sr>, <http://lexvo.org/id/iso639-3/srp> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "28175"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "27775"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.6592376"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "28180"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.6688503"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:swe_lex a lime:LexicalizationSet ;
+   lime:language "sv" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sv>, <http://lexvo.org/id/iso639-3/swe> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "24313"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "24208"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.5745751"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "24314"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.57709104"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:swa_lex a lime:LexicalizationSet ;
+   lime:language "sw" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/sw>, <http://lexvo.org/id/iso639-3/swa> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "43186"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42081"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9987895"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "43261"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.0267967"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:tel_lex a lime:LexicalizationSet ;
+   lime:language "te" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/te>, <http://lexvo.org/id/iso639-3/tel> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "4549"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "3920"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.09304092"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "4549"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.107970186"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:tha_lex a lime:LexicalizationSet ;
+   lime:language "th" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/th>, <http://lexvo.org/id/iso639-3/tha> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "41824"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "35991"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.8542438"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "41836"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.99297446"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:tur_lex a lime:LexicalizationSet ;
+   lime:language "tr" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/tr>, <http://lexvo.org/id/iso639-3/tur> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "58577"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "42100"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.99924046"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "58724"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.3938099"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:ukr_lex a lime:LexicalizationSet ;
+   lime:language "uk" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/uk>, <http://lexvo.org/id/iso639-3/ukr> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "34562"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "31113"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.73846483"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "34604"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.82132345"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:vie_lex a lime:LexicalizationSet ;
+   lime:language "vi" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/vi>, <http://lexvo.org/id/iso639-3/vie> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "22981"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "22947"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.5446454"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "22995"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "0.54578465"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+:zho_lex a lime:LexicalizationSet ;
+   lime:language "zh" ;
+   dct:language  <http://id.loc.gov/vocabulary/iso639-1/zh>, <http://lexvo.org/id/iso639-3/zho> ;
+   lime:lexicalizationModel <http://www.w3.org/2008/05/skos-xl> ;
+   lime:referenceDataset :Agrovoc ;
+   lime:lexicalEntries "50638"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:references "41998"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:percentage "0.9968195"^^<http://www.w3.org/2001/XMLSchema#float> ;
+   lime:lexicalizations "50750"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+   lime:avgNumOfLexicalizations "1.2045476"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+
+
+<http://aims.fao.org>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://aims.fao.org/> ;
+   foaf:mbox <mailto:AIMS@fao.org> .
+
+<http://www.opendevelopmentmekong.net/>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://www.opendevelopmentmekong.net/> ;
+   foaf:name "Open Development Mekong" .
+			
+<http://rcsd.soc.cmu.ac.th/>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://rcsd.soc.cmu.ac.th/> ;
+   foaf:name "The Regional Center for Social Science and Sustainable Development (RCSD)" .
+
+<http://www.cmu.ac.th>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://www.cmu.ac.th> ;
+   foaf:name "Chiang Mai University" .
+
+<http://cambodia.opendevelopmentmekong.net/>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://cambodia.opendevelopmentmekong.net/> ;
+   foaf:name "Open Development Cambodia" .
+
+<http://vietnam.opendevelopmentmekong.net/>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://vietnam.opendevelopmentmekong.net/> ;
+   foaf:name "Open Development Vietnam" .
+
+<http://myanmar.opendevelopmentmekong.net/>
+   rdf:type foaf:Organization ;
+   foaf:homepage <http://myanmar.opendevelopmentmekong.net/> ;
+   foaf:name "Open Development Myanmar" .
+
+
+
+# DBPedia has not been explicitly defined as Dataset here as we are directly referencing its void:Dataset instance, available on the web
+
+
+:AGROVOC2DBPEDIA_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget <http://dbpedia.org/void/Dataset> ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 54 .
+
+:AGROVOC2DBPEDIA_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget <http://dbpedia.org/void/Dataset> ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 10990 .
+
+:AGROVOC2DBPEDIA_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget <http://dbpedia.org/void/Dataset> ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DBPEDIA_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget <http://dbpedia.org/void/Dataset> ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DBPEDIA_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget <http://dbpedia.org/void/Dataset> ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2DDC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :DDC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DDC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :DDC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DDC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :DDC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DDC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :DDC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DDC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :DDC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2DNB_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :DNB ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 5430 .
+
+:AGROVOC2DNB_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :DNB ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 563 .
+
+:AGROVOC2DNB_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :DNB ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DNB_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :DNB ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DNB_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :DNB ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 260 .
+
+
+:AGROVOC2EUROVOC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :EUROVOC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1453 .
+
+:AGROVOC2EUROVOC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :EUROVOC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 66 .
+
+:AGROVOC2EUROVOC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :EUROVOC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2EUROVOC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :EUROVOC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EUROVOC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :EUROVOC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2EIGE_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :EIGE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 31 .
+
+:AGROVOC2EIGE_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :EIGE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2EIGE_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :EIGE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EIGE_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :EIGE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EIGE_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :EIGE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2GEMET_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :GEMET ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1290 .
+
+:AGROVOC2GEMET_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :GEMET ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 10 .
+
+:AGROVOC2GEMET_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :GEMET ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GEMET_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :GEMET ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2GEMET_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :GEMET ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+
+:AGROVOC2GeoNames_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :GeoNames ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 206 .
+
+:AGROVOC2GeoNames_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :GeoNames ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeoNames_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :GeoNames ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeoNames_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :GeoNames ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeoNames_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :GeoNames ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2GeopoliticalOntology_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :GeopoliticalOntology ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeopoliticalOntology_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :GeopoliticalOntology ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeopoliticalOntology_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :GeopoliticalOntology ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeopoliticalOntology_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :GeopoliticalOntology ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GeopoliticalOntology_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :GeopoliticalOntology ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2LCSH_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :LCSH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1099 .
+
+:AGROVOC2LCSH_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :LCSH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 7 .
+
+:AGROVOC2LCSH_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :LCSH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2LCSH_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :LCSH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 2 .
+
+:AGROVOC2LCSH_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :LCSH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2NALT_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :NALT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 15680 .
+
+:AGROVOC2NALT_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :NALT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 270 .
+
+:AGROVOC2NALT_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :NALT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 4 .
+
+:AGROVOC2NALT_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :NALT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 69 .
+
+:AGROVOC2NALT_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :NALT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2RAMEAU_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :RAMEAU ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 671 .
+
+:AGROVOC2RAMEAU_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :RAMEAU ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2RAMEAU_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :RAMEAU ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2RAMEAU_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :RAMEAU ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2RAMEAU_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :RAMEAU ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2STW_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :STW ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1159 .
+
+:AGROVOC2STW_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :STW ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 5 .
+
+:AGROVOC2STW_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :STW ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2STW_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :STW ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2STW_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :STW ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2TheSoz_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :TheSoz ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 844 .
+
+:AGROVOC2TheSoz_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :TheSoz ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 7 .
+
+:AGROVOC2TheSoz_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :TheSoz ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2TheSoz_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :TheSoz ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2TheSoz_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :TheSoz ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2EARTh_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :EARTh ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1400 .
+
+:AGROVOC2EARTh_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :EARTh ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EARTh_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :EARTh ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EARTh_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :EARTh ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EARTh_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :EARTh ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2CAAS_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :CAAS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CAAS_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :CAAS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CAAS_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :CAAS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CAAS_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :CAAS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CAAS_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :CAAS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2BNCF_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :BNCF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 231 .
+
+:AGROVOC2BNCF_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :BNCF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1769 .
+
+:AGROVOC2BNCF_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :BNCF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2BNCF_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :BNCF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2BNCF_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :BNCF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2CABI_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :CABI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 25 .
+
+:AGROVOC2CABI_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :CABI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2CABI_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :CABI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CABI_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :CABI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CABI_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :CABI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2UNESCO_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :UNESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 575 .
+
+:AGROVOC2UNESCO_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :UNESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 71 .
+
+:AGROVOC2UNESCO_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :UNESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNESCO_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :UNESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNESCO_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :UNESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2INRA_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :INRA ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 51 .
+
+:AGROVOC2INRA_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :INRA ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2INRA_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :INRA ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2INRA_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :INRA ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2INRA_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :INRA ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2GACS_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :GACS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GACS_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :GACS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GACS_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :GACS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GACS_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :GACS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GACS_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :GACS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2WORLDBANK_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :WORLDBANK ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 840 .
+
+:AGROVOC2WORLDBANK_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :WORLDBANK ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 21 .
+
+:AGROVOC2WORLDBANK_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :WORLDBANK ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 2 .
+
+:AGROVOC2WORLDBANK_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :WORLDBANK ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2WORLDBANK_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :WORLDBANK ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2MESH_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :MESH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 9 .
+
+:AGROVOC2MESH_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :MESH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2MESH_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :MESH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2MESH_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :MESH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2MESH_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :MESH ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2GBIF_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :GBIF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 2027 .
+
+:AGROVOC2GBIF_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :GBIF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GBIF_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :GBIF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GBIF_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :GBIF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2GBIF_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :GBIF ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2REALFAGSTERMER_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :REALFAGSTERMER ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 40 .
+
+:AGROVOC2REALFAGSTERMER_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :REALFAGSTERMER ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2REALFAGSTERMER_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :REALFAGSTERMER ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2REALFAGSTERMER_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :REALFAGSTERMER ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2REALFAGSTERMER_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :REALFAGSTERMER ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2UNBIS_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :UNBIS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1307 .
+
+:AGROVOC2UNBIS_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :UNBIS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 55 .
+
+:AGROVOC2UNBIS_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :UNBIS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNBIS_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :UNBIS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNBIS_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :UNBIS ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2SDG_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :SDG ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 17 .
+
+:AGROVOC2SDG_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :SDG ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2SDG_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :SDG ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2SDG_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :SDG ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2SDG_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :SDG ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2LOTERRE_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :LOTERRE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 26 .
+
+:AGROVOC2LOTERRE_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :LOTERRE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 2 .
+
+:AGROVOC2LOTERRE_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :LOTERRE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2LOTERRE_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :LOTERRE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2LOTERRE_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :LOTERRE ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2ESCO_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :ESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 4 .
+
+:AGROVOC2ESCO_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :ESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2ESCO_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :ESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2ESCO_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :ESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2ESCO_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :ESCO ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2UKAT_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :UKAT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 67 .
+
+:AGROVOC2UKAT_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :UKAT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 3 .
+
+:AGROVOC2UKAT_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :UKAT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UKAT_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :UKAT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UKAT_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :UKAT ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2CRAI_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :CRAI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 314 .
+
+:AGROVOC2CRAI_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :CRAI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2CRAI_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :CRAI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CRAI_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :CRAI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2CRAI_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :CRAI ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2NERC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :NERC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 21 .
+
+:AGROVOC2NERC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :NERC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2NERC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :NERC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2NERC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :NERC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2NERC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :NERC ;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2ENVTHES_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :ENVTHES;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 53 .
+
+:AGROVOC2ENVTHES_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :ENVTHES;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2ENVTHES_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :ENVTHES;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2ENVTHES_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :ENVTHES;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2ENVTHES_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :ENVTHES;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2SCOT_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :SCOT;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 30 .
+
+:AGROVOC2SCOT_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :SCOT;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 3 .
+
+:AGROVOC2SCOT_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :SCOT;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2SCOT_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :SCOT;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2SCOT_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :SCOT;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2DTIC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :DTIC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DTIC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :DTIC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DTIC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :DTIC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DTIC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :DTIC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2DTIC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :DTIC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2WIKIDATA_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :WIKIDATA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 44 .
+
+:AGROVOC2WIKIDATA_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :WIKIDATA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 6 .
+
+:AGROVOC2WIKIDATA_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :WIKIDATA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2WIKIDATA_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :WIKIDATA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2WIKIDATA_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :WIKIDATA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2MESA_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :MESA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 7 .
+
+:AGROVOC2MESA_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :MESA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2MESA_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :MESA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2MESA_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :MESA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2MESA_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :MESA;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2UNSPSC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :UNSPSC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 3 .
+
+:AGROVOC2UNSPSC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :UNSPSC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNSPSC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :UNSPSC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNSPSC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :UNSPSC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2UNSPSC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :UNSPSC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2YSO_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :YSO;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 89 .
+
+:AGROVOC2YSO_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :YSO;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 1 .
+
+:AGROVOC2YSO_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :YSO;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2YSO_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :YSO;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2YSO_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :YSO;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2EC_1
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:exactMatch ;
+   void:objectsTarget :EC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EC_2
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:closeMatch ;
+   void:objectsTarget :EC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EC_3
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:relatedMatch ;
+   void:objectsTarget :EC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EC_4
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:narrowMatch ;
+   void:objectsTarget :EC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+:AGROVOC2EC_5
+   rdf:type void:Linkset ;
+   void:linkPredicate skos:broadMatch ;
+   void:objectsTarget :EC;
+   void:subjectsTarget :Agrovoc ;
+   void:triples 0 .
+
+
+:AGROVOC2THEPLANTLIST_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :THEPLANTLIST;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2THEPLANTLIST_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :THEPLANTLIST;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2THEPLANTLIST_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :THEPLANTLIST;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2THEPLANTLIST_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :THEPLANTLIST;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2THEPLANTLIST_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :THEPLANTLIST;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2IPNI_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :IPNI;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IPNI_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :IPNI;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IPNI_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :IPNI;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IPNI_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :IPNI;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IPNI_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :IPNI;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2IUCN_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :IUCN;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IUCN_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :IUCN;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IUCN_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :IUCN;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IUCN_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :IUCN;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2IUCN_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :IUCN;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2UNIPROT_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :UNIPROT;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2UNIPROT_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :UNIPROT;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2UNIPROT_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :UNIPROT;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2UNIPROT_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :UNIPROT;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2UNIPROT_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :UNIPROT;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2CALATHE_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :CALATHE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 77 .
+
+:AGROVOC2CALATHE_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :CALATHE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 3 .
+
+:AGROVOC2CALATHE_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :CALATHE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2CALATHE_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :CALATHE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2CALATHE_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :CALATHE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2ILO_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :ILO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 26 .
+
+:AGROVOC2ILO_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :ILO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 1 .
+
+:AGROVOC2ILO_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :ILO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2ILO_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :ILO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2ILO_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :ILO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2EPPO_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :EPPO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EPPO_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :EPPO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EPPO_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :EPPO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EPPO_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :EPPO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EPPO_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :EPPO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2POWO_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :POWO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2POWO_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :POWO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2POWO_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :POWO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2POWO_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :POWO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2POWO_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :POWO;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2TROPICOS_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :TROPICOS;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TROPICOS_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :TROPICOS;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TROPICOS_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :TROPICOS;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TROPICOS_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :TROPICOS;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TROPICOS_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :TROPICOS;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2EF_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :EF;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EF_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :EF;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EF_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :EF;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EF_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :EF;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EF_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :EF;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2FAUNAEUR_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :FAUNAEUR;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2FAUNAEUR_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :FAUNAEUR;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2FAUNAEUR_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :FAUNAEUR;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2FAUNAEUR_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :FAUNAEUR;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2FAUNAEUR_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :FAUNAEUR;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2INDEXFUNGORUM_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :INDEXFUNGORUM;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INDEXFUNGORUM_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :INDEXFUNGORUM;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INDEXFUNGORUM_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :INDEXFUNGORUM;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INDEXFUNGORUM_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :INDEXFUNGORUM;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INDEXFUNGORUM_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :INDEXFUNGORUM;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2TESAUROBAC_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :TESAUROBAC;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TESAUROBAC_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :TESAUROBAC;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TESAUROBAC_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :TESAUROBAC;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TESAUROBAC_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :TESAUROBAC;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2TESAUROBAC_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :TESAUROBAC;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2EURFASHION_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :EURFASHION;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EURFASHION_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :EURFASHION;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 1 .
+
+:AGROVOC2EURFASHION_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :EURFASHION;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EURFASHION_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :EURFASHION;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EURFASHION_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :EURFASHION;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2ICD_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :ICD;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 57 .
+
+:AGROVOC2ICD_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :ICD;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 1 .
+
+:AGROVOC2ICD_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :ICD;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2ICD_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :ICD;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2ICD_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :ICD;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2EUVOCCOUNTRY_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :EUVOCCOUNTRY;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 2 .
+
+:AGROVOC2EUVOCCOUNTRY_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :EUVOCCOUNTRY;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOCCOUNTRY_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :EUVOCCOUNTRY;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOCCOUNTRY_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :EUVOCCOUNTRY;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOCCOUNTRY_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :EUVOCCOUNTRY;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2EUVOFC300_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :EUVOCFC300;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 2 .
+
+:AGROVOC2EUVOFC300_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :EUVOCFC300;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOFC300_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :EUVOCFC300;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOFC300_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :EUVOCFC300;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2EUVOFC300_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :EUVOCFC300;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:AGROVOC2INRAE_1
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:exactMatch ;
+	void:objectsTarget :INRAE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 1375 .
+
+:AGROVOC2INRAE_2
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:closeMatch ;
+	void:objectsTarget :INRAE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 68 .
+
+:AGROVOC2INRAE_3
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:relatedMatch ;
+	void:objectsTarget :INRAE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INRAE_4
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:narrowMatch ;
+	void:objectsTarget :INRAE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+:AGROVOC2INRAE_5
+	rdf:type void:Linkset ;
+	void:linkPredicate skos:broadMatch ;
+	void:objectsTarget :INRAE;
+	void:subjectsTarget :Agrovoc ;
+	void:triples 0 .
+
+
+:DDC  rdf:type void:Dataset ;
+   foaf:homepage <http://dewey.info/> .
+
+:DNB  rdf:type void:Dataset ;
+   foaf:homepage <https://portal.dnb.de/> .
+
+:EUROVOC
+   rdf:type void:Dataset ;
+   foaf:homepage <http://eurovoc.europa.eu/> .
+
+:EIGE
+   rdf:type void:Dataset ;
+   foaf:homepage <http://eige.europa.eu/> .
+   
+:GEMET
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.eionet.europa.eu/gemet> .
+
+:GeoNames
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.geonames.org/> .
+
+:GeopoliticalOntology
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.fao.org/countryprofiles/geoinfo.asp> .
+
+:LCSH
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.loc.gov/aba/cataloging/subject/weeklylists/> .
+
+:NALT
+   rdf:type void:Dataset ;
+   foaf:homepage <http://agclass.nal.usda.gov/> .
+
+:RAMEAU
+   rdf:type void:Dataset ;
+   foaf:homepage <http://rameau.bnf.fr/informations/rameauenbref.htm> .
+
+:STW  rdf:type void:Dataset ;
+   foaf:homepage <http://zbw.eu/stw/versions/latest/about> .
+
+:TheSoz
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.gesis.org/en/services/tools-standards/social-science-thesaurus/> .
+
+:EARTh
+   rdf:type void:Dataset ;
+   foaf:homepage <http://ekolab.iia.cnr.it/earth_eng.htm> ;
+   void:sparqlEndpoint <http://linkeddata.ge.imati.cnr.it:8890/sparql> .
+ 			
+:CAAS
+   rdf:type void:Dataset ;
+   foaf:homepage <http://cat.aii.caas.cn> ;
+   void:sparqlEndpoint <http://cat.aii.caas.cn/CATSparqlQuery> . 			
+
+:BNCF 
+   rdf:type void:Dataset ;
+   foaf:homepage <http://purl.org/bncf/tid/> .
+   
+:CABI
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.cabi.org/> .
+   
+:UNESCO
+   rdf:type void:Dataset ;
+   foaf:homepage <http://vocabularies.unesco.org/> .
+   
+:INRA
+   rdf:type void:Dataset ;
+   foaf:homepage <http://opendata.inra.fr/anaeeThes/> .
+   
+:GACS
+   rdf:type void:Dataset ;
+   foaf:homepage <http://browser.agrisemantics.org/gacs/> .
+   
+:WORLDBANK
+   rdf:type void:Dataset ;
+   foaf:homepage <http://vocabulary.worldbank.org/thesaurus/> .
+   
+:MESH
+   rdf:type void:Dataset ;
+   foaf:homepage <http://finto.fi/mesh/fi/>	.
+   
+:GBIF
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.gbif.org/species/>	.
+   
+:REALFAGSTERMER
+   rdf:type void:Dataset ;
+   foaf:homepage <http://data.ub.uio.no/realfagstermer/>	.
+   
+:UNBIS
+   rdf:type void:Dataset ;
+   foaf:homepage <http://metadata.un.org/thesaurus/>	.   
+
+:SDG
+   rdf:type void:Dataset ;
+   foaf:homepage <http://metadata.un.org/sdg/>	.
+   
+:LOTERRE
+   rdf:type void:Dataset ;
+   foaf:homepage <http://data.loterre.fr/>	.
+   
+:ESCO
+   rdf:type void:Dataset ;
+   foaf:homepage <https://ec.europa.eu/esco/portal>	.
+   
+:UKAT
+   rdf:type void:Dataset ;
+   foaf:homepage <https://ukat.aim25.com/thesaurus/concept/>	.
+   
+:CRAI
+   rdf:type void:Dataset ;
+   foaf:homepage <http://crai.ub.edu/>	.
+   
+:NERC
+   rdf:type void:Dataset ;
+   foaf:homepage <http://vocab.nerc.ac.uk/>	.
+   
+:ENVTHES
+   rdf:type void:Dataset ;
+   foaf:homepage <http://vocabs.lter-europe.net/EnvThes/> . 
+
+:SCOT
+   rdf:type void:Dataset ;
+   foaf:homepage <http://vocabulary.curriculum.edu.au/scot/> . 
+
+:DTIC
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.dtic.mil/dtic/thesaurus/> .
+   
+:WIKIDATA
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.wikidata.org/> .
+
+:MESA
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.yso.fi/onto/mesa/> .
+   
+:AGROVOC2UNSPSC
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.yso.fi/onto/unspsc/> .
+
+:YSO
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.yso.fi/onto/yso/> .
+   
+:EC
+   rdf:type void:Dataset ;
+   foaf:homepage <http://sorry.ec.europa.eu/> .
+
+:THEPLANTLIST	
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.theplantlist.org/> .
+   
+:IPNI
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.ipni.org/> .
+   
+:IUCN
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.iucnredlist.org/> .
+   
+:UNIPROT
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.uniprot.org/taxonomy/> .
+   
+:CALATHE
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.cadastralvocabulary.org/> .
+	
+:ILO
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.ilo.org/dyn/taxonomy/taxmain.home> .
+	
+:EPPO
+   rdf:type void:Dataset ;
+   foaf:homepage <https://gd.eppo.int/taxon/> .
+
+:POWO
+   rdf:type void:Dataset ;
+   foaf:homepage <http://powo.science.kew.org/> .
+
+:TROPICOS
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.tropicos.org/> .
+   
+:EF
+   rdf:type void:Dataset ;
+   foaf:homepage <http://onto.nerc.ac.uk/edg/tbl/EF.editor> .
+      
+:FAUNAEUR
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.faunaeur.org/> .    
+   
+:INDEXFUNGORUM
+   rdf:type void:Dataset ;
+   foaf:homepage <http://www.indexfungorum.org/> .
+   
+:TESAUROBAC
+   rdf:type void:Dataset ;
+   foaf:homepage <https://www.vocabularyserver.com/tesaurobac/index.php> .
+   
+:EURFASHION
+   rdf:type void:Dataset ;
+   foaf:homepage <http://thesaurus.europeanafashion.eu/> .
+   
+:ICD
+   rdf:type void:Dataset ;
+   foaf:homepage <https://icd.who.int/icdapi> .
+   
+:EUVOCCOUNTRY
+   rdf:type void:Dataset ;
+   foaf:homepage <https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/country> .
+
+:EUVOCFC300
+   rdf:type void:Dataset ;
+   foaf:homepage <https://op.europa.eu/en/web/eu-vocabularies/concept-scheme/-/resource?uri=http://publications.europa.eu/resource/authority/fd_300> .
+
+:INRAE
+   rdf:type void:Dataset ;
+   foaf:homepage <https://consultation.vocabulaires-ouverts.inrae.fr/thesaurus-inrae/> .

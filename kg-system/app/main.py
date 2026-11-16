@@ -31,7 +31,9 @@ from .nebula import NebulaGraphStore
 from .ontology import OntologyService
 from .ops import OpsScheduler, OpsService
 from .policy import PolicyService
+from .policy_impact import PolicyImpactError, PolicyImpactService
 from .conclusion import ConclusionService
+from .rule_runtime import RuleAlertService, RuleTestRunner
 from .pack2b import Pack2bService, ProtectedAssetError
 from .pack2c import Pack2cService
 from .rag import RagService
@@ -121,7 +123,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if settings.auto_seed:
                 app.state.market.seed_market()
             app.state.policy = PolicyService(db, app.state.scope)
+            app.state.policy_impact = PolicyImpactService(db, app.state.policy)
             app.state.conclusion = ConclusionService(db, app.state.policy)
+            app.state.rule_runner = RuleTestRunner(db, app.state.conclusion)
+            app.state.rule_alert = RuleAlertService(db, app.state.conclusion)
             app.state.pack2b = Pack2bService(db)
             app.state.pack2c = Pack2cService(db)
             app.state.rag = RagService(db, app.state.knowledge, settings)
@@ -761,6 +766,28 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except ProtectedAssetError as exc:
             raise HTTPException(409, {"message": str(exc), "protectedIds": exc.protected_ids}) from exc
 
+    @app.get("/api/rules/test-cases")
+    def rule_test_run_all(request: Request,
+                          _: Principal = Depends(current_principal)) -> dict[str, Any]:
+        return request.app.state.rule_runner.run_all()
+
+    @app.post("/api/rules/test-cases/{testcase_id}")
+    def rule_test_run_one(testcase_id: str, request: Request,
+                          _: Principal = Depends(current_principal)) -> dict[str, Any]:
+        return request.app.state.rule_runner.run_testcase(testcase_id)
+
+    @app.post("/api/rules/alerts/run")
+    def rule_alert_run(payload: dict[str, Any], request: Request,
+                       _: Principal = Depends(current_principal)) -> dict[str, Any]:
+        try:
+            return request.app.state.rule_alert.run(
+                facts=dict(payload.get("facts") or {}),
+                as_of=payload.get("asOf"),
+                scope_id=payload.get("scopeId"),
+            )
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
     @app.post("/api/rag/query")
     def rag_query(payload: dict[str, Any], request: Request,
                   _: Principal = Depends(current_principal)) -> dict[str, Any]:
@@ -884,6 +911,35 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from exc
         # 指定时点等于一次历史回溯，不能被中间层缓存成「当前」结果
+        if asOf:
+            return JSONResponse(result, headers={"Cache-Control": "no-store"})
+        return result
+
+    @app.get("/api/policies/impacts")
+    def policy_impacts(request: Request,
+                       commodityId: str = "",
+                       regionId: str | None = None,
+                       asOf: str | None = None,
+                       _: Principal = Depends(current_principal)) -> Any:
+        try:
+            result = request.app.state.policy_impact.impacts(commodityId, regionId, asOf)
+        except PolicyImpactError as exc:
+            raise HTTPException(exc.status, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        if asOf:
+            return JSONResponse(result, headers={"Cache-Control": "no-store"})
+        return result
+
+    @app.get("/api/policies/{policyId}/targets")
+    def policy_targets(policyId: str, request: Request, asOf: str | None = None,
+                       _: Principal = Depends(current_principal)) -> Any:
+        try:
+            result = request.app.state.policy_impact.policy_targets(policyId, asOf)
+        except PolicyImpactError as exc:
+            raise HTTPException(exc.status, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
         if asOf:
             return JSONResponse(result, headers={"Cache-Control": "no-store"})
         return result

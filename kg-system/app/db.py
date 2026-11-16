@@ -12,6 +12,8 @@ from typing import Any, Iterable
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import Connection, Engine
 
+from app.ontology_mirror import initialize_mirror_schema
+
 AUDIT_COLUMNS = {
     "createdBy": "TEXT", "createdAt": "TEXT", "updatedBy": "TEXT", "updatedAt": "TEXT"
 }
@@ -81,6 +83,7 @@ class Database:
             conn.execute(text('CREATE INDEX IF NOT EXISTS "idx_change_updated" ON "ChangeLog" ("updatedAt")'))
             for table, column in [("Policy", "reviewStatus"), ("IvdData", "status"), ("YrbYearbook", "status"), ("Intel", "status"), ("Relation", "status"), ("KtcCategory", "categoryCode")]:
                 conn.execute(text(f'CREATE INDEX IF NOT EXISTS "idx_{table}_{column}" ON {quote(table)} ({quote(column)})'))
+            initialize_mirror_schema(conn)
 
     def _backfill_columns(self, conn: Connection) -> None:
         """按 mapping.json 给已有库补齐缺失列。

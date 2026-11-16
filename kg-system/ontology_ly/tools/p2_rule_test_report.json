@@ -1,0 +1,123 @@
+{
+ "checkId": "P2-RULE-TEST",
+ "policyId": "POL0001",
+ "startedAt": "2026-11-16T05:09:38+00:00",
+ "finishedAt": "2026-11-16T05:09:39+00:00",
+ "total": 9,
+ "passed": 9,
+ "failed": 0,
+ "allPassed": true,
+ "engine": "nemo",
+ "engineWithFacts": {
+  "asOf": "2025-06-01",
+  "engine": "nemo",
+  "verdicts": [
+   {
+    "statementId": "STM-36e608ccc61dc8652052635ea2af1504",
+    "outcome": "NOT_APPLICABLE",
+    "engine": "nemo"
+   },
+   {
+    "statementId": "STM-a44607b1285a3619336dd0de6a9b8fe9",
+    "outcome": "NOT_APPLICABLE",
+    "engine": "nemo"
+   },
+   {
+    "statementId": "STM-97c8c236efc9b309132162f10d932484",
+    "outcome": "APPLICABLE",
+    "engine": "nemo"
+   }
+  ]
+ },
+ "engineWithoutFacts": {
+  "engine": "nemo",
+  "outcomes": [
+   "UNABLE",
+   "UNABLE",
+   "UNABLE"
+  ]
+ },
+ "results": [
+  {
+   "testcaseId": "RTC-POL0001-C001-01",
+   "statementId": "STM-36e608ccc61dc8652052635ea2af1504",
+   "scenarioName": "POL0001-C001 目标品种命中",
+   "expected": "APPLICABLE",
+   "actual": "APPLICABLE",
+   "passed": true,
+   "reason": "主条件全部成立、无例外触发且未被覆盖"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C001-02",
+   "statementId": "STM-36e608ccc61dc8652052635ea2af1504",
+   "scenarioName": "POL0001-C001 目标品种不命中",
+   "expected": "NOT_APPLICABLE",
+   "actual": "NOT_APPLICABLE",
+   "passed": true,
+   "reason": "至少一个主条件不成立"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C001-03",
+   "statementId": "STM-36e608ccc61dc8652052635ea2af1504",
+   "scenarioName": "POL0001-C001 缺少目标品种事实",
+   "expected": "UNABLE",
+   "actual": "UNABLE",
+   "passed": true,
+   "reason": "缺事实或条件不可求值：targetObject"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C002-01",
+   "statementId": "STM-a44607b1285a3619336dd0de6a9b8fe9",
+   "scenarioName": "POL0001-C002 目标品种命中",
+   "expected": "APPLICABLE",
+   "actual": "APPLICABLE",
+   "passed": true,
+   "reason": "主条件全部成立、无例外触发且未被覆盖"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C002-02",
+   "statementId": "STM-a44607b1285a3619336dd0de6a9b8fe9",
+   "scenarioName": "POL0001-C002 目标品种不命中",
+   "expected": "NOT_APPLICABLE",
+   "actual": "NOT_APPLICABLE",
+   "passed": true,
+   "reason": "至少一个主条件不成立"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C002-03",
+   "statementId": "STM-a44607b1285a3619336dd0de6a9b8fe9",
+   "scenarioName": "POL0001-C002 缺少目标品种事实",
+   "expected": "UNABLE",
+   "actual": "UNABLE",
+   "passed": true,
+   "reason": "缺事实或条件不可求值：targetObject"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C003-01",
+   "statementId": "STM-97c8c236efc9b309132162f10d932484",
+   "scenarioName": "POL0001-C003 目标品种命中",
+   "expected": "APPLICABLE",
+   "actual": "APPLICABLE",
+   "passed": true,
+   "reason": "主条件全部成立、无例外触发且未被覆盖"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C003-02",
+   "statementId": "STM-97c8c236efc9b309132162f10d932484",
+   "scenarioName": "POL0001-C003 目标品种不命中",
+   "expected": "NOT_APPLICABLE",
+   "actual": "NOT_APPLICABLE",
+   "passed": true,
+   "reason": "至少一个主条件不成立"
+  },
+  {
+   "testcaseId": "RTC-POL0001-C003-03",
+   "statementId": "STM-97c8c236efc9b309132162f10d932484",
+   "scenarioName": "POL0001-C003 缺少目标品种事实",
+   "expected": "UNABLE",
+   "actual": "UNABLE",
+   "passed": true,
+   "reason": "缺事实或条件不可求值：targetObject"
+  }
+ ]
+}

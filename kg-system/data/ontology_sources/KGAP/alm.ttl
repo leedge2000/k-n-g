@@ -1,0 +1,428 @@
+@prefix : <https://w3id.org/AlmesCore/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sdo: <https://schema.org/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <https://www.w3.org/ns/dcat#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <https://w3id.org/AlmesCore/> .
+
+<https://w3id.org/AlmesCore/> rdf:type owl:Ontology ;
+                                  rdfs:comment "In this version, hash URIs have been replaced with slash URIs"@en ;
+                                  owl:versionInfo "2.0.2" ;
+                                  rdfs:label "Agriculture and Livestock Metadata Elements Set (Almes Core)"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/terms/references
+dct:references rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#broadMatch
+skos:broadMatch rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#relatedMatch
+skos:relatedMatch rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/creator
+dc:creator rdf:type owl:ObjectProperty ;
+           rdfs:domain dcat:Resource ;
+           rdfs:range foaf:Agent ;
+           rdfs:comment "Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity. In this Application Profile, creator is instantiated by Agent."@en ;
+           rdfs:label "creator"@en ,
+                      "criador"@pt-br ;
+           skos:definition "An entity primarily responsible for making the resource."@en .
+
+
+###  http://purl.org/dc/elements/1.1/publisher
+dc:publisher rdf:type owl:ObjectProperty ;
+             rdfs:domain dcat:Resource ;
+             rdfs:range foaf:Agent ;
+             rdfs:comment "Examples of a Publisher include a person, an organization, or a service. Typically, the name of a Publisher should be used to indicate the entity. In this Application Profile, publisher is instantiated by Agent."@en ;
+             rdfs:label "editor"@pt-br ,
+                        "publisher"@en ;
+             skos:definition "An entity responsible for making the resource available."@en .
+
+
+###  https://schema.org/location
+sdo:location rdf:type owl:ObjectProperty ;
+             rdfs:domain dcat:Dataset ;
+             rdfs:range gn:Feature ;
+             rdfs:comment "In this Application Profile, this metadata field should be populated with Geonames.org."@en ;
+             rdfs:label "localização"@pt-br ,
+                        "location"@en ;
+             skos:definition "The location of, for example, where an event is happening, where an organization is located, or where an action takes place."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#hasObservation
+:hasObservation rdf:type owl:ObjectProperty ;
+                rdfs:domain dcat:Dataset ;
+                rdfs:range :Observation ;
+                rdfs:comment "This metadata field should be used to create a blank node in an RDF representation, including the properties dc:date, sdo:price, and sdo:currency."@en ;
+                rdfs:label "has observation"@en ,
+                           "tem observação"@pt-br ;
+                skos:definition "Associates an entity (represented by an dct:identifier) to a specific recorded price Observation related to an agricultural product."@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/date
+dc:date rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Observation ;
+        rdfs:range xsd:date ;
+        rdfs:comment "Date may be used to express temporal information at any level of granularity. Recommended practice is to express the date, date/time, or period of time according to ISO 8601-1 [ISO 8601-1] or a published profile of the ISO standard, such as the W3C Note on Date and Time Formats [W3CDTF] or the Extended Date/Time Format Specification [EDTF]. If the full date is unknown, month and year (YYYY-MM) or just year (YYYY) may be used. Date ranges may be specified using ISO 8601 period of time specification in which start and end dates are separated by a ‘/’ (slash) character. Either the start or end date may be missing. In this Aplication Profile, alternativelly, periods of time may be represented using  sdo:startDate and sdo:ednDate."@en ;
+        rdfs:label "data"@pt-br ,
+                   "date"@en ;
+        skos:definition "A point or period of time associated with an event in the lifecycle of the resource."@en .
+
+
+###  http://purl.org/dc/elements/1.1/rights
+dc:rights rdf:type owl:DatatypeProperty ;
+          rdfs:domain dcat:Resource ;
+          rdfs:range rdfs:Literal ;
+          rdfs:comment "Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights."@en ;
+          rdfs:label "direitos"@pt-br ,
+                     "rights"@en ;
+          skos:definition "Information about rights held in and over the resource."@en .
+
+
+###  http://purl.org/dc/elements/1.1/title
+dc:title rdf:type owl:DatatypeProperty ;
+         rdfs:domain dcat:Resource ;
+         rdfs:range rdfs:Literal ;
+         rdfs:label "title"@en ,
+                    "título"@pt-br ;
+         skos:definition "A name given to the resource."@en .
+
+
+###  http://purl.org/dc/terms/accrualPeriodicity
+dct:accrualPeriodicity rdf:type owl:DatatypeProperty ;
+                       rdfs:domain dcat:Dataset ;
+                       rdfs:range rdfs:Literal ;
+                       rdfs:comment "Recommended practice is to use a value from the Collection Description Frequency Vocabulary (DCMI-COLLFREQ)."@en ;
+                       rdfs:label "periodicidade"@pt-br ,
+                                  "periodicity"@en ;
+                       skos:definition "The frequency with which items are added to a collection."@en .
+
+
+###  http://purl.org/dc/terms/description
+dct:description rdf:type owl:DatatypeProperty ;
+                rdfs:domain dcat:Resource ;
+                rdfs:range rdfs:Literal ;
+                rdfs:label "description"@en ,
+                           "descrição"@pt-br ;
+                skos:definition "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en .
+
+
+###  http://purl.org/dc/terms/hasVersion
+dct:hasVersion rdf:type owl:DatatypeProperty ;
+               rdfs:domain dcat:Resource ;
+               rdfs:range rdfs:Literal ;
+               rdfs:label "version"@en ,
+                          "versão"@pt-br ;
+               skos:definition "Version indicator (name or identifier) of a resource."@en .
+
+
+###  http://purl.org/dc/terms/identifier
+dct:identifier rdf:type owl:DatatypeProperty ;
+               rdfs:domain dcat:Resource ;
+               rdfs:range xsd:anyURI ;
+               rdfs:label "identificador"@pt-br ,
+                          "identifier"@en ;
+               skos:definition "An unambiguous reference to the resource within a given context."@en .
+
+
+###  http://purl.org/dc/terms/language
+dct:language rdf:type owl:DatatypeProperty ;
+             rdfs:domain dcat:Resource ;
+             rdfs:range rdfs:Literal ;
+             rdfs:comment "Recommended practice is to use either a non-literal value representing a language from a controlled vocabulary such as ISO 639-2 or ISO 639-3, or a literal value consisting of an IETF Best Current Practice 47 (IETF-BCP47) language tag."@en ;
+             rdfs:label "idioma"@pt-br ,
+                        "language"@en ;
+             skos:definition "A language of the resource."@en .
+
+
+###  http://purl.org/dc/terms/license
+dct:license rdf:type owl:DatatypeProperty ;
+            rdfs:domain dcat:Resource ;
+            rdfs:range xsd:anyURI ;
+            rdfs:comment "Recommended practice is to identify the license document with a URI. If this is not possible or feasible, a literal value that identifies the license may be provided."@en ;
+            rdfs:label "license"@en ,
+                       "licença de uso"@pt-br ;
+            skos:definition "A legal document giving official permission to do something with the resource."@en .
+
+
+###  http://purl.org/dc/terms/modified
+dct:modified rdf:type owl:DatatypeProperty ;
+             rdfs:domain dcat:Resource ;
+             rdfs:range xsd:date ;
+             rdfs:comment "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en ;
+             rdfs:label "modified"@en ,
+                        "última atualização"@pt-br ;
+             skos:definition "Date on which the resource was changed."@en .
+
+
+###  http://www.geonames.org/ontology#geonamesID
+gn:geonamesID rdf:type owl:DatatypeProperty ;
+              rdfs:domain gn:Feature ;
+              rdfs:range xsd:anyURI ;
+              rdfs:comment "Examples: http://sws.geonames.org/5128581/, http://sws.geonames.org/6252001/, http://sws.geonames.org/2347283/."@en ;
+              rdfs:label "geonames ID"@en ,
+                         "identificador geoNames"@pt-br ;
+              skos:definition "The ID of a geographical feature."@en .
+
+
+###  http://www.geonames.org/ontology#name
+gn:name rdf:type owl:DatatypeProperty ;
+        rdfs:domain gn:Feature ;
+        rdfs:range rdfs:Literal ;
+        rdfs:comment "Examples: New York, Mount Everest, Nile River."@en ;
+        rdfs:label "geoNames name"@en ,
+                   "nome geoNames"@pt-br ;
+        skos:definition "The name of a geographical feature."@en .
+
+
+###  http://xmlns.com/foaf/0.1/homepage
+foaf:homepage rdf:type owl:DatatypeProperty ;
+              rdfs:domain foaf:Agent ;
+              rdfs:range xsd:anyURI ;
+              rdfs:label "homepage"@en ,
+                         "homepage"@pt-br ;
+              skos:definition "A homepage for some thing."@en .
+
+
+###  http://xmlns.com/foaf/0.1/mbox
+foaf:mbox rdf:type owl:DatatypeProperty ;
+          rdfs:domain foaf:Agent ;
+          rdfs:range rdfs:Literal ;
+          rdfs:label "e-mail"@en ,
+                     "e-mail"@pt-br ;
+          skos:definition "A personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox. This is a ‘static inverse functional property’, in that there is (across time and change) at most one individual that ever has any particular value for foaf:mbox."@en .
+
+
+###  http://xmlns.com/foaf/0.1/name
+foaf:name rdf:type owl:DatatypeProperty ;
+          rdfs:domain foaf:Agent ;
+          rdfs:range rdfs:Literal ;
+          rdfs:label "name"@en ,
+                     "nome"@pt-br ;
+          skos:definition "A name for some thing."@en .
+
+
+###  https://schema.org/currency
+sdo:currency rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Observation ;
+             rdfs:range xsd:string ;
+             rdfs:comment "Use standard formats: ISO 4217 currency format, e.g. “USD”; Ticker symbol for cryptocurrencies, e.g. “BTC”; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. “Ithaca HOUR”."@en ;
+             rdfs:label "currency"@en ,
+                        "moeda"@pt-br ;
+             skos:definition "The currency in which the monetary amount is expressed."@en .
+
+
+###  https://schema.org/endDate
+sdo:endDate rdf:type owl:DatatypeProperty ;
+            rdfs:domain dcat:Dataset ;
+            rdfs:range xsd:date ;
+            rdfs:comment "In this Application Profile, it is used to inform the end date of a price index time series. In case the price index is still active, this field should be left blank."@en ;
+            rdfs:label "data de fim"@pt-br ,
+                       "end date"@en ;
+            skos:definition "The end date and time of the item (in ISO 8601 date format)."@en .
+
+
+###  https://schema.org/price
+sdo:price rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Observation ;
+          rdfs:range xsd:float ;
+          rdfs:comment "The price should be indicated as a float number with two decimal digits."@en ;
+          rdfs:label "preço"@pt-br ,
+                     "price"@en ;
+          skos:definition "The offer price of a product."@en .
+
+
+###  https://schema.org/referenceQuantity
+sdo:referenceQuantity rdf:type owl:DatatypeProperty ;
+                      rdfs:domain dcat:Dataset ;
+                      rdfs:range rdfs:Literal ;
+                      rdfs:label "quantidade de referência"@pt-br ,
+                                 "reference quantity"@en ;
+                      skos:definition "The reference quantity for which a certain price applies, e.g. 1 EUR per 4 kWh of electricity. This property is a replacement for unitOfMeasurement for the advanced cases where the price does not relate to a standard unit.."@en .
+
+
+###  https://schema.org/startDate
+sdo:startDate rdf:type owl:DatatypeProperty ;
+              rdfs:domain dcat:Dataset ;
+              rdfs:range xsd:date ;
+              rdfs:comment "In this Application Profile, it is used to inform the start date of a price index time series."@en ;
+              rdfs:label "data de início"@pt-br ,
+                         "start date"@en ;
+              skos:definition "The start date and time of the item (in ISO 8601 date format)."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#descriptivestatistics
+:descriptivestatistics rdf:type owl:DatatypeProperty ;
+                       rdfs:domain dcat:Dataset ;
+                       rdfs:range rdfs:Literal ;
+                       rdfs:comment "Recommended best practice is to use a controlled vocabulary. Example: time series, mean, Range, trend analysis, seasonal snalysis, etc."@en ;
+                       rdfs:label "descriptive statistics"@en ,
+                                  "estatística descritiva"@pt-br ;
+                       skos:definition "Summarizes and describes the main features of a dataset. When used in the context of a time series, it includes metrics such as mean, variance, and trends over time."@en ;
+                       skos:relatedMatch <http://rdf-vocabulary.ddialliance.org/discovery#DescriptiveStatistics> .
+
+
+###  https://w3id.org/AlmesCore/rdf#productgroup
+:productgroup rdf:type owl:DatatypeProperty ;
+              rdfs:domain dcat:Dataset ;
+              rdfs:range rdfs:Literal ;
+              rdfs:comment "The best recommended practice is to use a controlled vocabulary. Example: AGROVOC, APTO, FoodOn."@en ;
+              rdfs:label "grupo do produto"@pt-br ,
+                         "product group"@en ;
+              skos:broadMatch sdo:productGroup ;
+              skos:definition "Group of products aggregated by common biological traits or any other characteristics (e.g., grain, vegetables, meat)."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#productgroupname
+:productgroupname rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf :productgroup ;
+                  rdfs:range rdfs:Literal ;
+                  rdfs:comment "Label of the product group term (e.g., grain, vegetables, meat)."@en ;
+                  rdfs:label "nome do grupo do produto"@pt-br ,
+                             "product group name"@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#productgroupuri
+:productgroupuri rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf :productgroup ;
+                 rdfs:range xsd:anyURI ;
+                 rdfs:comment "URI of a term describing the product group (e.g., https://agrovoc.fao.org/browse/agrovoc/en/page/c_3346)."@en ;
+                 rdfs:label "URI do grupo do produto"@pt-br ,
+                            "product group URI"@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#producttype
+:producttype rdf:type owl:DatatypeProperty ;
+             rdfs:domain dcat:Dataset ;
+             rdfs:range rdfs:Literal ;
+             rdfs:comment "The best recommended practice is to use a controlled vocabulary. Example: AGROVOC, APTO, FoodOn."@en ;
+             rdfs:label "product type"@en ,
+                        "produto"@pt-br ;
+             skos:broadMatch sdo:product ;
+             skos:definition "Name of the agricultural or livestock product type targeted by the commercial operation."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#producttypename
+:producttypename rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf :producttype ;
+                 rdfs:range rdfs:Literal ;
+                 rdfs:comment "Label of the controlled term (e.g., cassava flour, honey, beef)."@en ;
+                 rdfs:label "nome do tipo de produto"@pt-br ,
+                            "product type name"@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#producttypeuri
+:producttypeuri rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf :producttype ;
+                rdfs:range xsd:anyURI ;
+                rdfs:comment "URI of a controlled term for the product type (e.g., http://aims.fao.org/aos/agrovoc/c_a77edd1d)."@en ;
+                rdfs:label "URI do tipo de produto"@pt-br ,
+                           "product type URI"@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#statisticalmethod
+:statisticalmethod rdf:type owl:DatatypeProperty ;
+                   rdfs:domain dcat:Dataset ;
+                   rdfs:range xsd:anyURI ;
+                   rdfs:comment "Recommended best practice is to indicate the published resource URI in an open access format."@en ;
+                   rdfs:label "método estatístico"@pt-br ,
+                              "statistical method"@en ;
+                   skos:definition "Summary of the methods used for the process of obtaining data."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#theme
+:theme rdf:type owl:DatatypeProperty ;
+       rdfs:domain dcat:Dataset ;
+       rdfs:range rdfs:Literal ;
+       dct:references "https://metadados.ibge.gov.br/consulta/estatisticos/temas"^^xsd:anyURI ;
+       rdfs:comment "The recommended best practice is to use a controlled vocabulary for consistency and accuracy. Examples of possible themes include Price Index, Domestic Material Consumption Indicator, Agricultural Production, Export and Import Data, Inflation Rate, Employment Statistics, and Energy Consumption."@en ;
+       rdfs:label "tema"@pt-br ,
+                  "theme"@en ;
+       skos:broadMatch dcat:theme ;
+       skos:definition "Indicates the main subject or topic investigated in the economic statistical operation. Themes help categorize the dataset for easier discovery and analysis."@en .
+
+
+###  https://www.w3.org/ns/dcat#accessURL
+dcat:accessURL rdf:type owl:DatatypeProperty ;
+               rdfs:domain dcat:Dataset ;
+               rdfs:range xsd:anyURI ;
+               rdfs:label "access URL"@en ,
+                          "disponível em"@pt-br ;
+               skos:definition "A URL of the resource that gives access to a distribution of the dataset. E.g. landing page, feed, SPARQL endpoint."@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.geonames.org/ontology#Feature
+gn:Feature rdf:type owl:Class ;
+           rdfs:label "Característica Geográfica"@pt-br ,
+                      "GeoNames Feature"@en ;
+           skos:definition "A geographical feature. It can be any feature that has a geographical extent, such as a country, city, mountain, river, etc."@en .
+
+
+###  http://xmlns.com/foaf/0.1/Agent
+foaf:Agent rdf:type owl:Class ;
+           rdfs:label "Agent"@en ,
+                      "Agente"@pt-br ;
+           skos:definition "An agent (eg. person, group, software or physical artifact)."@en .
+
+
+###  https://w3id.org/AlmesCore/rdf#Observation
+:Observation rdf:type owl:Class ;
+             rdfs:label "Observation"@en ,
+                        "Observação"@pt-br ;
+             skos:definition "A recorded observation of an agricultural product price on a specific date. The observation captures key attributes such as the price, date of observation, and the applicable currency, which provide a snapshot of the economic value of the product at a given time."@en .
+
+
+###  https://www.w3.org/ns/dcat#Dataset
+dcat:Dataset rdf:type owl:Class ;
+             rdfs:label "Dataset"@en ,
+                        "Dataset"@pt-br ;
+             skos:definition "Data encoded in a defined structure."@en .
+
+
+###  https://www.w3.org/ns/dcat#Resource
+dcat:Resource rdf:type owl:Class ;
+              rdfs:label "Recurso"@pt-br ,
+                         "Resource"@en ;
+              skos:definition "Resource published or curated by a single agent."@en .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

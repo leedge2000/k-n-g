@@ -429,6 +429,98 @@ def test_reextract_rejects_non_draft_compiled_rule(client, settings):
     assert _query(client, "CompiledRule", '"ruleId"=:rid', {"rid": "RULE-PROTECTED"})
 
 
+# =========================================================================== v2 扩展（空间禁限 / 污染防治 / 目标语态）
+
+def test_v2_target_by_year_goal(client, settings):
+    """R2-1-6 v2：无"目标"二字但含"到2030年…力争" + 量值 → TARGET。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-GOAL",
+        clauseText="到2030年，力争累计建成高标准农田13.5亿亩，累计改造提升2.8亿亩。",
+        targetObject="高标准农田",
+    )
+    _extract(client, settings, "POL0001")
+    statement = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})[0]
+    assert statement["statementType"] == "TARGET"
+
+
+def test_v2_definition_requires_fact_verb(client, settings):
+    """R2-1-5 v2：仅含数字、无事实动词与目标语气 → 不判 DEFINITION 的理由不成立时兜底仍为 DEFINITION。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-PLAIN-NUM",
+        clauseText="2025年早籼稻产量7000万吨。",
+        targetObject="早籼稻",
+    )
+    _extract(client, settings, "POL0001")
+    statement = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})[0]
+    assert statement["statementType"] == "DEFINITION"
+
+
+def test_v2_weak_obligation_yao_ji_shi(client, settings):
+    """R2-1-1 v2："要及时落实补建" 属义务，不应因含"允许"被判 PERMISSION。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-WEAK-OBL",
+        clauseText="经依法批准允许占用的，各地要及时落实补建，确保数量不减少、质量不降低。",
+        targetObject="高标准农田",
+    )
+    _extract(client, settings, "POL0001")
+    statements = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})
+    assert [s["statementType"] for s in statements] == ["OBLIGATION"]
+
+
+def test_v2_land_type_condition_and_no_parenthetical_exception(client, settings):
+    """R5-1-4 v2 / R6-1-1 v2：空间禁限 → facts.landType ∈ 枚举；括号内"除外"不抽例外。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-LAND",
+        clauseText=(
+            "禁止在25度以上坡耕地、严格管控类耕地、生态保护红线"
+            "（红线内集中连片梯田或与保护对象共生的连片耕地除外）、"
+            "退耕还林还草还湖还牧区域等开展高标准农田建设。"
+        ),
+        targetObject="高标准农田",
+    )
+    _extract(client, settings, "POL0001")
+    statement = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})[0]
+    assert statement["statementType"] == "PROHIBITION"
+    condition = _query(
+        client, "ClauseCondition", '"conditionId"=:cid', {"cid": statement["conditionId"]}
+    )[0]
+    assert condition["leftOperand"] == "facts.landType"
+    assert condition["comparator"] == "∈"
+    assert condition["rightValue"] == (
+        "25度以上坡耕地,严格管控类耕地,生态保护红线,退耕还林还草还湖还牧区域"
+    )
+    assert _query(client, "ClauseException", '"statementId"=:sid', {"sid": statement["statementId"]}) == []
+
+
+def test_v2_target_has_no_condition(client, settings):
+    """R5-1-4c v2：TARGET 是目标达成度，不产适用条件。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-GOAL-NOCOND",
+        clauseText="到2035年，力争将具备条件的永久基本农田全部建成高标准农田，累计改造提升4.55亿亩。",
+        targetObject="永久基本农田",
+    )
+    _extract(client, settings, "POL0001")
+    statement = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})[0]
+    assert statement["statementType"] == "TARGET"
+    assert statement["conditionId"] is None
+
+
+def test_v2_waste_type_condition(client, settings):
+    """R5-1-4 v2：严禁将A、B、C排放/倾倒 → facts.wasteType ∈ 枚举。"""
+    clause_id = _insert_clause(
+        client, clauseId="POL0001-C-WASTE",
+        clauseText="严禁将污水、生活垃圾、工业废弃物等排放、倾倒、存放到农田。",
+        targetObject="农田",
+    )
+    _extract(client, settings, "POL0001")
+    statement = _query(client, "NormativeStatement", '"clauseId"=:cid', {"cid": clause_id})[0]
+    condition = _query(
+        client, "ClauseCondition", '"conditionId"=:cid', {"cid": statement["conditionId"]}
+    )[0]
+    assert condition["leftOperand"] == "facts.wasteType"
+    assert condition["rightValue"] == "污水,生活垃圾,工业废弃物"
+
+
 # =========================================================================== 边界
 
 def test_extract_no_clauses(client, settings):

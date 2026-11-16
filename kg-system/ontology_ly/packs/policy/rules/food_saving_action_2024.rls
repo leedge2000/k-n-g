@@ -1,0 +1,18 @@
+% 阶段 2 通用 Nemo 规则：优先级闭包、覆盖、成环检测与公共输出。
+prevails_t(?a, ?b) :- prevails(?a, ?b) .
+prevails_t(?a, ?c) :- prevails(?a, ?b), prevails_t(?b, ?c) .
+overridden_by(?c, ?a, ?b) :- fires(?c, ?b), prevails_t(?b, ?a) .
+overridden(?c, ?a) :- overridden_by(?c, ?a, ?b) .
+effective(?c, ?s) :- fires(?c, ?s), ~overridden(?c, ?s) .
+cycle(?a) :- prevails_t(?a, ?a) .
+output(?c, ?s, "APPLICABLE") :- effective(?c, ?s) .
+main_true_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) :- main_cond_true_stm_051baa6aacfe43cfc95ff60c7b532db8_0(?c) .
+main_false_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) :- main_cond_false_stm_051baa6aacfe43cfc95ff60c7b532db8_0(?c) .
+main_unknown_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) :- main_cond_unknown_stm_051baa6aacfe43cfc95ff60c7b532db8_0(?c), ~main_false_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) .
+exception_false_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) :- case_exists(?c) .
+fires(?c, "STM-051baa6aacfe43cfc95ff60c7b532db8") :- case_exists(?c), main_true_stm_051baa6aacfe43cfc95ff60c7b532db8(?c), exception_false_stm_051baa6aacfe43cfc95ff60c7b532db8(?c) .
+main_true_stm_d2712918ab43954ef0b732bd5164de70(?c) :- main_cond_true_stm_d2712918ab43954ef0b732bd5164de70_0(?c) .
+main_false_stm_d2712918ab43954ef0b732bd5164de70(?c) :- main_cond_false_stm_d2712918ab43954ef0b732bd5164de70_0(?c) .
+main_unknown_stm_d2712918ab43954ef0b732bd5164de70(?c) :- main_cond_unknown_stm_d2712918ab43954ef0b732bd5164de70_0(?c), ~main_false_stm_d2712918ab43954ef0b732bd5164de70(?c) .
+exception_false_stm_d2712918ab43954ef0b732bd5164de70(?c) :- case_exists(?c) .
+fires(?c, "STM-d2712918ab43954ef0b732bd5164de70") :- case_exists(?c), main_true_stm_d2712918ab43954ef0b732bd5164de70(?c), exception_false_stm_d2712918ab43954ef0b732bd5164de70(?c) .

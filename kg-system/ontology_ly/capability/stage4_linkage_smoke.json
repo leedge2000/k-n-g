@@ -15,7 +15,7 @@
       },
       {
         "path": "seed/business.json",
-        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+        "sha256": "79135eab910dd556d136fc42ac8931b3c88577c014fce7831e0654f5d769d2d4"
       }
     ]
   },
@@ -84,14 +84,14 @@
         {"group": "route", "type": "apiLength", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "scopeDimensions", "expected": 5},
         {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.commodityForms", "expected": 8},
         {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.places", "expected": 3},
-        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.impacts", "expected": 4},
+        {"group": "route", "type": "apiField", "path": "/api/market/overview", "params": {"asOf": "2024-06-30"}, "field": "counts.impacts", "expected": 11},
         {"group": "route", "type": "apiField", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "commodityForm.formId", "expected": "OBJ-PUB-CM-0001"},
         {"group": "route", "type": "apiField", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "marketPlace.placeId", "expected": "OBJ-PUB-MK-0001"},
         {"group": "route", "type": "apiLength", "path": "/api/market/series/OBJ-PUB-IN-0001", "params": {"asOf": "2024-06-30"}, "field": "impacts", "expected": 1},
         {"group": "route", "type": "apiEveryHas", "path": "/api/market/timeline", "params": {"asOf": "2024-06-30"}, "listField": "items", "field": "triggeredImpactCount"},
         {"group": "route", "type": "apiLength", "path": "/api/market/commodity-forms", "params": {"commodityId": "CMD0001"}, "field": "items", "expected": 2},
         {"group": "route", "type": "apiLength", "path": "/api/market/places", "params": {"marketType": "SPOT"}, "field": "items", "expected": 2},
-        {"group": "route", "type": "apiLength", "path": "/api/market/impacts", "params": {"asOf": "2024-04-15"}, "field": "items", "expected": 4},
+        {"group": "route", "type": "apiLength", "path": "/api/market/impacts", "params": {"asOf": "2024-04-15"}, "field": "items", "expected": 11},
         {"group": "route", "type": "apiLength", "path": "/api/market/evidence", "params": {"targetType": "ImpactLink", "targetId": "LNK-IM-0001"}, "field": "items", "expected": 1},
         {"group": "route", "type": "apiField", "path": "/api/market/factors/FAC0001", "params": {}, "field": "drives[0].seriesId", "expected": "OBJ-PUB-IN-0005"},
         {"group": "route", "type": "apiStatus", "path": "/api/market/evidence", "params": {}, "expected": 400},
@@ -105,7 +105,7 @@
       "checks": [
         {"group": "bridge", "type": "tableCount", "table": "FactorDriveLink", "expected": 5},
         {"group": "bridge", "type": "tableCount", "table": "EventFactorLink", "expected": 4},
-        {"group": "bridge", "type": "tableCount", "table": "ImpactLink", "expected": 4},
+        {"group": "bridge", "type": "tableCount", "table": "ImpactLink", "expected": 11},
         {"group": "bridge", "type": "impactEvidenceComplete", "expected": true},
         {"group": "bridge", "type": "impactNoSeriesTarget", "expected": true},
         {"group": "bridge", "type": "driveMetricComplete", "expected": true}
@@ -122,8 +122,8 @@
         "series": 8,
         "commodityForms": 8,
         "places": 3,
-        "evidence": 10,
-        "impactLinks": 4,
+        "evidence": 17,
+        "impactLinks": 11,
         "factorDrives": 5,
         "eventFactors": 4,
         "assertions": 6

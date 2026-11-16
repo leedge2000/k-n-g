@@ -108,7 +108,12 @@ class ConclusionService:
                     "scope_note": scope_note,
                 }
                 if not eligible:
-                    if formal_only:
+                    if str(statement.get("statementType") or "") == "TARGET":
+                        pending.append(("done", self._unqualified_verdict(
+                            **common,
+                            reason="目标类陈述（TARGET）仅描述建设目标，不作为适用性规则判定",
+                        )))
+                    elif formal_only:
                         pending.append(("done", self._unqualified_verdict(
                             **common, reason=qualification_reason
                         )))

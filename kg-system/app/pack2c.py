@@ -34,6 +34,9 @@ SUPPORTED_FACT_PATHS = {
     "facts.provinceRulePublished",
     "facts.emergencyLevel",
     "facts.tags",
+    # v2：空间禁限与污染防治类条件（见 pack2b R5-1-4 v2）
+    "facts.landType",
+    "facts.wasteType",
 }
 
 
@@ -125,8 +128,13 @@ class Pack2cService:
         self.registry_version = registry["registryVersion"]
         self.tier1_policies = {entry["policyId"]: entry for entry in registry["policies"]}
 
-    def compile(self, policy_id: str | None = None) -> dict[str, Any]:
+    def compile(
+        self, policy_id: str | None = None, statement_ids: list[str] | None = None
+    ) -> dict[str, Any]:
         statements = self._fetch_statements(policy_id)
+        if statement_ids is not None:
+            allowed = set(statement_ids)
+            statements = [s for s in statements if str(s["statementId"]) in allowed]
         stats: dict[str, Any] = {
             "statements": len(statements),
             "compiled": 0,

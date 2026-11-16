@@ -1,5 +1,5 @@
 {
-  "registryVersion": "stage2-tier1-v1",
+  "registryVersion": "stage2-tier1-v2",
   "policies": [
     {
       "policyId": "POL0001",
@@ -25,6 +25,128 @@
       ],
       "sharedRuleAsset": "rules/stage2_nemo.rls",
       "compiledRuleAsset": "rules/rice_minprice_2025.rls"
+    },
+    {
+      "policyId": "POL0009",
+      "docNumber": "",
+      "docNumberNote": "网页正文未载明发文字号，以新华社 2025-03-30 受权发布稿识别；不采用网页备案号。",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "中共中央办公厅、国务院办公厅印发《逐步把永久基本农田建成高标准农田实施方案》"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的禁止建设区域与“污水、生活垃圾、工业废弃物不得排放、倾倒、存放”口径"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0009-C001..C002 明确 13.5亿亩、2.8亿亩、8000万亩、4.55亿亩、1.3亿亩"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0009-C001",
+        "POL0009-C002"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/high_standard_farmland_2025.rls"
+    },
+    {
+      "policyId": "POL0005",
+      "docNumber": "",
+      "docNumberNote": "2026年中央一号文件，网页正文未载明发文字号，以新华社受权发布稿识别；不采用网页备案号。",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "中共中央、国务院印发《关于锚定农业农村现代化 扎实推进乡村全面振兴的意见》"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的粮食产量目标与稻谷小麦最低收购价政策口径"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0005-C001 明确粮食产量稳定在1.4万亿斤左右"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0005-C001"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/central_no1_doc_2026.rls"
+    },
+    {
+      "policyId": "POL0008",
+      "docNumber": "",
+      "docNumberNote": "中共中央、国务院印发，网页正文未载明发文字号，以中国政府网发布稿识别；不采用网页备案号。",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "中共中央、国务院印发《加快建设农业强国规划（2024－2035年）》"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的耕地保有量、永久基本农田与粮食播种面积口径"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0008-C001 明确18.65亿亩、15.46亿亩，POL0008-C003 明确17.5亿亩、14.5亿亩"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0008-C001",
+        "POL0008-C003"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/agriculture_power_plan_2025.rls"
+    },
+    {
+      "policyId": "POL0010",
+      "docNumber": "",
+      "docNumberNote": "中共中央办公厅、国务院办公厅印发，网页正文未载明发文字号，以新华社受权发布稿识别；不采用网页备案号。",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "中共中央办公厅、国务院办公厅印发《粮食节约和反食品浪费行动方案》"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的2027年节约减损目标节点与机关食堂、餐饮环节反浪费评估通报要求"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0010-C001 明确到2027年年底的阶段性目标"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0010-C001"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/food_saving_action_2024.rls"
+    },
+    {
+      "policyId": "POL0011",
+      "docNumber": "",
+      "docNumberNote": "中共中央办公厅、国务院办公厅印发，网页正文未载明发文字号，以新华社受权发布稿识别；不采用网页备案号。",
+      "qualificationEvidence": [
+        {
+          "criterion": "CENTRAL_MINISTRY_ISSUER",
+          "evidence": "中共中央办公厅、国务院办公厅印发《关于加强耕地保护提升耕地质量完善占补平衡的意见》"
+        },
+        {
+          "criterion": "NATIONAL_UNIFORM_PARAMETER",
+          "evidence": "全国统一的耕地保有量、永久基本农田红线与补充耕地来源禁限口径"
+        },
+        {
+          "criterion": "QUANTIFIED_CLAUSES",
+          "evidence": "POL0011-C001 明确18.65亿亩、15.46亿亩"
+        }
+      ],
+      "quantitativeClauseIds": [
+        "POL0011-C001"
+      ],
+      "sharedRuleAsset": "rules/stage2_nemo.rls",
+      "compiledRuleAsset": "rules/farmland_protection_2024.rls"
     }
   ]
 }

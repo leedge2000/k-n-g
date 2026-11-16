@@ -61,6 +61,15 @@ def parse_date(value: Any) -> date | None:
         return None
 
 
+def target_day_checked(as_of: str | None = None) -> date:
+    """校验并返回查询时点；缺省按东八区当天。"""
+    target = (as_of or "").strip() or default_as_of()
+    parsed = parse_date(target)
+    if parsed is None or len(target) != 10:
+        raise ValueError(f"asOf 必须是 YYYY-MM-DD 日期，收到：{as_of}")
+    return parsed
+
+
 class PolicyService:
     def __init__(self, db: Database, scope_service: ScopeService | None = None):
         self.db = db
@@ -69,9 +78,7 @@ class PolicyService:
     def effective(self, as_of: str | None = None, limit: int = 200,
                   scope_id: str | None = None) -> dict[str, Any]:
         target = (as_of or "").strip() or default_as_of()
-        target_day = parse_date(target)
-        if target_day is None or len(target) != 10:
-            raise ValueError(f"asOf 必须是 YYYY-MM-DD 日期，收到：{as_of}")
+        target_day = target_day_checked(target)
 
         query_scope = (scope_id or "").strip() or None
         if query_scope:
@@ -83,11 +90,7 @@ class PolicyService:
         rows = self.db.fetch_all('SELECT * FROM "Policy" ORDER BY "policyId"')
         # supersedesPolicyId 指回上一版本，按被取代方归组，判断某行是否已有后继生效
         # 版本链必须用全量构建：后继版本可能不在本次范围过滤结果里
-        successors: dict[str, list[dict[str, Any]]] = {}
-        for row in rows:
-            parent = row.get("supersedesPolicyId")
-            if parent:
-                successors.setdefault(str(parent), []).append(row)
+        successors = self._successors(rows)
 
         if query_scope:
             rows = [row for row in rows if self._covers(row.get("scopeId"), query_scope)]
@@ -149,6 +152,26 @@ class PolicyService:
             if successor_effective is not None and successor_effective <= target_day:
                 return "SUPERSEDED"
         return "CURRENT"
+
+    @staticmethod
+    def _successors(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+        """按被取代方归组；版本链始终用全量政策构建。"""
+        successors: dict[str, list[dict[str, Any]]] = {}
+        for row in rows:
+            parent = row.get("supersedesPolicyId")
+            if parent:
+                successors.setdefault(str(parent), []).append(row)
+        return successors
+
+    def status_map(self, as_of: str | None = None) -> dict[str, str]:
+        """返回 policyId → 七态判定，供影响链等下游复用同一时效口径。"""
+        day = target_day_checked(as_of)
+        rows = self.db.fetch_all('SELECT * FROM "Policy" ORDER BY "policyId"')
+        successors = self._successors(rows)
+        return {
+            str(row["policyId"]): self._classify(row, day, successors.get(str(row["policyId"]), []))
+            for row in rows
+        }
 
     @staticmethod
     def _item(row: dict[str, Any]) -> dict[str, Any]:

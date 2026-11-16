@@ -8,11 +8,11 @@
     "files": [
       {
         "path": "seed/business.json",
-        "sha256": "b5e55655d9a6a804d29bccb7906a05a319b196ffce73269c0148d31d48ea8dac"
+        "sha256": "79135eab910dd556d136fc42ac8931b3c88577c014fce7831e0654f5d769d2d4"
       },
       {
         "path": "ontology_ly/packs/policy/tier1_policy_registry.json",
-        "sha256": "6f5542a8ab2d1122fc685eceb5725cd56cd2f82635eaa0805ac3fe3add288e25"
+        "sha256": "5e6f93566169175363022c2bf310fda27c35489f4e30e75f7bfc621d65f5fc95"
       },
       {
         "path": "ontology_ly/packs/policy/rules/stage2_nemo.rls",

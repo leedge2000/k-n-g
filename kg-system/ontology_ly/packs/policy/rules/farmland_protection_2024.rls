@@ -1,0 +1,28 @@
+% 阶段 2 通用 Nemo 规则：优先级闭包、覆盖、成环检测与公共输出。
+prevails_t(?a, ?b) :- prevails(?a, ?b) .
+prevails_t(?a, ?c) :- prevails(?a, ?b), prevails_t(?b, ?c) .
+overridden_by(?c, ?a, ?b) :- fires(?c, ?b), prevails_t(?b, ?a) .
+overridden(?c, ?a) :- overridden_by(?c, ?a, ?b) .
+effective(?c, ?s) :- fires(?c, ?s), ~overridden(?c, ?s) .
+cycle(?a) :- prevails_t(?a, ?a) .
+output(?c, ?s, "APPLICABLE") :- effective(?c, ?s) .
+main_true_stm_364e213dd091a08cf33b5b10538107dd(?c) :- main_cond_true_stm_364e213dd091a08cf33b5b10538107dd_0(?c) .
+main_false_stm_364e213dd091a08cf33b5b10538107dd(?c) :- main_cond_false_stm_364e213dd091a08cf33b5b10538107dd_0(?c) .
+main_unknown_stm_364e213dd091a08cf33b5b10538107dd(?c) :- main_cond_unknown_stm_364e213dd091a08cf33b5b10538107dd_0(?c), ~main_false_stm_364e213dd091a08cf33b5b10538107dd(?c) .
+exception_false_stm_364e213dd091a08cf33b5b10538107dd(?c) :- case_exists(?c) .
+fires(?c, "STM-364e213dd091a08cf33b5b10538107dd") :- case_exists(?c), main_true_stm_364e213dd091a08cf33b5b10538107dd(?c), exception_false_stm_364e213dd091a08cf33b5b10538107dd(?c) .
+main_true_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) :- main_cond_true_stm_615cd0d8e9ae222c25d3fa514932d4c4_0(?c) .
+main_false_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) :- main_cond_false_stm_615cd0d8e9ae222c25d3fa514932d4c4_0(?c) .
+main_unknown_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) :- main_cond_unknown_stm_615cd0d8e9ae222c25d3fa514932d4c4_0(?c), ~main_false_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) .
+exception_false_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) :- case_exists(?c) .
+fires(?c, "STM-615cd0d8e9ae222c25d3fa514932d4c4") :- case_exists(?c), main_true_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c), exception_false_stm_615cd0d8e9ae222c25d3fa514932d4c4(?c) .
+main_true_stm_7c62e34c0e69108db59e4936ab202ff3(?c) :- main_cond_true_stm_7c62e34c0e69108db59e4936ab202ff3_0(?c) .
+main_false_stm_7c62e34c0e69108db59e4936ab202ff3(?c) :- main_cond_false_stm_7c62e34c0e69108db59e4936ab202ff3_0(?c) .
+main_unknown_stm_7c62e34c0e69108db59e4936ab202ff3(?c) :- main_cond_unknown_stm_7c62e34c0e69108db59e4936ab202ff3_0(?c), ~main_false_stm_7c62e34c0e69108db59e4936ab202ff3(?c) .
+exception_false_stm_7c62e34c0e69108db59e4936ab202ff3(?c) :- case_exists(?c) .
+fires(?c, "STM-7c62e34c0e69108db59e4936ab202ff3") :- case_exists(?c), main_true_stm_7c62e34c0e69108db59e4936ab202ff3(?c), exception_false_stm_7c62e34c0e69108db59e4936ab202ff3(?c) .
+main_true_stm_898c2941af562145fa7a260441606040(?c) :- main_cond_true_stm_898c2941af562145fa7a260441606040_0(?c) .
+main_false_stm_898c2941af562145fa7a260441606040(?c) :- main_cond_false_stm_898c2941af562145fa7a260441606040_0(?c) .
+main_unknown_stm_898c2941af562145fa7a260441606040(?c) :- main_cond_unknown_stm_898c2941af562145fa7a260441606040_0(?c), ~main_false_stm_898c2941af562145fa7a260441606040(?c) .
+exception_false_stm_898c2941af562145fa7a260441606040(?c) :- case_exists(?c) .
+fires(?c, "STM-898c2941af562145fa7a260441606040") :- case_exists(?c), main_true_stm_898c2941af562145fa7a260441606040(?c), exception_false_stm_898c2941af562145fa7a260441606040(?c) .

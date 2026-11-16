@@ -46,6 +46,28 @@
     .impact-row{border-left:2px solid var(--line);padding:8px 0 9px 11px;margin-bottom:9px;cursor:pointer;transition:.18s}.impact-row:last-child{margin-bottom:0}.impact-row:hover,.impact-row.active{border-left-color:var(--green);background:#fafcf7}.impact-row.is-triggered{border-left-color:var(--gold)}
     .impact-main{font-size:12px;line-height:1.6}.impact-main .arrow{color:var(--gold);margin:0 4px}.impact-main a{border-bottom:1px dashed var(--gold);text-decoration:none}
     .impact-meta{font-size:10px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .pi-summary{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:11px 13px;background:#f7f7f0;border:1px solid var(--line);border-radius:8px}
+    .pi-summary .sd{font-family:var(--serif);font-size:15px;font-weight:600}
+    .pi-counts{display:flex;gap:6px;flex-wrap:wrap}
+    .dir-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+    .dir-pos{background:#e9f2e9;color:#2f6243;border:1px solid #cfe0cf}
+    .dir-neg{background:#f5e9e4;color:#8c4338;border:1px solid #e8cfc6}
+    .dir-ins{background:#f0f1e8;color:#68766d;border:1px solid #d8dacc}
+    .pi-card{border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:10px;background:#fcfcf7;transition:.18s}
+    .pi-card:hover{border-color:var(--green);box-shadow:0 4px 14px rgba(28,91,72,.06)}
+    .pi-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .pi-card-head b{font-family:var(--serif);font-size:14px;line-height:1.5}
+    .pi-card-meta{font-size:10px;color:var(--muted);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+    .pi-quote{margin:9px 0 0;padding:8px 11px;border-left:3px solid var(--gold);background:var(--gold-soft);border-radius:0 6px 6px 0;font-family:var(--serif);font-size:12px;line-height:1.75;color:#5a4620}
+    .pi-quote a{color:#77591e;border-bottom:1px dashed #b8923e;text-decoration:none;font-size:10px;margin-left:6px}
+    .pi-foot{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:10px;color:var(--muted)}
+    .pi-target-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .pi-target-head h4{font-family:var(--serif);font-size:14px;margin:0}
+    .pi-target-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+    .pi-target-cell{border:1px solid var(--line);border-radius:7px;padding:9px 11px;background:#fafaf5}
+    .pi-target-cell .label{font-size:10px;color:var(--muted);margin-bottom:5px}
+    .pi-target-cell ul{margin:0;padding:0;list-style:none;font-size:11px;line-height:1.7}
+    .pi-target-cell li{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
     @media(max-width:1180px){.stats{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:1fr}.series-list{grid-template-columns:repeat(2,1fr)}.assert-columns{grid-template-columns:1fr}}
     @media(max-width:700px){main{padding:22px 16px 40px}.topbar{padding:0 16px;gap:10px}.brandline span{display:none}.stats{grid-template-columns:repeat(2,1fr)}.series-list{grid-template-columns:1fr}.split{grid-template-columns:1fr}.timeline-row{grid-template-columns:1fr;gap:4px}.disclaimer{display:none}.page-head{flex-direction:column;align-items:flex-start}}
   </style>
@@ -129,6 +151,17 @@
         <div class="detail-body" id="evidence-box" style="display:none;border-top:1px dashed var(--line)"></div>
       </section>
     </div>
+
+    <section class="panel" id="policy-impact-panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div><h2>政策影响链</h2><small id="pi-count">—</small></div>
+        <small>现行政策对当前品种的方向、影响变量与条款证据</small>
+      </div>
+      <div class="detail-body" id="policy-impact-body">
+        <p class="empty-note">选择序列后显示政策影响链。</p>
+      </div>
+      <div class="detail-body" id="policy-target-box" style="display:none;border-top:1px dashed var(--line)"></div>
+    </section>
 
     <section class="panel" id="timeline-panel" style="margin-bottom:16px">
       <div class="panel-head">
@@ -389,6 +422,9 @@
       renderForms(data.commodityForm);
       renderDrives(data.factors);
       renderImpacts(impactOverride || data.impacts);
+      const targetBox = $('#policy-target-box');
+      if (targetBox) targetBox.style.display = 'none';
+      loadPolicyImpacts().catch((error) => toast(error.message, true));
     }
 
     async function renderForms(form) {
@@ -512,6 +548,156 @@
       } catch (error) {
         box.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
       }
+    }
+
+    const DIR_CLASS = { '正向': 'dir-pos', '负向': 'dir-neg', '依据不足': 'dir-ins' };
+
+    function dirBadge(direction) {
+      const cls = DIR_CLASS[direction] || 'dir-ins';
+      return `<span class="dir-badge ${cls}">${esc(direction || '依据不足')}</span>`;
+    }
+
+    async function loadPolicyImpacts() {
+      const commodityId = state.commodityId;
+      const box = $('#policy-impact-body');
+      if (!commodityId) {
+        $('#pi-count').textContent = '—';
+        box.innerHTML = '<p class="empty-note">该序列未关联品种，无法查询政策影响链。</p>';
+        return;
+      }
+      box.innerHTML = '<p class="empty-note">正在读取政策影响链…</p>';
+      try {
+        const params = new URLSearchParams({ commodityId });
+        if (state.asOf) params.set('asOf', state.asOf);
+        const data = await api('/api/policies/impacts?' + params.toString());
+        renderPolicyImpacts(data);
+      } catch (error) {
+        box.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+      }
+    }
+
+    function renderPolicyImpacts(data) {
+      const box = $('#policy-impact-body');
+      const items = Array.isArray(data.items) ? data.items : [];
+      const counts = data.directionCounts || {};
+      $('#pi-count').textContent = `${data.total || 0} 条 · 综合方向 ${esc(data.summaryDirection || '依据不足')}`;
+      const countBadges = ['正向', '负向', '依据不足'].map((label) => (
+        `<span class="dir-badge ${DIR_CLASS[label]}">${esc(label)} ${esc(counts[label] || 0)}</span>`
+      )).join('');
+      const summary = `
+        <div class="pi-summary">
+          <span class="sd">综合方向</span>
+          ${dirBadge(data.summaryDirection)}
+          <span class="pi-counts">${countBadges}</span>
+          <span class="tag gray">强度：${esc(data.strength || '依据不足')}</span>
+          <span style="font-size:10px;color:var(--muted)">${esc(data.strengthBasis || '')}</span>
+        </div>
+      `;
+      if (!items.length) {
+        const notes = (data.notes || []).map((note) => `<p class="empty-note">${esc(note)}</p>`).join('');
+        box.innerHTML = summary + notes || (summary + '<p class="empty-note">该品种暂无现行政策影响链。</p>');
+        return;
+      }
+      const cards = items.map((item, index) => {
+        const basisLabel = { evidence: '有证据', 'clause-only': '仅条款', 'no-evidence': '无证据' }[item.basis] || item.basis;
+        const basisClass = item.basis === 'evidence' ? 'gold' : item.basis === 'clause-only' ? 'blue' : 'gray';
+        const quoteBlock = item.quote
+          ? `<div class="pi-quote">${esc(item.quote)}${item.sourceLink ? `<a href="${esc(item.sourceLink)}" target="_blank" rel="noopener">查看原文</a>` : ''}</div>`
+          : '';
+        return `<div class="pi-card" data-policy="${esc(item.policyId)}" role="button" tabindex="0">
+          <div class="pi-card-head">
+            <div>
+              <b>${esc(item.policyTitle || item.policyId)}</b>
+              <div class="pi-card-meta">
+                <span>${esc(item.docNumber || '')}</span>
+                <span>生效 ${esc(item.effectiveDate || '—')}</span>
+                <span>${esc(item.regionName || item.regionId || '—')}</span>
+                <span>${esc(item.industryStage || '')}</span>
+              </div>
+            </div>
+            ${dirBadge(item.direction)}
+          </div>
+          <div class="pi-foot">
+            <span class="tag">影响变量：${esc(item.impactVariable || '依据不足')}</span>
+            ${item.toolType ? `<span class="tag gold">政策工具：${esc(item.toolType)}</span>` : ''}
+            ${item.lagDays !== null && item.lagDays !== undefined ? `<span>滞后 ${esc(item.lagDays)} 天</span>` : ''}
+            <span>证据 ${esc(item.evidenceCount || 0)} 条</span>
+            <span class="tag ${basisClass}">${esc(basisLabel)}</span>
+          </div>
+          ${quoteBlock}
+        </div>`;
+      }).join('');
+      box.innerHTML = summary + cards;
+      $$('#policy-impact-body .pi-card').forEach((element) => {
+        element.addEventListener('click', () => {
+          const policyId = element.dataset.policy;
+          if (policyId) loadPolicyTargets(policyId, element);
+        });
+        element.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          element.click();
+        });
+      });
+    }
+
+    async function loadPolicyTargets(policyId, cardElement) {
+      const box = $('#policy-target-box');
+      box.style.display = 'block';
+      $$('#policy-impact-body .pi-card').forEach((element) => {
+        element.style.borderColor = element === cardElement ? 'var(--green)' : '';
+      });
+      box.innerHTML = '<p class="empty-note">正在读取政策影响对象…</p>';
+      try {
+        const params = new URLSearchParams();
+        if (state.asOf) params.set('asOf', state.asOf);
+        const data = await api(`/api/policies/${encodeURIComponent(policyId)}/targets` + (params.toString() ? '?' + params.toString() : ''));
+        renderPolicyTargets(data);
+      } catch (error) {
+        box.innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+      }
+    }
+
+    function renderPolicyTargets(data) {
+      const box = $('#policy-target-box');
+      const policy = data.policy || {};
+      const targets = data.targets || {};
+      const commodities = targets.commodities || [];
+      const regions = targets.regions || [];
+      const stages = targets.industryStages || [];
+      const enterpriseTypes = targets.enterpriseTypes || [];
+      const notes = data.notes || [];
+      const statusBadge = data.effective
+        ? `<span class="badge badge-effective">${esc(data.effectiveStatus || 'CURRENT')}</span>`
+        : `<span class="badge badge-expired">${esc(data.effectiveStatus || '')}</span>`;
+      const cells = [];
+      cells.push(`<div class="pi-target-cell"><div class="label">影响品种（${commodities.length}）</div><ul>${
+        commodities.map((c) => `<li>${esc(c.commodityName || c.commodityId)} ${dirBadge(c.direction)}</li>`).join('')
+        || '<li style="color:var(--muted)">无</li>'
+      }</ul></div>`);
+      cells.push(`<div class="pi-target-cell"><div class="label">适用地区</div><ul>${
+        regions.map((r) => `<li>${esc(r.regionName || r.regionId)}</li>`).join('')
+        || '<li style="color:var(--muted)">无</li>'
+      }</ul></div>`);
+      cells.push(`<div class="pi-target-cell"><div class="label">产业环节</div><ul>${
+        stages.map((s) => `<li>${esc(s)}</li>`).join('')
+        || '<li style="color:var(--muted)">无</li>'
+      }</ul></div>`);
+      cells.push(`<div class="pi-target-cell"><div class="label">企业类型（${enterpriseTypes.length}）</div><ul>${
+        enterpriseTypes.map((t) => `<li>${esc(t)}</li>`).join('')
+        || '<li style="color:var(--muted)">企业主数据为空</li>'
+      }</ul></div>`);
+      const notesHtml = notes.length
+        ? `<div style="margin-top:10px;font-size:10px;color:var(--muted);line-height:1.7">${notes.map((n) => esc(n)).join('<br>')}</div>`
+        : '';
+      box.innerHTML = `
+        <div class="pi-target-head">
+          <h4>${esc(policy.policyTitle || policy.policyId)} · 影响对象</h4>
+          ${statusBadge}
+        </div>
+        <div class="pi-target-grid">${cells.join('')}</div>
+        ${notesHtml}
+      `;
     }
 
     function renderTimeline(items) {
